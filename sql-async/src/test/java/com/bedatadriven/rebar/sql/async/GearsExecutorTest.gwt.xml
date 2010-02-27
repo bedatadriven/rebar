@@ -1,0 +1,9 @@
+<module>
+
+    <!-- This module tests the GearsExecutor itself, as normal GWT code,
+         rather than as a compiled worker. It just makes it easier to find errors
+         in the worker itself before we move on to a full end-to-end test. -->
+    
+    <inherits name="com.bedatadriven.rebar.sql.async.SqlAsync"/>
+
+</module>

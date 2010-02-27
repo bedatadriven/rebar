@@ -1,0 +1,6 @@
+<module>
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.gears.Gears"/>
+    <servlet path="/math" class="com.bedatadriven.rebar.worker.test.server.MathServlet"/>
+    <source path="client"/>
+</module>

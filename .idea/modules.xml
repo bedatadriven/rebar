@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/2d-it/2d-it.iml" filepath="$PROJECT_DIR$/2d-it/2d-it.iml" />
+      <module fileurl="file://$PROJECT_DIR$/htmlunit-gears-gwt/htmlunit-gears-gwt.iml" filepath="$PROJECT_DIR$/htmlunit-gears-gwt/htmlunit-gears-gwt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modulestore/modulestore.iml" filepath="$PROJECT_DIR$/modulestore/modulestore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/persistence/persistence.iml" filepath="$PROJECT_DIR$/persistence/persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sql/rebar-sql.iml" filepath="$PROJECT_DIR$/sql/rebar-sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/worker/worker.iml" filepath="$PROJECT_DIR$/worker/worker.iml" />
+    </modules>
+  </component>
+</project>
+

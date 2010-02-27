@@ -1,0 +1,3 @@
+<module>
+    <inherits name="com.bedatadriven.rebar.sql.Sql"/>
+</module>

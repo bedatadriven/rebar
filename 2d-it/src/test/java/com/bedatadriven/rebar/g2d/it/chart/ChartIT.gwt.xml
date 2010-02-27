@@ -1,0 +1,6 @@
+<module>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="org.jfree.chart.JFreeChart"/>
+
+    <entry-point class='com.bedatadriven.rebar.g2d.it.chart.client.ChartApp'/>    
+</module>
