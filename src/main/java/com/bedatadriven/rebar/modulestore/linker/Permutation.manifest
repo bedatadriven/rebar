@@ -1,0 +1,8 @@
+{
+ "name" : "__NAME__",
+ "betaManifestVersion" : 1,
+ "version" : "__VERSION__",
+ "entries" : [
+     __ENTRIES__
+    ]
+}
