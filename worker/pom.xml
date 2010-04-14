@@ -25,7 +25,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-worker</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>0.9</version>
     <name>Worker API for GWT</name>
     <description>A GWT Linker and support classes that links GWT code into worker
         scripts callable by Gears.</description>
@@ -84,9 +84,6 @@
         </resources>
 
         <plugins>
-
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -109,7 +106,6 @@
                         </configuration>
                     </execution>
                 </executions>
-
             </plugin>
         </plugins>
     </build>

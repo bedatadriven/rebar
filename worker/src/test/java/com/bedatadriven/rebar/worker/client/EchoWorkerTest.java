@@ -20,9 +20,9 @@ package com.bedatadriven.rebar.worker.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
-import com.google.gwt.gears.client.workerpool.WorkerPoolErrorHandler;
 import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author Alex Bertram
@@ -42,7 +42,7 @@ public class EchoWorkerTest extends GWTTestCase {
     pool.setMessageHandler(new WorkerPoolMessageHandler() {
       @Override
       public void onMessageReceived(MessageEvent event) {
-
+     
         assertEquals(event.getBody(), msg);
         finishTest();
       }
