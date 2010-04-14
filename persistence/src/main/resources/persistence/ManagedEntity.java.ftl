@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="com.bedatadriven.gears.persistence.mapping.EntityMapping" -->
+<#-- @ftlvariable name="" type="com.bedatadriven.rebar.persistence.mapping.EntityMapping" -->
 
 package ${context.packageName};
 

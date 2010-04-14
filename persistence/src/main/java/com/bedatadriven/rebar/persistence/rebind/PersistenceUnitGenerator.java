@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.rebind;
+package com.bedatadriven.rebar.persistence.rebind;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
@@ -25,10 +25,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.bedatadriven.gears.persistence.client.BindEntities;
-import com.bedatadriven.gears.persistence.client.BindPackages;
-import com.bedatadriven.gears.persistence.mapping.EntityMapping;
-import com.bedatadriven.gears.persistence.mapping.UnitMapping;
+import com.bedatadriven.rebar.persistence.client.BindEntities;
+import com.bedatadriven.rebar.persistence.client.BindPackages;
+import com.bedatadriven.rebar.persistence.mapping.EntityMapping;
+import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 

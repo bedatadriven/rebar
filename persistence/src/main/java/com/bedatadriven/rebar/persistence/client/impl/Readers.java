@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.client.impl;
+package com.bedatadriven.rebar.persistence.client.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -15,9 +15,9 @@
 
  */
 
-package com.bedatadriven.gears.persistence.mapping;
+package com.bedatadriven.rebar.persistence.mapping;
 
-import com.bedatadriven.gears.persistence.client.ClientSideGeneratedValue;
+import com.bedatadriven.rebar.persistence.client.ClientSideGeneratedValue;
 
 import javax.persistence.Column;
 import javax.persistence.Id;

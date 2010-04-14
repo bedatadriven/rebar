@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.util;
+package com.bedatadriven.rebar.persistence.util;
 
 import java.util.ArrayList;
 import java.util.List;

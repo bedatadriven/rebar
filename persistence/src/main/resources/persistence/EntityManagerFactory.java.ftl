@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="com.bedatadriven.gears.persistence.mapping.UnitMapping" -->
+<#-- @ftlvariable name="" type="com.bedatadriven.rebar.persistence.mapping.UnitMapping" -->
 
 <#include 'DDL.sql.ftl'>
 
@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-import com.bedatadriven.gears.persistence.client.ConnectionProvider;
+import com.bedatadriven.rebar.persistence.client.ConnectionProvider;
 
 import com.allen_sauer.gwt.log.client.Log;
 

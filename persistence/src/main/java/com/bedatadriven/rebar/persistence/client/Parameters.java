@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.client;
+package com.bedatadriven.rebar.persistence.client;
 
 /**
  * @author Alex Bertram

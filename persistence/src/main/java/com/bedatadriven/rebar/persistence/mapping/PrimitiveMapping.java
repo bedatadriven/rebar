@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.mapping;
+package com.bedatadriven.rebar.persistence.mapping;
 
 import org.json.JSONStringer;
 import org.json.JSONException;

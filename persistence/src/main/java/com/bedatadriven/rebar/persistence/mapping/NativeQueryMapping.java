@@ -15,9 +15,9 @@
 
  */
 
-package com.bedatadriven.gears.persistence.mapping;
+package com.bedatadriven.rebar.persistence.mapping;
 
-import com.bedatadriven.gears.persistence.util.SQLStatement;
+import com.bedatadriven.rebar.persistence.util.SQLStatement;
 
 import java.util.Map;
 import java.util.Collection;

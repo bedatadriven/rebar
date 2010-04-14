@@ -15,10 +15,10 @@
 
  */
 
-package com.bedatadriven.gears.persistence.mapping;
+package com.bedatadriven.rebar.persistence.mapping;
 
-import com.bedatadriven.gears.persistence.client.impl.PersistentSet;
-import com.bedatadriven.gears.persistence.client.impl.PersistentList;
+import com.bedatadriven.rebar.persistence.client.impl.PersistentSet;
+import com.bedatadriven.rebar.persistence.client.impl.PersistentList;
 
 import javax.persistence.CascadeType;
 import javax.persistence.JoinTable;

@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="com.bedatadriven.gears.persistence.mapping.EntityMapping" -->
+<#-- @ftlvariable name="" type="com.bedatadriven.rebar.persistence.mapping.EntityMapping" -->
 
 <#include 'SetParameters.java.ftl'>
 <#include 'ReadRecordSet.java.ftl'>
@@ -7,9 +7,9 @@
 
 package ${context.packageName};
 
-import com.bedatadriven.gears.persistence.client.impl.Delegate;
-import com.bedatadriven.gears.persistence.client.impl.Readers;
-import com.bedatadriven.gears.persistence.client.impl.AbstractNativeRuntimeQuery;
+import com.bedatadriven.rebar.persistence.client.impl.Delegate;
+import com.bedatadriven.rebar.persistence.client.impl.Readers;
+import com.bedatadriven.rebar.persistence.client.impl.AbstractNativeRuntimeQuery;
 
 import com.google.gwt.core.client.GWT;
 

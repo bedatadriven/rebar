@@ -15,11 +15,11 @@
 
  */
 
-package com.bedatadriven.gears.persistence.rebind;
+package com.bedatadriven.rebar.persistence.rebind;
 
-import com.bedatadriven.gears.persistence.rebind.ftl.SingleLineDirective;
-import com.bedatadriven.gears.persistence.rebind.ftl.CsvDirective;
-import com.bedatadriven.gears.persistence.rebind.ftl.AutoIndentDirective;
+import com.bedatadriven.rebar.persistence.rebind.ftl.SingleLineDirective;
+import com.bedatadriven.rebar.persistence.rebind.ftl.CsvDirective;
+import com.bedatadriven.rebar.persistence.rebind.ftl.AutoIndentDirective;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 

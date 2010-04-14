@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.rebind.ftl;
+package com.bedatadriven.rebar.persistence.rebind.ftl;
 
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateModel;

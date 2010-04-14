@@ -15,11 +15,11 @@
 
  */
 
-package com.bedatadriven.gears.persistence.mapping;
+package com.bedatadriven.rebar.persistence.mapping;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.bedatadriven.gears.persistence.client.PersistenceUnit;
+import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 
 import javax.persistence.Entity;
 import java.util.Collection;

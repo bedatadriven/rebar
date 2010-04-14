@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.client;
+package com.bedatadriven.rebar.persistence.client;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.Map;

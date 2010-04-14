@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.client;
+package com.bedatadriven.rebar.persistence.client;
 
 import javax.persistence.GenerationType;
 import java.lang.annotation.Target;

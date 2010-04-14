@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="com.bedatadriven.gears.persistence.mapping.UnitMapping" -->
+<#-- @ftlvariable name="" type="com.bedatadriven.rebar.persistence.mapping.UnitMapping" -->
 
 package ${packageName};
 
@@ -9,9 +9,7 @@ import java.sql.SQLException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
-import com.bedatadriven.gears.jdbc.client.DriverManager;
-import com.bedatadriven.gears.persistence.client.ConnectionProvider;
-import com.bedatadriven.gears.persistence.client.GearsConnectionProvider;
+import com.bedatadriven.rebar.persistence.client.ConnectionProvider;
 
 public class ${persistenceUnitImplClass} implements ${type.qualifiedName} {
 

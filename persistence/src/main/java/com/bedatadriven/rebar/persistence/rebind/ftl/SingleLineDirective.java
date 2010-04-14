@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.gears.persistence.rebind.ftl;
+package com.bedatadriven.rebar.persistence.rebind.ftl;
 
 import freemarker.core.Environment;
 import freemarker.template.*;

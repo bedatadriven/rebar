@@ -15,11 +15,11 @@
 
  */
 
-package com.bedatadriven.gears.persistence.server;
+package com.bedatadriven.rebar.persistence.server;
 
-import com.bedatadriven.gears.persistence.mapping.EntityMapping;
-import com.bedatadriven.gears.persistence.mapping.UnitMapping;
-import com.bedatadriven.gears.persistence.mapping.PropertyMapping;
+import com.bedatadriven.rebar.persistence.mapping.EntityMapping;
+import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
+import com.bedatadriven.rebar.persistence.mapping.PropertyMapping;
 import org.json.JSONException;
 import org.json.JSONStringer;
 

@@ -15,9 +15,9 @@
 
  */
 
-package com.bedatadriven.gears.persistence.client.impl;
+package com.bedatadriven.rebar.persistence.client.impl;
 
-import com.bedatadriven.gears.persistence.util.SQLStatement;
+import com.bedatadriven.rebar.persistence.util.SQLStatement;
 
 import javax.persistence.TemporalType;
 import javax.persistence.Query;

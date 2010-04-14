@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="" type="com.bedatadriven.gears.persistence.mapping.EntityMapping" -->
+<#-- @ftlvariable name="" type="com.bedatadriven.rebar.persistence.mapping.EntityMapping" -->
 
 <#-- This macro writes a series of statements that reads properties from
      a RecordSet (named "rs") and assign the values to an entity instance
