@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.bedatadriven.rebarb</groupId>
+    <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-sql-async</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
@@ -58,8 +58,8 @@
         </dependency>
         <dependency>
             <groupId>com.bedatadriven.rebar</groupId>
-            <artifactId>worker</artifactId>
-            <version>1.0</version>
+            <artifactId>rebar-worker</artifactId>
+            <version>0.9</version>
             <scope>provided</scope>
         </dependency>
 
