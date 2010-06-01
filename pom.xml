@@ -22,7 +22,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-modulestore</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>Module Manifest GWT Linker</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for Gears for a given GWT module.</description>
@@ -69,6 +69,7 @@
                     <include>**/client/**/*.java</include>
                     <include>**/*.gwt.xml</include>
                     <include>**/*.properties</include>
+                    <include>**/*.manifest</include>
                 </includes>
             </resource>
             <resource>
