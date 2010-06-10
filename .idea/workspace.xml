@@ -1,16 +1,219 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager" verified="true">
-    <list default="true" readonly="true" id="81400e54-6601-4d91-9cc1-6c616ef1c3cb" name="Default" comment="" />
-    <ignored path="rebar.iws" />
+    <list default="true" readonly="true" id="81400e54-6601-4d91-9cc1-6c616ef1c3cb" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/SimpleTest.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/SimpleTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\EmbeddedMapping.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com/bedatadriven/rebar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/GearsUpdateWorker.java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main" afterPath="$PROJECT_DIR$/sync/src/main" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\test\java\com\bedatadriven\rebar\persistence\mapping\MappingTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google/gwt/gwt/gears/persistence/ejbql" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\GearsSqlWorker.gwt.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\StringMapping.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/client" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\Jpa.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/DateMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EntityMapping.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\client\GearsAsyncConnection.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\SqlAsync.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gwt_log_gwt_log_3_0_1.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\TypeInfo.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java" afterPath="$PROJECT_DIR$/sync/src/main/java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/BuilderTest.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\SingleColumnPropertyMapping.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/mock/MockPersistenceUnitFactory.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/mock/MockPersistenceUnitFactory.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\NativeQueryMapping.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/SimpleUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/SimpleUnit.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\client\BindEntities.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google/gwt/gwt/gears" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/Person.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/client/GearsExecutorTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AutoIdEntity.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AutoIdEntity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/client/ClientSideGeneratedValue.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sql/async/worker" afterPath="" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com" afterPath="$PROJECT_DIR$/sync/src/main/java/com" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/client" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/MappingTest.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerResponse.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/MappingException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/Address.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/JreTypeInfo.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/UnitMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/impl/GearsBulkUpdater.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/2d-it/src/test/java/org/jfree/chart/JFreeChart.gwt.xml" afterPath="$PROJECT_DIR$/2d-it/src/test/java/org/jfree/chart/JFreeChart.gwt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ContactUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ContactUnit.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerLogger.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/WorkerLogger.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerCommand.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/client/Database.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\worker\GearsExecutor.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\test\java\com\bedatadriven\rebar\persistence\server\MockBulkOperationTest.java" afterPath="" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java" afterPath="$PROJECT_DIR$/sync/src/test/java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\antlr3\com\google\gwt\gwt\gears\persistence\ejbql\EJBQL.g" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/ChartIT.gwt.xml" afterPath="$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/ChartIT.gwt.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/FieldUtil.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\test\java\com\bedatadriven\rebar\sql\async\client\GearsExecutorTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sql/async/mock" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\mock\MockAsyncConnection.java" afterPath="" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven\rebar\sql\async" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sql/async" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/PrimitiveMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/2d-it/tomcat/conf/web.xml" afterPath="$PROJECT_DIR$/2d-it/tomcat/conf/web.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/mock" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\worker\GearsExecutor.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sql/async" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\test\java\com\bedatadriven\rebar\persistence\server\BulkOperationBuilderTest.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\GearsSqlWorker.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/PropertyMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ChildUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ChildUnit.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google/gwt/gwt/gears/persistence" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com/bedatadriven" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test" afterPath="$PROJECT_DIR$/sync/src/test" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerResponse.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/EntityManagerTest.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/EntityManagerTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/rebind/GwtMethodInfo.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google/gwt/gwt" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/StringMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/2d-it/tomcat/webapps/ROOT/WEB-INF/web.xml" afterPath="$PROJECT_DIR$/2d-it/tomcat/webapps/ROOT/WEB-INF/web.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EmbeddedMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/ColumnMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/BulkUpdater.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com/bedatadriven/rebar/persistence/mapping" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\pom.xml" afterPath="$PROJECT_DIR$/sync/pom.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\client\PreparedStatementBatch.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\ColumnMapping.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven\rebar\sql\async\client\GearsExecutorTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql/async/mock" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\ManyToOneMapping.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\MappingException.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/ParameterMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/client/BindEntities.java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven\rebar" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\DateMapping.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\PrimitiveMapping.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql/async/client" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\client\AsyncConnection.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/GearsExecutorTest.gwt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/EmbeddedTest.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/EmbeddedTest.java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/server/JpaUpdateBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/rebind/PersistenceUnitGenerator.java" afterPath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/rebind/PersistenceUnitGenerator.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/client/PersistenceUnit.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerCommand.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\ParameterMapping.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/EventUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/EventUnit.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/worker/pom.xml" afterPath="$PROJECT_DIR$/worker/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/MethodInfo.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\worker\GearsSqlWorker.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/antlr3/com/google/gwt" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/TypeInfo.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/mapping" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\FieldUtil.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/WorkerResponse.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/SqliteTypes.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\mock\MockAsyncConnection.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/test/java/com/bedatadriven/rebar/sql/async/client" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/mock/MockBulkUpdater.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/GearsUpdateWorker.gwt.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sql/async/client" afterPath="" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven\rebar\sql" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sql" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\test\java\com\bedatadriven\rebar\persistence\rebind\PersonTest.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\client\BindPackages.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sql" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/PreparedStatementBatch.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AdminUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AdminUnit.java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sql/async/client" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\CollectionMapping.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/rebind/GwtTypeInfo.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql/async" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/mapping" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\client\ClientSideGeneratedValue.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com/bedatadriven/rebar/persistence" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\client\PreparedStatementBatch.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/ManyToOneMapping.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\main\java\com\bedatadriven\rebar\sql\async\worker\WorkerLogger.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/server" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/CollectionMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql/pom.xml" afterPath="$PROJECT_DIR$/sql/pom.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\client\Database.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\UnitMapping.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/pom.xml" afterPath="$PROJECT_DIR$/persistence/pom.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\MethodInfo.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/ColumnStreamWriter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/WorkerCommand.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/server" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven\rebar\sql\async\GearsExecutorTest.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/client/BindPackages.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/NativeQueryMapping.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/Sync.gwt.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com\bedatadriven" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/Contact.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async\src\test\java\com" afterPath="$PROJECT_DIR$/sync/src/test/java/com" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\SqliteTypes.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\test\java\com\bedatadriven\rebar\sql\async\GearsExecutorTest.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/GearsExecutor.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/server" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\client\GearsAsyncConnection.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AutoIdUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/AutoIdUnit.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\test\java\com\bedatadriven\rebar\persistence\mapping\RuntimeMethodInfoImplTest.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ChildParentUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/ChildParentUnit.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/Mapping.gwt.xml" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\server\BulkOperationBuilder.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/test/java/com/bedatadriven/rebar/persistence/mapping/RuntimeMethodInfoImplTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/SingleColumnPropertyMapping.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/client/GearsConnectionProvider.java" afterPath="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/client/GearsConnectionProvider.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/JreMethodInfo.java" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\PropertyMapping.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql/async/worker" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/PersonUnit.java" afterPath="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/client/domain/PersonUnit.java" />
+      <change type="MOVED" beforePath="C:\Users\Owner\dev\p\rebar\sql-async" afterPath="$PROJECT_DIR$/sync" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\SqlAsync.gwt.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/impl" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\worker\GearsSqlWorker.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\ColumnStreamWriter.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\sync\src\main\java\com\bedatadriven\rebar\sql\async\client\AsyncConnection.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Owner\dev\p\rebar\persistence\src\main\java\com\bedatadriven\rebar\persistence\mapping\EntityMapping.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path=".idea/workspace.xml" />
+    <ignored path="rebar.iws" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="ChangesViewManager" flattened_view="false" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
     <option name="REVERSE_PATCH" value="false" />
@@ -19,6 +222,21 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EntityMapping.java" line="19" class="Class at EntityMapping.java:19" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -61,12 +279,39 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/2d-it/pom.xml">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="27" selection-start="1069" selection-end="1069" vertical-scroll-proportion="-8.3">
+            <state line="41" column="20" selection-start="1645" selection-end="1645" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CollectionMapping.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/CollectionMapping.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="131" column="13" selection-start="3681" selection-end="3681" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntityMapping.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EntityMapping.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="208" column="50" selection-start="5893" selection-end="5893" vertical-scroll-proportion="0.51138353">
               <folding>
-                <marker date="1267288264375" expanded="true" signature="3081:4515" placeholder="..." />
+                <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sync/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="79" column="20" selection-start="2821" selection-end="2821" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -74,16 +319,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/worker/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="10" selection-start="1213" selection-end="1213" vertical-scroll-proportion="-4.5333333">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="58" selection-start="670" selection-end="670" vertical-scroll-proportion="-7.9333334">
+            <state line="41" column="24" selection-start="1630" selection-end="1630" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -92,25 +328,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/persistence/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="53" selection-start="1142" selection-end="1142" vertical-scroll-proportion="-14.166667">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sql/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="79" selection-start="1382" selection-end="1382" vertical-scroll-proportion="-15.866667">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sql-async/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="30" selection-start="2781" selection-end="2781" vertical-scroll-proportion="-7.9333334">
+            <state line="88" column="20" selection-start="2937" selection-end="2937" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -119,34 +337,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modulestore/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="36" selection-start="1125" selection-end="1125" vertical-scroll-proportion="-6.233333">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="39" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.54937166">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GearsGwtTest.gwt.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/src/test/java/com/bedatadriven/rebar/GearsGwtTest.gwt.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="15" selection-start="72" selection-end="72" vertical-scroll-proportion="-1.1333333">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HtmlUnitIE7Gears.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/src/main/java/com/bedatadriven/rebar/HtmlUnitIE7Gears.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="13" selection-start="1219" selection-end="1219" vertical-scroll-proportion="-6.3333335">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -162,22 +353,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/sql-async/src/main/java/com/bedatadriven/rebar/sql/async/public/GearsSqlWorker/GearsSqlWorker.js" />
-        <option value="$PROJECT_DIR$/2d-it/src/main/java/com/bedatadriven/rebar/g2d/it/chart/ChartIT.gwt.xml" />
-        <option value="$PROJECT_DIR$/2d-it/src/main/java/org/jfree/chart/JFreeChart.gwt.xml" />
-        <option value="$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/ChartIT.gwt.xml" />
-        <option value="$PROJECT_DIR$/2d-it/src/main/java/com/bedatadriven/rebar/g2d/CanvasGraphics2D.java" />
-        <option value="$PROJECT_DIR$/2d-it/src/test/java/org/jfree/chart/JFreeChart.gwt.xml" />
-        <option value="$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/client/ChartTest.java" />
-        <option value="$PROJECT_DIR$/.idea/modules.xml" />
-        <option value="$PROJECT_DIR$/2d-it/pom.xml" />
-        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/PreparedStatementBatch.java" />
+        <option value="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/worker/GearsExecutor.java" />
+        <option value="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/client/GearsExecutorTest.java" />
+        <option value="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/Person.java" />
+        <option value="$PROJECT_DIR$/sync/src/test/java/com/bedatadriven/rebar/sync/server/BuilderTest.java" />
+        <option value="$PROJECT_DIR$/persistence/src/main/java/com/bedatadriven/rebar/persistence/rebind/PersistenceUnitGenerator.java" />
+        <option value="$PROJECT_DIR$/persistence/src/test/java/com/bedatadriven/rebar/persistence/rebind/PersonTest.java" />
+        <option value="$PROJECT_DIR$/jpa-mapping/pom.xml" />
+        <option value="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/GearsUpdateWorker.gwt.xml" />
+        <option value="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/client/impl/GearsBulkUpdater.java" />
+        <option value="$PROJECT_DIR$/sync/pom.xml" />
         <option value="$PROJECT_DIR$/persistence/pom.xml" />
         <option value="$PROJECT_DIR$/sql/pom.xml" />
-        <option value="$PROJECT_DIR$/modulestore/pom.xml" />
-        <option value="$PROJECT_DIR$/sql-async/pom.xml" />
-        <option value="$PROJECT_DIR$/worker/pom.xml" />
-        <option value="$PROJECT_DIR$/htmlunit-gears-gwt/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EntityMapping.java" />
+        <option value="$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/server/JpaUpdateBuilder.java" />
       </list>
     </option>
   </component>
@@ -223,7 +414,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
@@ -232,15 +422,9 @@
               <option name="myItemId" value="rebar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -252,8 +436,18 @@
               <option name="myItemId" value="rebar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="htmlunit-gears-gwt" />
+              <option name="myItemId" value="rebar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rebar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sync" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -267,59 +461,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="htmlunit-gears-gwt" />
+              <option name="myItemId" value="sync" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="htmlunit-gears-gwt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="rebar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="PackagesPane">
+        <subPane />
+      </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -338,11 +493,44 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
-  <component name="RunManager" selected="Maven.sql-async tests">
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.bedatadriven.rebar.persistence.mapping" />
+      <recent name="GwtMethodInfo" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.BuilderTest">
+    <configuration default="false" name="BuilderTest.embeddedEntities" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="com.bedatadriven.rebar.sql.async.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="sync" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.bedatadriven.rebar.sync.server" />
+      <option name="MAIN_CLASS_NAME" value="com.bedatadriven.rebar.sync.server.BuilderTest" />
+      <option name="METHOD_NAME" value="embeddedEntities" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="false" name="GearsExecutorTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" runner="emma">
         <pattern>
@@ -350,11 +538,11 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <module name="sql-async" />
+      <module name="sync" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.bedatadriven.rebar.sql.async.client" />
-      <option name="MAIN_CLASS_NAME" value="com.bedatadriven.rebar.sql.async.client.GearsExecutorTest" />
+      <option name="PACKAGE_NAME" value="com.bedatadriven.rebar.sync.client" />
+      <option name="MAIN_CLASS_NAME" value="com.bedatadriven.rebar.sync.client.GearsExecutorTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -372,6 +560,60 @@
         <option name="LOCAL" value="true" />
       </RunnerSettings>
       <ConfigurationWrapper RunnerId="Debug" />
+      <method />
+    </configuration>
+    <configuration default="false" name="SimpleTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="com.bedatadriven.rebar.persistence.rebind.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="persistence" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.bedatadriven.rebar.persistence.rebind" />
+      <option name="MAIN_CLASS_NAME" value="com.bedatadriven.rebar.persistence.rebind.SimpleTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="BuilderTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" runner="emma">
+        <pattern>
+          <option name="PATTERN" value="com.bedatadriven.rebar.sql.async.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="sync" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.bedatadriven.rebar.sync.server" />
+      <option name="MAIN_CLASS_NAME" value="com.bedatadriven.rebar.sync.server.BuilderTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
     <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
@@ -703,12 +945,15 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Maven.rebar-sql  tests" />
-      <item index="1" class="java.lang.String" itemvalue="Maven.Module Store Tests" />
-      <item index="2" class="java.lang.String" itemvalue="Maven.Worker Tests" />
-      <item index="3" class="java.lang.String" itemvalue="Maven.sql-async tests" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.GearsExecutorTest" />
+    <list size="8">
+      <item index="0" class="java.lang.String" itemvalue="JUnit.BuilderTest.embeddedEntities" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.GearsExecutorTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.SimpleTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.BuilderTest" />
+      <item index="4" class="java.lang.String" itemvalue="Maven.rebar-sql  tests" />
+      <item index="5" class="java.lang.String" itemvalue="Maven.Module Store Tests" />
+      <item index="6" class="java.lang.String" itemvalue="Maven.Worker Tests" />
+      <item index="7" class="java.lang.String" itemvalue="Maven.sql-async tests" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -732,6 +977,24 @@
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
     <supportedVersion>125</supportedVersion>
   </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\Owner\dev\p\rebar" />
+          <option name="myCopyRoot" value="C:\Users\Owner\dev\p\rebar" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="C:\Users\Owner\dev\p\rebar" />
+          <option name="myCopyRoot" value="C:\Users\Owner\dev\p\rebar" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="81400e54-6601-4d91-9cc1-6c616ef1c3cb" name="Default" comment="" />
@@ -740,26 +1003,47 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1296" height="776" extended-state="6" />
+    <frame x="1" y="0" width="1278" height="760" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3280255" sideWeight="0.0" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32868218" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32927817" sideWeight="0.49612403" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3995037" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13251029" sideWeight="0.5294118" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2895377" sideWeight="0.49612403" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2707819" sideWeight="0.5294118" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49302325" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.45945945" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="SVN Properties" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.75503874" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32868218" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27591705" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2583732" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -793,121 +1077,101 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/2d-it/src/main/java/com/bedatadriven/rebar/g2d/CanvasGraphics2D.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.0.0/gwt-dev-2.0.0.jar!/com/google/gwt/dev/util/Util.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="30" selection-start="1236" selection-end="1236" vertical-scroll-proportion="0.09392265">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="170" column="0" selection-start="10275" selection-end="10275" vertical-scroll-proportion="0.8152174" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/client/ChartTest.java">
+    <entry file="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/UnitMapping.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="64" selection-start="1298" selection-end="1298" vertical-scroll-proportion="1.4232558">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="29" column="13" selection-start="885" selection-end="885" vertical-scroll-proportion="0.029010238" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2d-it/src/test/java/com/bedatadriven/rebar/g2d/it/chart/ChartIT.gwt.xml">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/gwt-log/gwt-log/2.6.2/gwt-log-2.6.2.jar!/com/allen_sauer/gwt/log/gwt-log-common.gwt.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="47" selection-start="107" selection-end="107" vertical-scroll-proportion="0.20481928">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.015817223" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/worker/src/main/java/com/bedatadriven/rebar/worker/Worker.gwt.xml">
+    <entry file="file://$MAVEN_REPOSITORY$/com/google/code/gwt-log/gwt-log/2.6.2/gwt-log-2.6.2.pom">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="39" selection-start="1967" selection-end="1967" vertical-scroll-proportion="-16.233334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parent.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/2d-it/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="27" selection-start="1069" selection-end="1069" vertical-scroll-proportion="-8.3">
-          <folding>
-            <marker date="1267288264375" expanded="true" signature="3081:4515" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="58" selection-start="670" selection-end="670" vertical-scroll-proportion="-7.9333334">
-          <folding />
-        </state>
+        <state line="8" column="71" selection-start="203" selection-end="384" vertical-scroll-proportion="0.23901582" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sql/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="79" selection-start="1382" selection-end="1382" vertical-scroll-proportion="-15.866667">
+        <state line="152" column="49" selection-start="6371" selection-end="6371" vertical-scroll-proportion="0.27240774" />
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/gwt-log/gwt-log/2.6.2/gwt-log-2.6.2.jar!/com/allen_sauer/gwt/log/gwt-log-OFF.gwt.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="40" selection-start="952" selection-end="952" vertical-scroll-proportion="0.56766254" />
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/gwt-log/gwt-log/2.6.2/gwt-log-2.6.2.jar!/com/allen_sauer/gwt/log/gwt-log.gwt.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="51" selection-start="4806" selection-end="4806" vertical-scroll-proportion="0.73110723" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/src/main/java/com/bedatadriven/rebar/sql/Sql.gwt.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="40" selection-start="897" selection-end="897" vertical-scroll-proportion="0.61130136" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/worker/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="24" selection-start="1630" selection-end="1630" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/persistence/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="53" selection-start="1142" selection-end="1142" vertical-scroll-proportion="-14.166667">
+        <state line="88" column="20" selection-start="2937" selection-end="2937" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/modulestore/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="36" selection-start="1125" selection-end="1125" vertical-scroll-proportion="-6.233333">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/CollectionMapping.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="13" selection-start="3681" selection-end="3681" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sql-async/pom.xml">
+    <entry file="file://$PROJECT_DIR$/sync/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="30" selection-start="2781" selection-end="2781" vertical-scroll-proportion="-7.9333334">
+        <state line="79" column="20" selection-start="2821" selection-end="2821" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/worker/pom.xml">
+    <entry file="file://$PROJECT_DIR$/sync/src/main/java/com/bedatadriven/rebar/sync/server/JpaUpdateBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="10" selection-start="1213" selection-end="1213" vertical-scroll-proportion="-4.5333333">
+        <state line="15" column="10" selection-start="621" selection-end="621" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="20" selection-start="1645" selection-end="1645" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/src/test/java/com/bedatadriven/rebar/GearsGwtTest.gwt.xml">
+    <entry file="file://$PROJECT_DIR$/jpa-mapping/src/main/java/com/bedatadriven/rebar/persistence/mapping/EntityMapping.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="15" selection-start="72" selection-end="72" vertical-scroll-proportion="-1.1333333">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/src/main/java/com/bedatadriven/rebar/HtmlUnitIE7Gears.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="13" selection-start="1219" selection-end="1219" vertical-scroll-proportion="-6.3333335">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/htmlunit-gears-gwt/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="39" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.54937166">
-          <folding />
+        <state line="208" column="50" selection-start="5893" selection-end="5893" vertical-scroll-proportion="0.51138353">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

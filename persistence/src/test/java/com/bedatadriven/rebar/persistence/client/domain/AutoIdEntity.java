@@ -17,7 +17,7 @@
 
 package com.bedatadriven.rebar.persistence.client.domain;
 
-import com.bedatadriven.rebar.persistence.client.ClientSideGeneratedValue;
+import com.bedatadriven.rebar.persistence.mapping.client.ClientSideGeneratedValue;
 
 import javax.persistence.*;
 import java.io.Serializable;

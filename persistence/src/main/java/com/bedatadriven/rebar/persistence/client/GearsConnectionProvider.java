@@ -17,11 +17,9 @@
 
 package com.bedatadriven.rebar.persistence.client;
 
-import com.bedatadriven.rebar.persistence.client.ConnectionProvider;
 import com.bedatadriven.rebar.sql.client.GearsConnectionFactory;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -44,6 +42,6 @@ public class GearsConnectionProvider implements ConnectionProvider {
   }
 
   public void close() {
-
+  
   }
 }

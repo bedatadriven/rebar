@@ -17,18 +17,17 @@
 
 package com.bedatadriven.rebar.persistence.rebind;
 
-import com.bedatadriven.rebar.sql.async.mock.MockAsyncConnection;
-import org.junit.Test;
-import com.bedatadriven.rebar.persistence.client.domain.*;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
-import com.bedatadriven.rebar.persistence.server.BulkOperationBuilder;
+import com.bedatadriven.rebar.persistence.client.domain.Address;
+import com.bedatadriven.rebar.persistence.client.domain.Contact;
+import com.bedatadriven.rebar.persistence.client.domain.ContactUnit;
+import junit.framework.Assert;
+import org.junit.Test;
 
 import javax.persistence.EntityManager;
-import java.sql.*;
-import java.util.List;
-import java.util.ArrayList;
-
-import junit.framework.Assert;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * @author Alex Bertram
@@ -90,36 +89,6 @@ public class EmbeddedTest extends PersistenceUnitTestCase{
     Contact reboss = em.find(Contact.class, boss.getId());
 
     Assert.assertEquals(boss, reboss);
-  }
-
-  @Test
-  public void testBulk() throws Exception {
-
-    List<Contact> list = new ArrayList<Contact>();
-    list.add(new Contact("RA365", "Ralph", new Address("13 kirby", "Apt 4", "Wellsboro", "PA", 16901, 3)));
-    list.add(new Contact("JQ412", "Jim", new Address("13 kirby", null, "Savanahh", "GA", 16901, 3)));
-    list.add(new Contact("SZQ", "Suzy", null));
-
-    BulkOperationBuilder builder = new BulkOperationBuilder();
-    builder.insert(Contact.class, list);
-
-    String json = builder.asJson();
-
-    System.out.println(json);
-
-    EntityManager em = emf.createEntityManager();  // assure schema is created
-    MockAsyncConnection conn = new MockAsyncConnection(connectionProvider.getConnection());
-    conn.executeUpdates(json);
-
-
-    List<Contact> relist = em.createNativeQuery("select * from Contact", Contact.class)
-                            .getResultList();
-
-    for(int i=0;i!=list.size();++i)
-      Assert.assertEquals(list.get(i), relist.get(i));
-
-
-
   }
 
 }

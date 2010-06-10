@@ -21,8 +21,6 @@ import com.bedatadriven.rebar.persistence.client.domain.SimpleUnit;
 import com.bedatadriven.rebar.persistence.client.domain.Simple;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.Before;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

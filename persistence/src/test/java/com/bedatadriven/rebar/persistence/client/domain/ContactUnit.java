@@ -17,7 +17,7 @@
 
 package com.bedatadriven.rebar.persistence.client.domain;
 
-import com.bedatadriven.rebar.persistence.client.BindEntities;
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 
 /**

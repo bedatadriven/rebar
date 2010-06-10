@@ -17,6 +17,7 @@
 
 package com.bedatadriven.rebar.persistence.client;
 
+import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;

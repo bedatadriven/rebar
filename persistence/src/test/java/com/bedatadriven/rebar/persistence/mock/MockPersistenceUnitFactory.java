@@ -17,6 +17,8 @@
 
 package com.bedatadriven.rebar.persistence.mock;
 
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
+import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
@@ -25,8 +27,6 @@ import com.google.gwt.core.ext.linker.Artifact;
 import com.google.gwt.core.ext.linker.GeneratedResource;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.resource.ResourceOracle;
-import com.bedatadriven.rebar.persistence.client.BindEntities;
-import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
 import com.bedatadriven.rebar.persistence.mapping.MappingException;
 import com.bedatadriven.rebar.persistence.rebind.PersistenceUnitGenerator;

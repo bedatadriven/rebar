@@ -17,6 +17,7 @@
 
 package com.bedatadriven.rebar.persistence.rebind;
 
+import com.bedatadriven.rebar.persistence.rebind.GwtTypeInfo;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -25,8 +26,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.bedatadriven.rebar.persistence.client.BindEntities;
-import com.bedatadriven.rebar.persistence.client.BindPackages;
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
+import com.bedatadriven.rebar.persistence.mapping.client.BindPackages;
 import com.bedatadriven.rebar.persistence.mapping.EntityMapping;
 import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
 import freemarker.template.Configuration;
@@ -53,7 +54,9 @@ public class PersistenceUnitGenerator extends Generator {
       TypeOracle typeOracle = context.getTypeOracle();
       JClassType requestedContext = typeOracle.getType(typeName);
 
-      UnitMapping mapping = new UnitMapping(requestedContext);
+      UnitMapping mapping = new UnitMapping(
+          new GwtTypeInfo(requestedContext),
+          requestedContext.isClassOrInterface().getPackage().getName());
 
       /*
       * Step 1: Make a list of all the entites to be managed
@@ -68,7 +71,7 @@ public class PersistenceUnitGenerator extends Generator {
                 "persistence unit " + requestedContext.getSimpleSourceName() + ": no @Entity annotation. ");
             throw new UnableToCompleteException();
           }
-          mapping.getMapping(typeOracle.findType(entityClass.getName()));
+          mapping.getMapping(new GwtTypeInfo(typeOracle.findType(entityClass.getName())));
         }
       }
 
@@ -80,7 +83,7 @@ public class PersistenceUnitGenerator extends Generator {
           for (JType type : entityPackage.getTypes()) {
             JClassType classType = type.isClass();
             if (classType != null && classType.isAnnotationPresent(Entity.class)) {
-              mapping.getMapping(classType);
+              mapping.getMapping(new GwtTypeInfo(classType));
             }
           }
         }
