@@ -21,7 +21,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-modulestore</artifactId>
     <packaging>jar</packaging>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Module Manifest GWT Linker</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for Gears for a given GWT module.</description>
@@ -31,7 +31,7 @@
         <version>1.0</version>
     </parent>
 	<scm>
-		<developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-modulestore-1.1</developerConnection>
+		<developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/</developerConnection>
 	</scm>
     <dependencies>
         <dependency>
@@ -112,7 +112,7 @@
                                                      to update the manifest during compilation, so we
                                                      use -port auto -->
 
-                                            <sysproperty key="gwt.args" value="-out target/test-out                                                                 -gen target/test-gen                                                                 -port auto                                                                 -codeServerPort 50101                                                                 -prod                                                                 -runStyle Manual                                                                 -logLevel INFO" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen                                                                 -port auto                                                                 -codeServerPort 50101                                                                 -prod                                                                 -runStyle Manual                                                                 -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.modulestore.client.ModuleStoreTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
