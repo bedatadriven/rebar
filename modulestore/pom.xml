@@ -15,14 +15,13 @@
   ~ the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-modulestore</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <name>Module Manifest GWT Linker</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for Gears for a given GWT module.</description>
@@ -31,6 +30,9 @@
         <artifactId>parent</artifactId>
         <version>1.0</version>
     </parent>
+	<scm>
+		<developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-modulestore-1.1</developerConnection>
+	</scm>
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -99,9 +101,8 @@
                                 <phase>test</phase>
                                 <configuration>
                                     <tasks>
-                                        <property name="test_classpath" refid="maven.test.classpath"/>
-                                        <java classname="junit.textui.TestRunner" fork="true"
-                                              maxmemory="128m">
+                                        <property name="test_classpath" refid="maven.test.classpath" />
+                                        <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
 
                                             <!--  Notes on test config : -->
                                             <!--  1) Linkers are only invoked when a module is compiled,
@@ -111,19 +112,12 @@
                                                      to update the manifest during compilation, so we
                                                      use -port auto -->
 
-                                            <sysproperty key="gwt.args"
-                                                         value="-out target/test-out
-                                                                -gen target/test-gen
-                                                                -port auto
-                                                                -codeServerPort 50101
-                                                                -prod
-                                                                -runStyle Manual
-                                                                -logLevel INFO"/>
-                                            <arg value="com.bedatadriven.rebar.modulestore.client.ModuleStoreTest"/>
+                                            <sysproperty key="gwt.args" value="-out target/test-out                                                                 -gen target/test-gen                                                                 -port auto                                                                 -codeServerPort 50101                                                                 -prod                                                                 -runStyle Manual                                                                 -logLevel INFO" />
+                                            <arg value="com.bedatadriven.rebar.modulestore.client.ModuleStoreTest" />
                                             <classpath>
-                                                <pathelement path="${basedir}/src/main/java"/>
-                                                <pathelement path="${basedir}/src/test/java"/>
-                                                <pathelement path="${test_classpath}"/>
+                                                <pathelement path="${basedir}/src/main/java" />
+                                                <pathelement path="${basedir}/src/test/java" />
+                                                <pathelement path="${test_classpath}" />
                                             </classpath>
                                         </java>
                                     </tasks>
