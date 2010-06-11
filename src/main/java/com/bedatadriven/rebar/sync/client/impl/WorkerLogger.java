@@ -17,11 +17,11 @@
  * Copyright 2010 Alex Bertram and contributors.
  */
 
-package com.bedatadriven.rebar.sync.worker;
+package com.bedatadriven.rebar.sync.client.impl;
 
 import com.google.gwt.gears.client.workerpool.WorkerPool;
 
-public class WorkerLogger {
+public class WorkerLogger implements GearsExecutor.Logger {
   private final int ownerWorkerId;
   private final WorkerPool pool;
   private final int executionId;
@@ -32,12 +32,14 @@ public class WorkerLogger {
     this.executionId = executionId;
   }
 
+  @Override
   public void log(final String message) {
     if(pool != null) {
       pool.sendMessage(WorkerResponse.newLogResponse(executionId, message), ownerWorkerId);
     }
   }
 
+  @Override
   public void log(String message, Exception e) {
     if(pool != null) {
       pool.sendMessage(WorkerResponse.newLogResponse(executionId, message + e.getMessage()), ownerWorkerId);
@@ -49,7 +51,7 @@ public class WorkerLogger {
    * be used in testing.
    * 
    */
-  public static WorkerLogger createNullLogger() {
+  public static GearsExecutor.Logger createNullLogger() {
     return new WorkerLogger(null, 0, 0);
   }
 

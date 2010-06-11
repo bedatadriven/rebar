@@ -99,12 +99,6 @@
     <resources>
       <resource>
         <directory>src/main/java</directory>
-        <includes>
-          <include>**/emul/**/*.java</include>
-          <include>**/client/**/*.java</include>
-          <include>**/*.gwt.xml</include>
-          <include>**/*.properties</include>
-        </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
@@ -197,7 +191,7 @@ test workers in preparation for our test execution -->
                     <property name="test_classpath" refid="maven.test.classpath" />
                     <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
                       <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen                                                                 -notHeadless                                                                 -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
-                      <arg value="com.bedatadriven.rebar.sync.client.GearsExecutorTest" />
+                      <arg value="com.bedatadriven.rebar.sync.client.GearsTest" />
                       <classpath>
                         <pathelement path="${basedir}/src/main/java" />
                         <pathelement path="${basedir}/src/test/java" />

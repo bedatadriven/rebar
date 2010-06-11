@@ -17,7 +17,7 @@
 
 package com.bedatadriven.rebar.sync.mock;
 
-import com.bedatadriven.rebar.sync.client.BulkUpdater;
+import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +32,7 @@ import java.sql.*;
  *
  * @author Alex Bertram
  */
-public class MockBulkUpdater implements BulkUpdater {
+public class MockBulkUpdater implements BulkUpdaterAsync {
 
   private Connection connection;
 
@@ -40,19 +40,23 @@ public class MockBulkUpdater implements BulkUpdater {
     this.connection = connection;
   }
 
-  public void executeUpdates(String json, AsyncCallback<Integer> callback) {
-    int totalRowsAffected = 0;
+  public void executeUpdates(String databaseName, String json, AsyncCallback<Integer> callback) {
     try {
-      JSONArray list = new JSONArray(json);
-      for (int i = 0; i != list.length(); ++i) {
-        JSONObject bulkOperation = list.getJSONObject(i);
-
-        totalRowsAffected += executeStatement(bulkOperation);
-      }
-      callback.onSuccess(totalRowsAffected);
+      callback.onSuccess(executeUpdates(json));
     } catch (Exception e) {
       callback.onFailure(e);
     }
+  }
+
+  public int executeUpdates(String json) throws SQLException, JSONException {
+    int totalRowsAffected = 0;
+    JSONArray list = new JSONArray(json);
+    for (int i = 0; i != list.length(); ++i) {
+      JSONObject bulkOperation = list.getJSONObject(i);
+
+      totalRowsAffected += executeStatement(bulkOperation);
+    }
+    return totalRowsAffected;
   }
 
   private int executeStatement(JSONObject bulkOperation) throws JSONException, SQLException {
@@ -90,20 +94,6 @@ public class MockBulkUpdater implements BulkUpdater {
       }
     }
     return rowsAffected;
-  }
-
-  public void executeUpdates(String json) {
-    executeUpdates(json, new AsyncCallback<Integer>() {
-      @Override
-      public void onFailure(Throwable throwable) {
-
-      }
-
-      @Override
-      public void onSuccess(Integer integer) {
-
-      }
-    });
   }
 
   private void doSetParameter(PreparedStatement stmt, ParameterMetaData paramMetaData, JSONArray params, int j) throws SQLException, JSONException {

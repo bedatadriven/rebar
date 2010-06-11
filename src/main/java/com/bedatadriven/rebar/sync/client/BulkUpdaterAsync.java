@@ -19,7 +19,12 @@ package com.bedatadriven.rebar.sync.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface BulkUpdater {
+/**
+ * Generic interface to a service capable of executing a set of SQL statements
+ * asynchronously
+ */
+public interface BulkUpdaterAsync {
+
   /**
    * Executes a list of BulkOperation objects asynchronously within a savepoint, such that
    * all of the statements fail or succeed together.
@@ -27,7 +32,8 @@ public interface BulkUpdater {
    * On success, the callback will receive the total number of update rows.
    *
    * @param bulkOperationJsonArray
+   * @param callback
    */
-  public int executeUpdates(String databaseName, String bulkOperationJsonArray);
+  public void executeUpdates(String databaseName, String bulkOperationJsonArray, AsyncCallback<Integer> callback);
 
 }
