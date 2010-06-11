@@ -42,7 +42,6 @@
     <module>sync</module>
     <module>modulestore</module>
     <module>worker</module>
-    <module>htmlunit-gears-gwt</module>
     <module>persistence</module>
     <module>jpa-mapping</module>
   </modules>
