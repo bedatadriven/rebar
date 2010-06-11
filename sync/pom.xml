@@ -21,7 +21,7 @@
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>rebar-sync</artifactId>
   <packaging>jar</packaging>
-  <version>0.2</version>
+  <version>0.3-SNAPSHOT</version>
   <name>Synchronization Tools for GWT</name>
   <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
     the Gears local database.</description>
@@ -31,7 +31,7 @@
     <version>1.0</version>
   </parent>
   <scm>
-    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-sync-0.2</developerConnection>
+    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/sync</developerConnection>
   </scm>
   
   <dependencies>
@@ -190,7 +190,7 @@ test workers in preparation for our test execution -->
                   <tasks>
                     <property name="test_classpath" refid="maven.test.classpath" />
                     <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                      <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless                                                                 -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
+                      <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
                       <arg value="com.bedatadriven.rebar.sync.client.GearsTest" />
                       <classpath>
                         <pathelement path="${basedir}/src/main/java" />
