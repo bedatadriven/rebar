@@ -17,14 +17,17 @@
 
 package com.bedatadriven.rebar.sync.client;
 
-import com.bedatadriven.rebar.sync.worker.GearsExecutor;
-import com.bedatadriven.rebar.sync.worker.WorkerCommand;
-import com.bedatadriven.rebar.sync.worker.WorkerLogger;
+import com.bedatadriven.rebar.sync.client.impl.GearsBulkUpdater;
+import com.bedatadriven.rebar.sync.client.impl.GearsExecutor;
+import com.bedatadriven.rebar.sync.client.impl.WorkerCommand;
+import com.bedatadriven.rebar.sync.client.impl.WorkerLogger;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
+import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.Date;
 
@@ -32,18 +35,27 @@ import java.util.Date;
 /**
  * @author Alex Bertram
  */
-public class GearsExecutorTest extends GWTTestCase {
+public class GearsTest extends GWTTestCase {
+  private String dbName;
+  private static final String json =
+      "[ { statement: \"create table mytest (number int)\" }, "  +
+        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [1], [2], [3], [4] ] } " +
+      "]";
 
   @Override
   public String getModuleName() {
     return "com.bedatadriven.rebar.sync.GearsExecutorTest";
   }
 
-  public void testExecution() throws Exception {
+  @Override
+  protected void gwtSetUp() throws Exception {
+    super.gwtSetUp();
 
     // make unique db name to assure we start each test with a clean slate
-    String dbName = "textExecution" + (new Date()).getTime();
+    dbName = "textExecution" + (new Date()).getTime();
+  }
 
+  public void testGearsExecution() throws Exception {
     PreparedStatementBatch createOp = PreparedStatementBatch.newInstance();
     createOp.setStatement("create table prime_numbers (name text, number int, date_discovered int)");
 
@@ -64,9 +76,6 @@ public class GearsExecutorTest extends GWTTestCase {
     cmd.addOperation(createOp);
     cmd.addOperation(insertOp);
     cmd.addOperation(deleteOp);
-
-    GWT.log("Delete op just before = " + cmd.getOperations().get(2).getStatement(), null);
-
     int rowsAffected = GearsExecutor.execute(cmd, WorkerLogger.createNullLogger());
 
     // verify that that the database state is as expected
@@ -86,4 +95,53 @@ public class GearsExecutorTest extends GWTTestCase {
     assertEquals(5, numbers[1]);
     assertEquals(11, numbers[2]);
   }
+
+  public void testGearsExecutorWithJson() throws Exception {
+    WorkerCommand cmd = WorkerCommand.newInstance(1);
+    cmd.setDatabaseName(dbName);
+    cmd.setOperations(json);
+
+    int rowsAffected = GearsExecutor.execute(cmd, WorkerLogger.createNullLogger());
+
+    assertEquals(4, rowsAffected);
+    assertSumOfNumbersIsTen();
+  }
+
+  private void assertSumOfNumbersIsTen() throws DatabaseException {
+    // verify that that the database state is as expected
+    Database db = Factory.getInstance().createDatabase();
+    db.open(dbName);
+    ResultSet rs = db.execute("select sum(number) from mytest");
+    assertTrue(rs.isValidRow());
+    assertEquals(rs.getFieldAsInt(0), 10);
+  }
+
+  public void testGearsWorker() {
+    WorkerCommand cmd = WorkerCommand.newInstance(1);
+    cmd.setDatabaseName(dbName);
+    cmd.setOperations(json);
+
+    GearsBulkUpdater updater = new GearsBulkUpdater();
+    updater.executeUpdates(dbName, json, new AsyncCallback<Integer>() {
+      @Override
+      public void onFailure(Throwable throwable) {
+        throwable.printStackTrace();
+        fail(throwable.getMessage());
+      }
+
+      @Override
+      public void onSuccess(Integer result) {
+        assertEquals("rows", 4, (int)result);
+        try {
+          assertSumOfNumbersIsTen();
+        } catch (DatabaseException e) {
+          e.printStackTrace();
+          fail(e.getMessage());
+        }
+        finishTest();
+      }
+    });
+    delayTestFinish(1000);
+  }
+
 }

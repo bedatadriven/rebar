@@ -20,7 +20,6 @@
 package com.bedatadriven.rebar.sync.server;
 
 import com.bedatadriven.rebar.sync.mock.MockBulkUpdater;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
@@ -100,17 +99,8 @@ public class BuilderTest {
 
     System.out.println(json);
 
-    updater.executeUpdates(json, new AsyncCallback<Integer>() {
-      @Override
-      public void onFailure(Throwable throwable) {
-        throw new Error(throwable);
-      }
-
-      @Override
-      public void onSuccess(Integer rows) {
-        assertEquals("rows updated", 3, (int)rows);
-      }
-    });
+    int rows = updater.executeUpdates(json);
+    assertEquals("rows updated", 3, rows);
 
     // now verify that the data were populated correctly
     Statement stmt = conn.createStatement();
@@ -124,18 +114,9 @@ public class BuilderTest {
     }
   }
 
-  private void executeUpdateAndExpectedAffectedRowsToBe(final int expectedRowsAffected) throws JSONException {
-    updater.executeUpdates(builder.asJson(), new AsyncCallback<Integer>() {
-      @Override
-      public void onFailure(Throwable throwable) {
-        throw new Error(throwable);
-      }
-
-      @Override
-      public void onSuccess(Integer rowsAffected) {
-        assertEquals("rowsAffected", expectedRowsAffected, (int)rowsAffected);
-      }
-    });
+  private void executeUpdateAndExpectedAffectedRowsToBe(final int expectedRowsAffected) throws JSONException, SQLException {
+    int rows = updater.executeUpdates(builder.asJson());
+    assertEquals("rowsAffected", expectedRowsAffected, rows);
   }
 
   private java.util.Date makeDate(int year, int month, int day) {
