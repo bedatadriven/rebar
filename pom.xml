@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2009-2010 BeDataDriven (alex@bedatadriven.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  ~ use this file except in compliance with the License. You may obtain a copy of
+  ~ the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  ~ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing permissions and limitations under
+  ~ the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bedatadriven.rebar</groupId>
+  <artifactId>rebar-sync</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1</version>
+  <name>Synchronization Tools for GWT</name>
+  <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
+    the Gears local database.</description>
+  <parent>
+    <groupId>com.bedatadriven.rebar</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  <scm>
+    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-sync-0.1</developerConnection>
+  </scm>
+  
+  <dependencies>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt.google-apis</groupId>
+      <artifactId>gwt-gears</artifactId>
+      <version>1.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.bedatadriven.rebar</groupId>
+      <artifactId>rebar-worker</artifactId>
+      <version>0.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.bedatadriven.rebar</groupId>
+      <artifactId>jpa-mapping</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20090211</version>
+    </dependency>
+
+    <!-- Support for Logging -->
+    <dependency>
+      <groupId>com.google.code.gwt-log</groupId>
+      <artifactId>gwt-log</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
+
+    <!-- Testing libraries -->
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.6.17</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <!-- Include everything in the jar -->
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/emul/**/*.java</include>
+          <include>**/client/**/*.java</include>
+          <include>**/*.gwt.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <!-- Before we build the workers we
+     need to clean out the folder for some reason,
+     or else the compilation fails -->
+          <execution>
+            <id>clean-workers</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>src/main/java/com/bedatadriven/rebar/sync/public</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+
+      </plugin>
+
+      <!-- Configure the GWT compiler to compile the
+test workers in preparation for our test execution -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.2</version>
+
+        <executions>
+          <execution>
+            <id>compile-bulk-executing-worker</id>
+            <phase>process-classes</phase>
+            <configuration>
+              <modules>
+                <module>com.bedatadriven.rebar.sync.GearsUpdateWorker</module>
+              </modules>
+              <webappDirectory>src/main/java/com/bedatadriven/rebar/sync/public</webappDirectory>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>gears-it</id>
+      <build>
+        <plugins>
+          <!-- Turn off our normal tests -->
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.4.3</version>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+
+
+          <!-- Use the maven antrun plugin to launch junit manually as
+       surefire will not run GWT tests correctly and
+       the gwt-maven-plugin doesn't allow us to pass the parameters
+       we need in and the maven-exec-plugin won't let us add the sources
+        to the classpath-->
+
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>ant-test</id>
+                <phase>test</phase>
+                <configuration>
+                  <tasks>
+                    <property name="test_classpath" refid="maven.test.classpath" />
+                    <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
+                      <sysproperty key="gwt.args" value="-out target/test-out                                                                 -gen target/test-gen                                                                 -notHeadless                                                                 -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
+                      <arg value="com.bedatadriven.rebar.sync.client.GearsExecutorTest" />
+                      <classpath>
+                        <pathelement path="${basedir}/src/main/java" />
+                        <pathelement path="${basedir}/src/test/java" />
+                        <pathelement path="${test_classpath}" />
+                      </classpath>
+                    </java>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+
