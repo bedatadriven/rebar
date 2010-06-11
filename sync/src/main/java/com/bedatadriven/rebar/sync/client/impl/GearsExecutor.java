@@ -17,10 +17,9 @@
  * Copyright 2010 Alex Bertram and contributors.
  */
 
-package com.bedatadriven.rebar.sync.worker;
+package com.bedatadriven.rebar.sync.client.impl;
 
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gears.client.Factory;
@@ -30,17 +29,21 @@ import com.google.gwt.gears.client.database.ResultSet;
 
 public class GearsExecutor {
   private final WorkerCommand cmd;
-  private final WorkerLogger logger;
+  private final Logger logger;
   private Database database;
 
-  public static int execute(WorkerCommand cmd, WorkerLogger logger) throws Exception {
+  public static interface Logger {
+    void log(String message);
+    void log(String message, Exception e);
+  }
+
+  public static int execute(WorkerCommand cmd, Logger logger) throws Exception {
     return new GearsExecutor(cmd, logger).execute();
   }
 
-  private GearsExecutor(WorkerCommand cmd, WorkerLogger logger) {
+  private GearsExecutor(WorkerCommand cmd, Logger logger) {
     this.cmd = cmd;
     this.logger = logger;
-
   }
 
   private int execute() throws Exception {
@@ -116,4 +119,6 @@ public class GearsExecutor {
   private native ResultSet execute(Database db, String sqlStatement, JavaScriptObject args) /*-{
         return db.execute(sqlStatement, args);
   }-*/;
+
+
 }

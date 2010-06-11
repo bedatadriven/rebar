@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.rebar.sync.worker;
+package com.bedatadriven.rebar.sync.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -41,7 +41,7 @@ public final class WorkerResponse extends JavaScriptObject {
   }-*/;
 
   public static native WorkerResponse newSuccessResponse(int executionId, int rowsAffected) /*-{
-    return { executionId: executionId, type: 3,  rowsAffected: 3 };
+    return { executionId: executionId, type: 3,  rowsAffected: rowsAffected };
   }-*/;
 
   public native int getExecutionId() /*-{

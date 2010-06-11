@@ -19,8 +19,7 @@ package com.bedatadriven.rebar.sync.client.impl;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sync.client.BulkUpdater;
-import com.bedatadriven.rebar.sync.worker.WorkerCommand;
-import com.bedatadriven.rebar.sync.worker.WorkerResponse;
+import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
@@ -36,19 +35,27 @@ import java.util.Map;
  *
  * @author Alex Bertram
  */
-public class GearsBulkUpdater implements BulkUpdater, WorkerPoolMessageHandler {
+public class GearsBulkUpdater implements BulkUpdater, BulkUpdaterAsync, WorkerPoolMessageHandler {
 
-  private String databaseName;
   private WorkerPool pool;
   private Integer workerId;
   private int nextExecutionId = 1;
   private Map<Integer, AsyncCallback> callbacks = new HashMap<Integer, AsyncCallback>();
 
-  public GearsBulkUpdater(String databaseName) {
-    this.databaseName = databaseName;
+  @Override
+  public int executeUpdates(String databaseName, String bulkOperationJsonArray) {
+    WorkerCommand cmd = WorkerCommand.newInstance(0);
+    cmd.setDatabaseName(databaseName);
+    cmd.setOperations(bulkOperationJsonArray);
+
+    try {
+      return GearsExecutor.execute(cmd, new GwtLogLogger());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public void executeUpdates(String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
+  public void executeUpdates(String databaseName, String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
 
     // Create our worker if we haven't already
     if(pool == null) {
@@ -98,4 +105,5 @@ public class GearsBulkUpdater implements BulkUpdater, WorkerPoolMessageHandler {
       }
     }
   }
+
 }
