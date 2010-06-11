@@ -14,14 +14,13 @@
   ~ License for the specific language governing permissions and limitations under
   ~ the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-sql</artifactId>
     <packaging>jar</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <name>JDBC Façade for GWT</name>
     <description>Provides a JDBC façade for the browser, allowing java developers to write DAO code
         that runs transparently both in the JVM and on evolving browser apis, such as HTML5, Gears, AIR.
@@ -34,6 +33,9 @@
         <version>1.0</version>
     </parent>
 
+	<scm>
+	    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-sql-1.1</developerConnection>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -135,24 +137,14 @@
                                 <phase>test</phase>
                                 <configuration>
                                     <tasks>
-                                        <property name="test_classpath" refid="maven.test.classpath"/>
-                                        <java classname="junit.textui.TestRunner" fork="true"
-                                              maxmemory="128m">
-                                            <sysproperty key="gwt.args"
-                                                         value="-out target/test-out
-                                                                -gen target/test-gen
-                                                                -notHeadless
-                                                                -prod
-                                                                -port 50100
-                                                                -codeServerPort 50101
-                                                                -logdir target/test-logs
-                                                                -runStyle Manual
-                                                                -logLevel INFO"/>
-                                            <arg value="com.bedatadriven.rebar.sql.client.SqlTest"/>
+                                        <property name="test_classpath" refid="maven.test.classpath" />
+                                        <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
+                                            <sysproperty key="gwt.args" value="-out target/test-out                                                                 -gen target/test-gen                                                                 -notHeadless                                                                 -prod                                                                 -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel INFO" />
+                                            <arg value="com.bedatadriven.rebar.sql.client.SqlTest" />
                                             <classpath>
-                                                <pathelement path="${basedir}/src/main/java"/>
-                                                <pathelement path="${basedir}/src/test/java"/>
-                                                <pathelement path="${test_classpath}"/>
+                                                <pathelement path="${basedir}/src/main/java" />
+                                                <pathelement path="${basedir}/src/test/java" />
+                                                <pathelement path="${test_classpath}" />
                                             </classpath>
                                         </java>
                                     </tasks>
