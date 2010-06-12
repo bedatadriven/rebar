@@ -15,14 +15,13 @@
   ~ the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>rebar-sync</artifactId>
   <packaging>jar</packaging>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.3</version>
   <name>Synchronization Tools for GWT</name>
   <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
     the Gears local database.</description>
@@ -31,6 +30,10 @@
     <artifactId>parent</artifactId>
     <version>1.0</version>
   </parent>
+  <scm>
+    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-sync-0.3</developerConnection>
+  </scm>
+  
   <dependencies>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -96,12 +99,6 @@
     <resources>
       <resource>
         <directory>src/main/java</directory>
-        <includes>
-          <include>**/emul/**/*.java</include>
-          <include>**/client/**/*.java</include>
-          <include>**/*.gwt.xml</include>
-          <include>**/*.properties</include>
-        </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
@@ -144,7 +141,7 @@ test workers in preparation for our test execution -->
         <executions>
           <execution>
             <id>compile-bulk-executing-worker</id>
-            <phase>process-classes</phase>
+            <phase>generate-sources</phase>
             <configuration>
               <modules>
                 <module>com.bedatadriven.rebar.sync.GearsUpdateWorker</module>
@@ -191,23 +188,14 @@ test workers in preparation for our test execution -->
                 <phase>test</phase>
                 <configuration>
                   <tasks>
-                    <property name="test_classpath" refid="maven.test.classpath"/>
-                    <java classname="junit.textui.TestRunner" fork="true"
-                          maxmemory="128m">
-                      <sysproperty key="gwt.args"
-                                   value="-out target/test-out
-                                                                -gen target/test-gen
-                                                                -notHeadless
-                                                                -port 50100
-                                                                -codeServerPort 50101
-                                                                -logdir target/test-logs
-                                                                -runStyle Manual
-                                                                -logLevel DEBUG"/>
-                      <arg value="com.bedatadriven.rebar.sync.client.GearsExecutorTest"/>
+                    <property name="test_classpath" refid="maven.test.classpath" />
+                    <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
+                      <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -port 50100 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
+                      <arg value="com.bedatadriven.rebar.sync.client.GearsTest" />
                       <classpath>
-                        <pathelement path="${basedir}/src/main/java"/>
-                        <pathelement path="${basedir}/src/test/java"/>
-                        <pathelement path="${test_classpath}"/>
+                        <pathelement path="${basedir}/src/main/java" />
+                        <pathelement path="${basedir}/src/test/java" />
+                        <pathelement path="${test_classpath}" />
                       </classpath>
                     </java>
                   </tasks>

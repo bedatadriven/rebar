@@ -17,6 +17,7 @@
 
 package com.bedatadriven.rebar.sync.worker;
 
+import com.bedatadriven.rebar.sync.client.impl.*;
 import com.bedatadriven.rebar.worker.client.AbstractWorkerEntryPoint;
 import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
 
@@ -28,7 +29,7 @@ public class GearsUpdateWorker extends AbstractWorkerEntryPoint {
   @Override
   public void onMessageReceived(WorkerPoolMessageHandler.MessageEvent event) {
     WorkerCommand cmd = event.getBodyObject().cast();
-    WorkerLogger logger = new WorkerLogger(getPool(), event.getSender(), cmd.getExecutionId());
+    GearsExecutor.Logger logger = new WorkerLogger(getPool(), event.getSender(), cmd.getExecutionId());
 
     try {
       int rowsAffected = GearsExecutor.execute(cmd, logger);

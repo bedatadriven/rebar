@@ -15,7 +15,7 @@
 
  */
 
-package com.bedatadriven.rebar.sync.worker;
+package com.bedatadriven.rebar.sync.client.impl;
 
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
 import com.google.gwt.core.client.JavaScriptObject;
