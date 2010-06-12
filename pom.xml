@@ -141,7 +141,7 @@ test workers in preparation for our test execution -->
         <executions>
           <execution>
             <id>compile-bulk-executing-worker</id>
-            <phase>process-classes</phase>
+            <phase>generate-sources</phase>
             <configuration>
               <modules>
                 <module>com.bedatadriven.rebar.sync.GearsUpdateWorker</module>
