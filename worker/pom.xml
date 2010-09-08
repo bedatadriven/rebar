@@ -13,19 +13,18 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with ActivityInfo.  If not, see <http://www.gnu.org/licenses/>.
+  ~ along with ActivityInfo.  If not, see <http://www.gnu.org/licenses />.
   ~
   ~ Copyright 2010 Alex Bertram and contributors.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-worker</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1</version>
     <name>Worker API for GWT</name>
     <description>A GWT Linker and support classes that links GWT code into worker
         scripts callable by Gears.</description>
@@ -35,6 +34,12 @@
         <artifactId>parent</artifactId>
         <version>1.0</version>
     </parent>
+	
+	 <scm>
+        <connection>scm:svn:http://rebar.googlecode.com/svn/tags/rebar-worker-0.9.1</connection>
+        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-worker-0.9.1</developerConnection>
+        <url>http://code.google.com/p/rebar/source/browse/tags/rebar-worker-0.9.1</url>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -169,25 +174,14 @@
                                 <phase>test</phase>
                                 <configuration>
                                     <tasks>
-                                        <property name="test_classpath" refid="maven.test.classpath"/>
-                                        <java classname="junit.textui.TestRunner" fork="true"
-                                              maxmemory="128m">
-                                            <sysproperty key="gwt.args"
-                                                         value="-out target/test-out
-                                                                -gen target/test-gen
-                                                                -notHeadless
-                                                                -draftCompile
-                                                                -style PRETTY
-                                                                -port 40100
-                                                                -codeServerPort 50101
-                                                                -logdir target/test-logs
-                                                                -runStyle Manual
-                                                                -logLevel DEBUG"/>
-                                            <arg value="com.bedatadriven.rebar.worker.client.WorkerTestSuite"/>
+                                        <property name="test_classpath" refid="maven.test.classpath" />
+                                        <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
+                                            <sysproperty key="gwt.args" value="-out target/test-out                                                                 -gen target/test-gen                                                                 -notHeadless                                                                 -draftCompile                                                                 -style PRETTY                                                                 -port 40100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
+                                            <arg value="com.bedatadriven.rebar.worker.client.WorkerTestSuite" />
                                             <classpath>
-                                                <pathelement path="${basedir}/src/main/java"/>
-                                                <pathelement path="${basedir}/src/test/java"/>
-                                                <pathelement path="${test_classpath}"/>
+                                                <pathelement path="${basedir}/src/main/java" />
+                                                <pathelement path="${basedir}/src/test/java" />
+                                                <pathelement path="${test_classpath}" />
                                             </classpath>
                                         </java>
                                     </tasks>
