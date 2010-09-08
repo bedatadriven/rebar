@@ -13,9 +13,20 @@ $strongName = '__STRONG_NAME__';
 
 navigator = { userAgent: 'gears' };
 window = {};
+window.location = {};
 window.google = google;
 $wnd = window;
 $doc = {};
 $sessionId = 1; // TODO: look this up
+
+$wnd.alert = function(msg) { };
+
+// we also need to emulate the timer API...
+$gtimer = google.gears.factory.create('beta.timer');
+
+$wnd.setTimeout = function(a, b) { return $gtimer.setTimeout(a, b); };
+$wnd.setInterval = function(a, b) { return $gtimer.setInterval(a, b); };
+$wnd.clearTimeout = function(id) { return $gtimer.clearTimeout(id); };
+$wnd.clearInterval = function(id) { return $gtimer.clearInterval(id); };
 
 gwtOnLoad(null, '__MODULE_NAME__', '');
