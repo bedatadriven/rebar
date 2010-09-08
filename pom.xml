@@ -25,7 +25,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-worker</artifactId>
     <packaging>jar</packaging>
-    <version>0.9</version>
+    <version>0.9.1-SNAPSHOT</version>
     <name>Worker API for GWT</name>
     <description>A GWT Linker and support classes that links GWT code into worker
         scripts callable by Gears.</description>
