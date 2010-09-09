@@ -30,17 +30,19 @@ public class Templates {
 
   public static Configuration get() {
     Configuration cfg = new Configuration();
+    //cfg.setObjectWrapper(new DefaultObjectWrapper());
+
+    cfg.setSharedVariable("singleline", new SingleLineDirective());
+    cfg.setSharedVariable("csv", new CsvDirective());
+    cfg.setSharedVariable("autoindent", new AutoIndentDirective());
     // Specify the data source where the template files come from.
     cfg.setClassForTemplateLoading(Templates.class, "/persistence");
     cfg.setDefaultEncoding("UTF-8");
 
     // Specify how templates will see the data-model. This is an advanced topic...
     // but just use this:
-    cfg.setObjectWrapper(new DefaultObjectWrapper());
 
-    cfg.setSharedVariable("singleline", new SingleLineDirective());
-    cfg.setSharedVariable("csv", new CsvDirective());
-    cfg.setSharedVariable("autoindent", new AutoIndentDirective());
+  
 
     return cfg;
   }

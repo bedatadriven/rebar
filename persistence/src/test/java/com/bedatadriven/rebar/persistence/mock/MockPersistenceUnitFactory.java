@@ -32,6 +32,7 @@ import com.bedatadriven.rebar.persistence.mapping.MappingException;
 import com.bedatadriven.rebar.persistence.rebind.PersistenceUnitGenerator;
 
 import javax.tools.*;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import java.io.*;
 import java.util.*;
@@ -182,7 +183,7 @@ public class MockPersistenceUnitFactory {
       BindEntities boundEntities = (BindEntities) contextClass.getAnnotation(BindEntities.class);
       if(boundEntities != null) {
         for (Class boundEntity : boundEntities.value()) {
-          if(boundEntity.getAnnotation(Entity.class)==null)
+          if((boundEntity.getAnnotation(Entity.class)==null) && (boundEntity.getAnnotation(Embeddable.class)==null))
             throw new MappingException(boundEntity.getName() + " is not annotated with @Entity and  " +
                 "so cannot be bound to the persistence unit " + contextClass.getName());
           logger.log(TreeLogger.Type.DEBUG, "Binding " + boundEntity.getName());
@@ -223,6 +224,7 @@ public class MockPersistenceUnitFactory {
       return context.newInstance();
 
     } catch (Exception e) {
+    
       throw new RuntimeException(e);
     }
   }

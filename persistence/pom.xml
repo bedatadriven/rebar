@@ -22,7 +22,7 @@
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>rebar-persistence</artifactId>
   <packaging>jar</packaging>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <name>Java Persistence API Implementation for GWT</name>
   <description>Compile-time implementation of the Java Persistence API for the
     Google Web Toolkit (GWT) platform.</description>
@@ -62,17 +62,12 @@
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>rebar-sql</artifactId>
-      <version>1.0</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>jpa-mapping</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
-      <version>1.0</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
      <dependency>
       <groupId>org.freemarker</groupId>

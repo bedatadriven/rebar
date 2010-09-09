@@ -49,7 +49,7 @@ class ${entityManagerFactoryClass} implements EntityManagerFactory {
             return em;
         } catch(SQLException e) {
             throw new RuntimeException(e);
-        }
+        } 
     }
 
     public void close() {
@@ -69,8 +69,15 @@ class ${entityManagerFactoryClass} implements EntityManagerFactory {
             Statement stmt = conn.createStatement();
             <#list entities as entity>
             stmt.executeUpdate("<@createtable entity/>");
-            Log.debug("Creating table for entity ${entity.name}: <@createtable entity/>");
+            System.out.println("Creating table for entity ${entity.name}: <@createtable entity/>");
+                <#list entity.collections as collection >
+                	<#if collection.joinTableName != "" >
+                	 stmt.executeUpdate("<@createjointable collection/>");
+                 	 System.out.println("Creating join table for entity ${entity.name}: <@createjointable collection/> ");
+                 	</#if>
+                </#list>
             </#list>
+          
             stmt.close();
             schemaCreated=true;
         } catch(SQLException e) {

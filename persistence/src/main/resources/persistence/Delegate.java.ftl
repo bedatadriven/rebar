@@ -339,7 +339,7 @@ class ${delegateClass}
 
              rs = stmt.executeQuery();
              if(!rs.next())
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException("entity id:"  + entity.${id.getterName}() + " not found");
 
              // read the properties from the recordset
              readPropertiesFromResultSet(entity, rs);
@@ -350,8 +350,8 @@ class ${delegateClass}
             if(rs != null) { try { rs.close(); } catch(SQLException ignored) {} }
         }
     }
-
-
+    
+    
     public Query createNativeBoundQuery(String sql) {
 
         return new AbstractNativeRuntimeQuery<${qualifiedClassName},${idBoxedClass}>(conn, sql) {
@@ -359,7 +359,7 @@ class ${delegateClass}
             // store the column mappings in a
             // fields
             <#list columns as column>
-                private int ${column.name}Index;
+                private int ${column.name}Index; 
             </#list>
 
             @Override
@@ -369,6 +369,7 @@ class ${delegateClass}
                         ${column.name}Index = rs.findColumn("${column.name}");
                     </#list>
                 } catch(SQLException e) {
+                	e.printStackTrace();
                     throw new IllegalArgumentException("Your query must contain ALL the columns for an entity in the" +
                         " select list.");
                 }
@@ -378,8 +379,13 @@ class ${delegateClass}
             protected ${qualifiedClassName} newResultInstance(ResultSet rs) throws SQLException {
 
                 // first read the id
+                <#if id.readerName != "">
                 ${idBoxedClass} id = ${id.readerName}(rs, ${id.column.name}Index);
-
+				</#if>
+				<#if id.readerName = "">
+				${idBoxedClass} id = getEmbeddedId(rs);
+				</#if>
+				
                 // try and get it from the cache first, to maintain object
                 // identiy equality
                 ${qualifiedClassName} entity = cache.get(id);
@@ -526,7 +532,15 @@ class ${delegateClass}
         }
         return map;
     }
-
+    <#if id.readerName = "">
+    private ${idBoxedClass} getEmbeddedId(ResultSet rs) throws SQLException {
+    	${idBoxedClass} id = new ${idBoxedClass}();
+    	<#list id.columns as column>
+    	id.set${column.name}(rs.findColumn("${column.name}"));
+    	</#list>
+ 		return id;
+    }
+    </#if>
 
     private static native void attach(Object entity, EntityManager em, ${delegateClass} delegate) /*-{
         entity["__em"] = em;

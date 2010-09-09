@@ -50,6 +50,11 @@ public class Readers {
     return rs.wasNull() ? null : value;
   }
 
+  public static Long readLong(ResultSet rs, int index) throws SQLException {
+	long value = rs.getLong(index);
+    return rs.wasNull() ? null : value;
+  }
+  
   public static Short readShort(ResultSet rs, int index) throws SQLException {
     short value = rs.getShort(index);
     return rs.wasNull() ? null : value;
@@ -63,6 +68,5 @@ public class Readers {
   public static java.sql.Date toSqlDate(Date date) {
     return date == null ? null :  new java.sql.Date(date.getTime());
   }
-
 
 }

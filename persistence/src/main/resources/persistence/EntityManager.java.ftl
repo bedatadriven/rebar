@@ -185,6 +185,11 @@ class ${entityManagerClass} implements EntityManager {
   public EntityTransaction getTransaction() {
     return null;
   }
+  
+  public Connection getConnection() {
+  	return connection;
+  }
+  
 }
 
 

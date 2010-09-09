@@ -49,25 +49,33 @@ public abstract class AbstractNativeRuntimeQuery<T, K> extends AbstractNativeQue
   protected PreparedStatement prepareStatement() {
     try {
       PreparedStatement stmt;
-      if(sql.getQueryType() != SQLStatement.TYPE_SELECT)
+      
+      if (sql.getQueryType() == SQLStatement.TYPE_DELETE) {
+    	    StringBuilder nativeSql = new StringBuilder();
+            nativeSql.append(sql.toNativeSQL());
+            stmt = conn.prepareStatement(nativeSql.toString());
+            return stmt;
+      } else if (sql.getQueryType() == SQLStatement.TYPE_SELECT) {
+    	  // trade in the named/positional parameters for garden
+          // variety jdbc params ( "?" )
+          StringBuilder nativeSql = new StringBuilder();
+          nativeSql.append(sql.toNativeSQL());
+          if(this.maxResults != -1) {
+            nativeSql.append(" LIMIT ").append(this.maxResults);
+          }
+          if(this.firstResult != 0) {
+            nativeSql.append(" OFFSET ").append(this.firstResult);
+          }
+          stmt = conn.prepareStatement(nativeSql.toString());
+
+          // set query parameters
+          fillParameters(stmt);
+          return stmt; 
+      } else {
         throw new RuntimeException("You tried to call createNativeQuery(sql, entityClass) with something else " +
             "besides a select query. Your sql was: " + sql.toString());
-
-      // trade in the named/positional parameters for garden
-      // variety jdbc params ( "?" )
-      StringBuilder nativeSql = new StringBuilder();
-      nativeSql.append(sql.toNativeSQL());
-      if(this.maxResults != -1) {
-        nativeSql.append(" LIMIT ").append(this.maxResults);
       }
-      if(this.firstResult != 0) {
-        nativeSql.append(" OFFSET ").append(this.firstResult);
-      }
-      stmt = conn.prepareStatement(nativeSql.toString());
-
-      // set query parameters
-      fillParameters(stmt);
-      return stmt;
+    
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

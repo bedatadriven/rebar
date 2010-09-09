@@ -26,6 +26,7 @@ class ${lazyClass} extends ${managedClass} {
     <#list type.methods as method >
     <#if method.public &&
         !method.final &&
+        !method.static &&
          method.name != id.setterName &&
          method.name != id.getterName>
 

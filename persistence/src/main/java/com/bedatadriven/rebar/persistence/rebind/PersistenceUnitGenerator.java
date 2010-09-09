@@ -66,12 +66,16 @@ public class PersistenceUnitGenerator extends Generator {
       BindEntities entities = requestedContext.getAnnotation(BindEntities.class);
       if (entities != null) {
         for (Class entityClass : entities.value()) {
-          if(entityClass.getAnnotation(Entity.class)==null) {
-            logger.log(TreeLogger.Type.ERROR, "Cannot bind " + entityClass.getName() + " to the" +
-                "persistence unit " + requestedContext.getSimpleSourceName() + ": no @Entity annotation. ");
-            throw new UnableToCompleteException();
+          if (entityClass != null) {
+	          if(entityClass.getAnnotation(Entity.class)==null) {
+	            logger.log(TreeLogger.Type.ERROR, "Cannot bind " + entityClass.getName() + " to the" +
+	                "persistence unit " + requestedContext.getSimpleSourceName() + ": no @Entity annotation. ");
+	            throw new UnableToCompleteException();
+	          }
+	          logger.log(TreeLogger.Type.INFO, "Try bind " + entityClass.getName() + " to the " +
+		                "persistence unit " + requestedContext.getSimpleSourceName());
+	          mapping.getMapping(new GwtTypeInfo(typeOracle.findType(entityClass.getName())));
           }
-          mapping.getMapping(new GwtTypeInfo(typeOracle.findType(entityClass.getName())));
         }
       }
 
