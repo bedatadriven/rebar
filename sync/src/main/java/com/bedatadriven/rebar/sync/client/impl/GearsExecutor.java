@@ -19,6 +19,7 @@
 
 package com.bedatadriven.rebar.sync.client.impl;
 
+
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -42,23 +43,27 @@ public class GearsExecutor {
   }
 
   private GearsExecutor(WorkerCommand cmd, Logger logger) {
+	 
     this.cmd = cmd;
     this.logger = logger;
   }
 
   private int execute() throws Exception {
+    int rowsAffected = 0;
+
     try {
       openConnection();
-      beginTransaction();
-      int rowsAffected = executeUpdates(cmd.getOperations());
-      commitTransaction();
-      return rowsAffected;
+  //    beginTransaction();
+      rowsAffected = executeUpdates(cmd.getOperations());
+    //  commitTransaction();
+      
     } catch(Exception e) {
-      rollbackSavePoint();
-      throw e;
+    	//rollbackSavePoint();
+    //	throw e;
     } finally {
       closeConnection();
     }
+    return rowsAffected;
   }
 
   private void rollbackSavePoint() throws Exception {
@@ -73,7 +78,6 @@ public class GearsExecutor {
     int rowsAffectedCount = 0;
     for(int i = 0; i!= ops.length(); ++i) {
       PreparedStatementBatch stmt = ops.get(i);
-
       if(stmt.getExecutions() == null || stmt.getExecutions().length()==0) {
         database.execute(stmt.getStatement());
       } else {
@@ -119,6 +123,7 @@ public class GearsExecutor {
   private native ResultSet execute(Database db, String sqlStatement, JavaScriptObject args) /*-{
         return db.execute(sqlStatement, args);
   }-*/;
+
 
 
 }
