@@ -18,9 +18,13 @@
 package com.bedatadriven.rebar.persistence.mapping;
 
 import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +47,7 @@ public class CollectionMapping {
   private boolean cascadeRefresh;
 
   private JoinTable joinTable;
+  private String joinTableName = ""; 
   private String mappedBy;
 
   public CollectionMapping(UnitMapping context, MethodInfo getter) {
@@ -65,6 +70,8 @@ public class CollectionMapping {
       cascadeTypes = manyToMany.cascade();
       mappedBy = manyToMany.mappedBy();
       joinTable = getter.getAnnotation(JoinTable.class);
+      if (joinTable != null) 
+    	  joinTableName = joinTable.name();
     } else {
       OneToMany oneToMany = getter.getAnnotation(OneToMany.class);
       if (oneToMany != null) {
@@ -139,7 +146,27 @@ public class CollectionMapping {
     return mappedBy;
   }
 
+  public String getJoinTableName() {
+	  return joinTableName;
+  }
+  
   public String getPersistentCollectionClass() {
     return persistentCollectionClass;
   }
+  
+  public List <String> getJoinColumns() {
+	  ArrayList <String> names = new ArrayList<String> ();
+	  if (this.joinTable != null) {
+		  JoinColumn[] cols =  joinTable.joinColumns();
+		  for (int i = 0 ; i < cols.length; i ++ ) {
+			 names.add(cols[i].name());
+		  }
+		  cols =  joinTable.inverseJoinColumns();
+		  for (int i = 0 ; i < cols.length; i ++ ) {
+			 names.add(cols[i].name());
+		  }
+	  }
+	  return names;
+  }
+ 
 }

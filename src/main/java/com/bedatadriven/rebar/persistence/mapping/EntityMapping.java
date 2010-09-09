@@ -90,7 +90,7 @@ public class EntityMapping {
     // bail otherwise
 
     if (entityType.getAnnotation(javax.persistence.Entity.class) != null && id == null) {
-      throw new MappingException("Entity classes must have exactly one property marked with @Id");
+      throw new MappingException("Entity Classes must have exactly one property marked with @Id");
     }
   }
 
@@ -217,7 +217,8 @@ public class EntityMapping {
   public List<ColumnMapping> getColumns() {
     List<ColumnMapping> list = new ArrayList<ColumnMapping>();
     for (PropertyMapping property : properties) {
-      list.addAll(property.getColumns());
+    	if (!(property.isEmbedded() && property.isId())) 	
+    		list.addAll(property.getColumns());
     }
     return list;
   }
@@ -474,10 +475,11 @@ public class EntityMapping {
       return new ManyToOneMapping(context, getter);
     }
 
-    if (getter.getAnnotation(Embedded.class) != null) {
+    if (getter.getAnnotation(Embedded.class) != null ||
+    	getter.getAnnotation(EmbeddedId.class) != null) {
       return new EmbeddedMapping(context, getter);
     }
-
+    
     return null;
   }
 

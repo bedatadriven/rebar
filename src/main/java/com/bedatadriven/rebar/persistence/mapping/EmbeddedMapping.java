@@ -53,7 +53,7 @@ import java.util.List;
  * @author Alex Bertram
  */
 public class EmbeddedMapping extends PropertyMapping {
-
+ 
   private boolean id;
   private UnitMapping context;
   private int propertyId;
@@ -79,10 +79,20 @@ public class EmbeddedMapping extends PropertyMapping {
   public EntityMapping getEmbeddedClass() {
     return context.getMapping(getType());
   }
+  
+  @Override
+  public boolean isId() {
+    return this.id;
+  }
 
   @Override
   public boolean isEmbedded() {
     return true;
+  }
+  
+  @Override
+  public String getReaderName() {
+    return "";
   }
 
   @Override
