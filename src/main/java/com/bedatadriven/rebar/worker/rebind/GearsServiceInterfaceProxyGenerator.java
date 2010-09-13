@@ -12,13 +12,12 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.worker.rebind;
 
-import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.bedatadriven.rebar.worker.client.rpc.GearsServiceProxy;
+import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.client.rpc.impl.RemoteServiceProxy;
 import com.google.gwt.user.rebind.rpc.ProxyCreator;
 import com.google.gwt.user.rebind.rpc.ServiceInterfaceProxyGenerator;

@@ -12,14 +12,12 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.worker.test.client;
 
-import com.google.gwt.core.client.GWT;
 import com.bedatadriven.rebar.worker.client.AbstractWorkerEntryPoint;
-import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
