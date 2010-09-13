@@ -12,12 +12,14 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.sync.worker;
 
-import com.bedatadriven.rebar.sync.client.impl.*;
+import com.bedatadriven.rebar.sync.client.impl.GearsExecutor;
+import com.bedatadriven.rebar.sync.client.impl.WorkerCommand;
+import com.bedatadriven.rebar.sync.client.impl.WorkerLogger;
+import com.bedatadriven.rebar.sync.client.impl.WorkerResponse;
 import com.bedatadriven.rebar.worker.client.AbstractWorkerEntryPoint;
 import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
 
