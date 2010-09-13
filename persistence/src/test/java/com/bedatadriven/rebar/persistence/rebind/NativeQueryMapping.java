@@ -12,7 +12,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
@@ -21,8 +20,8 @@ import com.bedatadriven.rebar.persistence.mapping.ParameterMapping;
 import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
 import com.bedatadriven.rebar.persistence.util.SQLStatement;
 
-import java.util.Map;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Alex Bertram

@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright 2009-2010 BeDataDriven (alex@bedatadriven.com)
  *
@@ -12,22 +14,21 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.client.impl;
 
 import com.bedatadriven.rebar.persistence.util.SQLStatement;
 
-import javax.persistence.TemporalType;
 import javax.persistence.Query;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.HashMap;
-import java.sql.PreparedStatement;
+import javax.persistence.TemporalType;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implements the query interface for queries that are known only at run time.

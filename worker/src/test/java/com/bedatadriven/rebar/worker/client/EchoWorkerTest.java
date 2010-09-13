@@ -12,7 +12,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.worker.client;
@@ -22,7 +21,6 @@ import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
 import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author Alex Bertram

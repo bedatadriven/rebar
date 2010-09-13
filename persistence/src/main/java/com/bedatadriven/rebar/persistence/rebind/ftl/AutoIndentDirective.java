@@ -12,22 +12,21 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind.ftl;
 
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateException;
 import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 
-import java.util.Map;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Map;
 
 /**
  * @author Alex Bertram

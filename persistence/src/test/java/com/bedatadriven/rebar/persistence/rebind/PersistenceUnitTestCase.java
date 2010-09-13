@@ -12,7 +12,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
@@ -21,11 +20,10 @@ import com.bedatadriven.rebar.persistence.client.ConnectionProvider;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
 import com.bedatadriven.rebar.persistence.mock.MockConnectionProvider;
 import com.bedatadriven.rebar.persistence.mock.MockPersistenceUnitFactory;
+import org.junit.After;
+import org.junit.Before;
 
 import javax.persistence.EntityManagerFactory;
-
-import org.junit.Before;
-import org.junit.After;
 
 /**
  * @author Alex Bertram

@@ -12,14 +12,13 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.sql.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
-import com.allen_sauer.gwt.log.client.Log;
 
 import java.sql.*;
 

@@ -12,13 +12,12 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.client.domain;
 
-import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
 
 /**
  * @author Alex Bertram

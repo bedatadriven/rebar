@@ -12,13 +12,15 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.mock;
 
-import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
+import com.bedatadriven.rebar.persistence.mapping.MappingException;
+import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
+import com.bedatadriven.rebar.persistence.rebind.PersistenceUnitGenerator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
@@ -27,17 +29,16 @@ import com.google.gwt.core.ext.linker.Artifact;
 import com.google.gwt.core.ext.linker.GeneratedResource;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.resource.ResourceOracle;
-import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
-import com.bedatadriven.rebar.persistence.mapping.MappingException;
-import com.bedatadriven.rebar.persistence.rebind.PersistenceUnitGenerator;
 
-import javax.tools.*;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.tools.*;
 import java.io.*;
-import java.util.*;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Compiles and instantiates a PersistenceUnit that can be run completely on the

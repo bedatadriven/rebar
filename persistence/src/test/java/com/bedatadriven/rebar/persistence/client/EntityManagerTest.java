@@ -12,17 +12,15 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.client;
 
-import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
+import com.bedatadriven.rebar.persistence.client.domain.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.ResultSet;
-import com.bedatadriven.rebar.persistence.client.domain.*;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import javax.persistence.EntityManager;

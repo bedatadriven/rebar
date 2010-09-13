@@ -12,16 +12,14 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
 
-import com.bedatadriven.rebar.persistence.rebind.ftl.SingleLineDirective;
-import com.bedatadriven.rebar.persistence.rebind.ftl.CsvDirective;
 import com.bedatadriven.rebar.persistence.rebind.ftl.AutoIndentDirective;
+import com.bedatadriven.rebar.persistence.rebind.ftl.CsvDirective;
+import com.bedatadriven.rebar.persistence.rebind.ftl.SingleLineDirective;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 
 /**
  * @author Alex Bertram

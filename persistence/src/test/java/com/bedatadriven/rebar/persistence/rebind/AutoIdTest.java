@@ -12,19 +12,17 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
 
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
-import com.bedatadriven.rebar.persistence.client.domain.AutoIdUnit;
 import com.bedatadriven.rebar.persistence.client.domain.AutoIdEntity;
+import com.bedatadriven.rebar.persistence.client.domain.AutoIdUnit;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
-
-import junit.framework.Assert;
 
 /**
  * @author Alex Bertram

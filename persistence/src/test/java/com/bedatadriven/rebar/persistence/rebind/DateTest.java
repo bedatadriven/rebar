@@ -12,24 +12,22 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
 
 import com.bedatadriven.rebar.persistence.client.PersistenceUnit;
-import com.bedatadriven.rebar.persistence.client.domain.EventUnit;
 import com.bedatadriven.rebar.persistence.client.domain.Event;
+import com.bedatadriven.rebar.persistence.client.domain.EventUnit;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
-
-import junit.framework.Assert;
 
 /**
  * @author Alex Bertram

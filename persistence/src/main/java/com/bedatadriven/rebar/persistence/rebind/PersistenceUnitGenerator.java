@@ -12,12 +12,14 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-
  */
 
 package com.bedatadriven.rebar.persistence.rebind;
 
-import com.bedatadriven.rebar.persistence.rebind.GwtTypeInfo;
+import com.bedatadriven.rebar.persistence.mapping.EntityMapping;
+import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
+import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
+import com.bedatadriven.rebar.persistence.mapping.client.BindPackages;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -26,18 +28,14 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.bedatadriven.rebar.persistence.mapping.client.BindEntities;
-import com.bedatadriven.rebar.persistence.mapping.client.BindPackages;
-import com.bedatadriven.rebar.persistence.mapping.EntityMapping;
-import com.bedatadriven.rebar.persistence.mapping.UnitMapping;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
 import javax.persistence.Entity;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Alex Bertram
