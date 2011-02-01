@@ -1,0 +1,86 @@
+[
+  {
+    "permutation": "1150152E33D501831E8E5560E403F92C",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "safari"
+    }
+  },
+  {
+    "permutation": "1150152E33D501831E8E5560E403F92C",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "safari"
+    }
+  },
+  {
+    "permutation": "D3462BC0A8880B5CE1B3FB60C711D4D6",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "gecko"
+    }
+  },
+  {
+    "permutation": "D3462BC0A8880B5CE1B3FB60C711D4D6",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "gecko"
+    }
+  },
+  {
+    "permutation": "E60D786673E81A0F4DA5BF5F84CA8E7E",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "gecko1_8"
+    }
+  },
+  {
+    "permutation": "E60D786673E81A0F4DA5BF5F84CA8E7E",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "gecko1_8"
+    }
+  },
+  {
+    "permutation": "F461B4925CA75C3608BEFC78A0C4CF03",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "ie8"
+    }
+  },
+  {
+    "permutation": "F461B4925CA75C3608BEFC78A0C4CF03",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "ie8"
+    }
+  },
+  {
+    "permutation": "F8C3FC901B446F95E60A05117CD8B92E",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "opera"
+    }
+  },
+  {
+    "permutation": "F8C3FC901B446F95E60A05117CD8B92E",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "opera"
+    }
+  },
+  {
+    "permutation": "FAEA7D5EDD9E9E9274689A309A6A7A3E",
+    "properties": {
+      "gears.installed": "false",
+      "user.agent": "ie6"
+    }
+  },
+  {
+    "permutation": "FAEA7D5EDD9E9E9274689A309A6A7A3E",
+    "properties": {
+      "gears.installed": "true",
+      "user.agent": "ie6"
+    }
+  }
+]
