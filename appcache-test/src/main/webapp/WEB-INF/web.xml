@@ -1,0 +1,14 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <servlet>
+        <servlet-name>BootstrapServlet</servlet-name>
+        <servlet-class>com.bedatadriven.rebar.appcache.server.BootstrapServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BootstrapServlet</servlet-name>
+        <url-pattern>/TestApp/bootstrap.js</url-pattern>
+    </servlet-mapping>
+        <servlet-mapping>
+        <servlet-name>BootstrapServlet</servlet-name>
+        <url-pattern>/TestApp/gears.manifest</url-pattern>
+    </servlet-mapping>
+</web-app>
