@@ -16,13 +16,8 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-public class AppCacheFactory {
-
-  public static AppCache get() {
-    if(Html5AppCache.isSupported()) {
-      return new Html5AppCache();
-    } else {
-      return new GearsAppCache();
-    }
+public class AppCacheException extends Exception {
+  public AppCacheException(String message) {
+    super(message);
   }
 }

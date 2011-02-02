@@ -17,8 +17,6 @@
 package com.bedatadriven.rebar.appcache.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
@@ -28,8 +26,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class GearsAppCache implements AppCache {
 
   private ManagedResourceStore store;
-  private HandlerManager handlerManager;
-  private String initialVersion;
 
   public GearsAppCache() {
     LocalServer server = Factory.getInstance().createLocalServer();
@@ -37,35 +33,9 @@ public class GearsAppCache implements AppCache {
     this.store.setManifestUrl(GWT.getModuleBaseURL() + "gears.manifest");
   }
 
-  public void fireEvent(GwtEvent<?> event) {
-    if (handlerManager != null) {
-      handlerManager.fireEvent(event);
-    }
-  }
-
   @Override
   public String getImplementation() {
     return "Gears";
-  }
-
-  @Override
-  public Status getStatus() {
-    switch( store.getUpdateStatus() ){
-
-      case 1:
-        return Status.CHECKING;
-      case 2:
-        return Status.DOWNLOADING;
-
-      default:
-      case 0: // Update OK
-      case 3: // Update failed
-        if( store.getCurrentVersion() == null || store.getCurrentVersion().length() == 0) {
-          return Status.UNCACHED;
-        } else {
-          return Status.IDLE;
-        }
-    }
   }
 
   @Override

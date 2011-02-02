@@ -16,10 +16,9 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface AppCache extends HasHandlers {
+public interface AppCache {
 
 
   public enum Status {
@@ -47,11 +46,12 @@ public interface AppCache extends HasHandlers {
    */
   String getImplementation();
 
-  Status getStatus();
 
   /**
    * Ensures that the current application is completely cached and
-   * ready to serve.
+   * ready to serve offline.
+   *
+   * This does not necessary trigger an update.
    *
    * @param callback an asynchronous callback that will receive the version upon completion
    */
