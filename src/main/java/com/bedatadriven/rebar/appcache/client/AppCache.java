@@ -22,6 +22,12 @@ public interface AppCache {
 
 
   public enum Status {
+
+    /**
+     * AppCache is not supported by this browser
+     */
+    UNSUPPORTED,
+
     /**
      * The ApplicationCache object's cache host is not associated with an application cache at this time.
      */
@@ -34,18 +40,35 @@ public interface AppCache {
      * application cache group is not marked as obsolete.
      */
     IDLE,
+
+    /**
+     * Checking for the most recent version
+     */
     CHECKING,
+
+    /**
+     * Downloading a new version of the application
+     */
     DOWNLOADING,
+
+    /**
+     * A new version has been successfully downloaded and is ready
+     * for the user upon page refresh
+     */
     UPDATE_READY,
+
+    /**
+     * The cache manifest has disappeared from the server.
+     * (Not reported by Gears)
+     */
     OBSOLETE
   }
 
   /**
    * @return a user-friendly description of the cache API being
-   * used
+   * used.
    */
   String getImplementation();
-
 
   /**
    * Ensures that the current application is completely cached and
@@ -57,5 +80,5 @@ public interface AppCache {
    */
   void ensureCached(AsyncCallback<Void> callback);
 
-
+  Status getStatus();
 }

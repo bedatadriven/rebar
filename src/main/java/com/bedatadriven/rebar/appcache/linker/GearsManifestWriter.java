@@ -16,7 +16,7 @@
 
 package com.bedatadriven.rebar.appcache.linker;
 
-public class GearsManifestWriter implements ManifestWriter {
+class GearsManifestWriter implements ManifestWriter {
 
   private StringBuilder entries = new StringBuilder();
 

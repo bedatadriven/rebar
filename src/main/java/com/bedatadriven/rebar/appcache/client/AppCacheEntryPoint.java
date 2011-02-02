@@ -16,22 +16,30 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-public class AppCacheFactory {
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-  private static AppCache instance = null;
+public class AppCacheEntryPoint implements EntryPoint {
 
-  public static AppCache get() {
-    if(instance == null) {
-      if(Html5AppCache.isSupported()) {
-        instance = new Html5AppCache();
+  @Override
+  public void onModuleLoad() {
 
-      } else if(GearsAppCache.isSupported()) {
-        instance = new GearsAppCache();
+    // the default behavior of most HTML5 app cache implementations
+    // seems to be to start downloading the cache immediately,
+    // so let's standardize that across browsers / implementations
 
-      } else {
-        instance = new NullAppCache();
+    AppCache appCache = AppCacheFactory.get();
+    appCache.ensureCached(new AsyncCallback<Void>() {
+      @Override
+      public void onFailure(Throwable caught) {
+        /** NOOP */
       }
-    }
-    return instance;
+
+      @Override
+      public void onSuccess(Void result) {
+        /** NOOP **/
+      }
+    });
+
   }
 }

@@ -16,12 +16,22 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-public interface UpdateListener {
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-  /**
-   * Called when a new version of the app has been successfully downloaded,
-   * but has not
-   */
-  void onUpdateReady();
+class NullAppCache implements AppCache {
 
+  @Override
+  public String getImplementation() {
+    return "Unsupported";
+  }
+
+  @Override
+  public void ensureCached(AsyncCallback<Void> callback) {
+    callback.onFailure(new AppCacheException("Your browser does not support AppCache"));
+  }
+
+  @Override
+  public Status getStatus() {
+    return Status.UNSUPPORTED;
+  }
 }

@@ -16,7 +16,7 @@
 
 package com.bedatadriven.rebar.appcache.linker;
 
-public class Html5ManifestWriter implements ManifestWriter {
+class Html5ManifestWriter implements ManifestWriter {
 
   private StringBuilder entries = new StringBuilder();
 
