@@ -21,7 +21,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-appcache</artifactId>
     <packaging>jar</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <name>AppCache support for GWT</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for HTML5 and for Gears for a given GWT module.</description>
@@ -31,7 +31,7 @@
         <version>1.0</version>
     </parent>
     <scm>
-        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/</developerConnection>
+        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-appcache-0.3</developerConnection>
     </scm>
     <dependencies>
         <dependency>
@@ -124,7 +124,7 @@
                                                      to update the manifest during compilation, so we
                                                      use -port auto -->
 
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -port auto -codeServerPort 50101 -prod -runStyle Manual                                                                 -logLevel INFO" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -port auto -codeServerPort 50101 -prod -runStyle Manual -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.appcache.client.ModuleStoreTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
