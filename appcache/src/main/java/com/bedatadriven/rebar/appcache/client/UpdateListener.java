@@ -16,13 +16,12 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-public class AppCacheFactory {
+public interface UpdateListener {
 
-  public static AppCache get() {
-    if(Html5AppCache.isSupported()) {
-      return new Html5AppCache();
-    } else {
-      return new GearsAppCache();
-    }
-  }
+  /**
+   * Called when a new version of the app has been successfully downloaded,
+   * but has not
+   */
+  void onUpdateReady();
+
 }
