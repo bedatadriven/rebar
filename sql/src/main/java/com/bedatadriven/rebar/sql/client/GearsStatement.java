@@ -84,8 +84,12 @@ class GearsStatement implements Statement {
   }
 
   protected SQLException makeSqlException(DatabaseException e) {
-    return new SQLException("Gears/Sqlite threw a DatabaseException on the following unprepared" +
+    if(e.getMessage() != null && e.getMessage().contains("database is locked")) {
+      return new DatabaseLockedException();
+    } else {
+      return new SQLException("Gears/Sqlite threw a DatabaseException on the following unprepared" +
         " statement SQL: '" + sql + "'", e);
+    }
   }
 
   public int doExecuteUpdate(String sql) throws SQLException {
