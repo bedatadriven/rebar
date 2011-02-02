@@ -49,8 +49,13 @@ public class BootstrapServlet extends HttpServlet {
 
   public BootstrapServlet() {
     providers = new HashMap<String, PropertyProvider>();
-    providers.put("user.agent", new UserAgentProvider());
+    registerProvider("user.agent", new UserAgentProvider());
   }
+
+  public final void registerProvider(String propertyName, PropertyProvider provider) {
+    providers.put(propertyName, provider);
+  }
+
 
   @Override
   public void init(ServletConfig config) throws ServletException {
