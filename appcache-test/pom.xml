@@ -45,7 +45,7 @@
         <dependency>
             <groupId>com.bedatadriven.rebar</groupId>
             <artifactId>rebar-appcache</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -59,7 +59,7 @@
                     <modules>
                         <module>com.bedatadriven.rebar.appcache.test.AppCacheTest</module>
                     </modules>
-                    <style>pretty</style>
+                    <style>detailed</style>
                 </configuration>
 
                 <executions>

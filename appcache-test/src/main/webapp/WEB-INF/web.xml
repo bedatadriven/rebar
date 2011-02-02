@@ -11,4 +11,8 @@
         <servlet-name>BootstrapServlet</servlet-name>
         <url-pattern>/TestApp/gears.manifest</url-pattern>
     </servlet-mapping>
+            <servlet-mapping>
+        <servlet-name>BootstrapServlet</servlet-name>
+        <url-pattern>/TestApp/html5.manifest</url-pattern>
+    </servlet-mapping>
 </web-app>
