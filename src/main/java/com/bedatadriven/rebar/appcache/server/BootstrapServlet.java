@@ -49,8 +49,13 @@ public class BootstrapServlet extends HttpServlet {
 
   public BootstrapServlet() {
     providers = new HashMap<String, PropertyProvider>();
-    providers.put("user.agent", new UserAgentProvider());
+    registerProvider("user.agent", new UserAgentProvider());
   }
+
+  public final void registerProvider(String propertyName, PropertyProvider provider) {
+    providers.put(propertyName, provider);
+  }
+
 
   @Override
   public void init(ServletConfig config) throws ServletException {
@@ -67,6 +72,13 @@ public class BootstrapServlet extends HttpServlet {
     resp.setHeader("Cache-Control", "no-cache");
     resp.setHeader("Pragma", "no-cache");
     resp.setDateHeader("Expires", new Date().getTime());
+
+    if(moduleBaseAndFile[1].equals("html5.manifest")) {
+      resp.setContentType("text/cache-manifest");
+
+    } else if(moduleBaseAndFile[1].endsWith(".js")) {
+      resp.setContentType("application/javascript");
+    }
 
     sendFile(resp, moduleBaseAndFile, permutation);
   }

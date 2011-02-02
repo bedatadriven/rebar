@@ -14,15 +14,29 @@
  * the License.
  */
 
-package com.bedatadriven.rebar.appcache.client;
+package com.bedatadriven.rebar.appcache.linker;
 
-public class AppCacheFactory {
+public class GearsManifestWriter implements ManifestWriter {
 
-  public static AppCache get() {
-    if(Html5AppCache.isSupported()) {
-      return new Html5AppCache();
-    } else {
-      return new GearsAppCache();
+  private StringBuilder entries = new StringBuilder();
+
+  @Override
+  public String getSuffix() {
+    return "gears.manifest";
+  }
+
+  @Override
+  public void appendEntry(String path) {
+    if(entries.length() != 0) {
+      entries.append(",\n");
     }
+    entries.append("{ \"url\" : \"");
+    entries.append(path);
+    entries.append("\" }");
+  }
+
+  @Override
+  public String getEntries() {
+    return entries.toString();
   }
 }

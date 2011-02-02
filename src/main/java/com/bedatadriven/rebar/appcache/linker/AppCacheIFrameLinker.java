@@ -60,7 +60,8 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
       toReturn.addAll(compilationArtifacts);
       toReturn.add(doEmitBootstrapScript(logger, context, artifacts, compilation));
-      toReturn.add(doGearsEmitManifest(logger, context, artifacts, compilation, toCache));
+      toReturn.add(doEmitManifest(logger, context, artifacts, compilation, new GearsManifestWriter(), toCache));
+      toReturn.add(doEmitManifest(logger, context, artifacts, compilation, new Html5ManifestWriter(), toCache));
     }
 
     toReturn.add(emitPermutationMap(logger, context, artifacts));
@@ -202,27 +203,27 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     }
   }
 
-  private EmittedArtifact doGearsEmitManifest(TreeLogger logger, LinkerContext context,
-                                              ArtifactSet artifacts,
-                                              CompilationResult compilation,
-                                              Collection<EmittedArtifact> artifactsToCache)
+  private EmittedArtifact doEmitManifest(TreeLogger logger, LinkerContext context,
+                                         ArtifactSet artifacts,
+                                         CompilationResult compilation,
+                                         ManifestWriter writer,
+                                         Collection<EmittedArtifact> artifactsToCache)
       throws UnableToCompleteException {
 
-    logger = logger.branch(TreeLogger.DEBUG, "Generating Gears manifest contents",
+    logger = logger.branch(TreeLogger.DEBUG, "Generating " + writer.getSuffix() + " contents",
         null);
 
-    StringBuffer out = readManifestTemplate(logger, context, artifacts);
+    StringBuffer out = readManifestTemplate(logger, context, writer.getSuffix(), artifacts);
 
     // Generate the manifest entries
-    StringBuffer entries = generateEntries(logger, context, artifactsToCache);
+    appendEntries(logger, context, writer, artifactsToCache);
 
-    // add the bootstrap script (provided by the server)
-    entries.append(",\n{ \"url\": \"bootstrap.js\" }");
+
 
     // use the current time as the version number
     replaceAll(out, "__NAME__", context.getModuleName());
     replaceAll(out, "__VERSION__", generateTimestampVersion());
-    replaceAll(out, "__ENTRIES__", entries.toString());
+    replaceAll(out, "__ENTRIES__", writer.getEntries());
 
     /*
     * NB: It's tempting to use LinkerContext.optimizeJavaScript here, but the
@@ -231,7 +232,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     * would normally be removed.
     */
     return emitBytes(logger, Util.getBytes(out.toString()),
-        compilation.getStrongName() + ".gears.manifest");
+        compilation.getStrongName() + "." + writer.getSuffix());
   }
 
   private String generateTimestampVersion() {
@@ -242,15 +243,17 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   /**
    * Generate a string containing object literals for each manifest entry.
    */
-  private StringBuffer generateEntries(TreeLogger logger, LinkerContext context,
-                                       Collection<EmittedArtifact> artifacts)
+  private void appendEntries(TreeLogger logger, LinkerContext context,
+                             ManifestWriter writer,
+                             Collection<EmittedArtifact> artifacts)
       throws UnableToCompleteException {
 
     logger = logger.branch(TreeLogger.DEBUG, "Generating manifest entries",
         null);
 
-    StringBuffer entries = new StringBuffer();
-    boolean needsComma = false;
+    // add the bootstrap script (provided by the server)
+    writer.appendEntry("bootstrap.js");
+
     for (EmittedArtifact artifact : artifacts) {
       if (artifact.isPrivate()) {
         logger.log(TreeLogger.DEBUG, "excluding private: " + artifact.getPartialPath());
@@ -267,33 +270,24 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       path = path.replace('\\', '/');
 
       logger.log(TreeLogger.DEBUG, "adding: " + path);
-
-      if (needsComma) {
-        entries.append(",\n");
-      } else {
-        needsComma = true;
-      }
-
-      entries.append("{ \"url\" : \"");
-      entries.append(path);
-      entries.append("\" }");
+      writer.appendEntry(path);
     }
-    return entries;
   }
 
 
-  private StringBuffer readManifestTemplate(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException {
+  private StringBuffer readManifestTemplate(TreeLogger logger, LinkerContext context, String suffix, ArtifactSet artifacts) throws UnableToCompleteException {
     // first try to find a template provided in the module's public
     // folder
     for(PublicResource artifact : artifacts.find(PublicResource.class)) {
-      if(artifact.getPartialPath().equals(context.getModuleName() + ".gears.manifest")) {
+      if(artifact.getPartialPath().equals(context.getModuleName() + "." + suffix)) {
         return readAll(logger, artifact.getContents(logger));
       }
     }
 
-    InputStream defaultIn = getClass().getResourceAsStream("Gears.manifest");
+    String defaultTemplate = "Default." + suffix;
+    InputStream defaultIn = getClass().getResourceAsStream(defaultTemplate);
     if(defaultIn == null) {
-      logger.log(TreeLogger.Type.ERROR, "Could not read default 'Gears.manifest'");
+      logger.log(TreeLogger.Type.ERROR, "Could not read default '" + defaultTemplate + "'");
       throw new UnableToCompleteException();
     }
     return readAll(logger, defaultIn);
