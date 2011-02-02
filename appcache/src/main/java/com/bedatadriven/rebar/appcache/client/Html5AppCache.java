@@ -19,7 +19,7 @@ package com.bedatadriven.rebar.appcache.client;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class Html5AppCache implements AppCache {
+class Html5AppCache implements AppCache {
 
   public static final int UNCACHED = 0;
   public static final int IDLE = 1;
@@ -27,6 +27,10 @@ public class Html5AppCache implements AppCache {
   public static final int DOWNLOADING = 3;
   public static final int UPDATE_READY = 4;
   public static final int OBSOLETE = 5;
+
+  public static final Status[] STATUS_MAPPING = new Status[] {
+      Status.UNCACHED, Status.IDLE, Status.CHECKING, Status.DOWNLOADING, Status.UPDATE_READY, Status.OBSOLETE
+  };
 
 
   @Override
@@ -56,7 +60,7 @@ public class Html5AppCache implements AppCache {
   private boolean checkStatus(AsyncCallback<Void> callback) {
     int status = 0;
     try {
-      status = getStatus();
+      status = getAppCacheStatus();
     } catch (Exception e) {
       callback.onFailure(new AppCacheException(e.getMessage()));
     }
@@ -75,6 +79,11 @@ public class Html5AppCache implements AppCache {
     return false;
   }
 
+  @Override
+  public Status getStatus() {
+    return STATUS_MAPPING[getAppCacheStatus()];
+  }
+
   public static native boolean isSupported() /*-{
     return typeof $wnd.applicationCache == 'object';
   }-*/;
@@ -83,7 +92,7 @@ public class Html5AppCache implements AppCache {
     return $wnd.applicationCache.update();
   }-*/;
 
-  public static native int getStatus() /*-{
+  public static native int getAppCacheStatus() /*-{
     return $wnd.applicationCache.status;
   }-*/;
 }

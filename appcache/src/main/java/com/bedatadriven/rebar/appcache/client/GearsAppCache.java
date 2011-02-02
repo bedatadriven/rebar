@@ -23,7 +23,7 @@ import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class GearsAppCache implements AppCache {
+class GearsAppCache implements AppCache  {
 
   private ManagedResourceStore store;
 
@@ -41,10 +41,36 @@ public class GearsAppCache implements AppCache {
   @Override
   public void ensureCached(final AsyncCallback<Void> callback) {
     store.setEnabled(true);
-    if(store.getCurrentVersion() == null || store.getCurrentVersion().isEmpty()) {
+    if(currentVersionIsEmpty()) {
       download(callback);
     } else {
       callback.onSuccess(null);
+    }
+  }
+
+  private boolean currentVersionIsEmpty() {
+    return store.getCurrentVersion() == null || store.getCurrentVersion().isEmpty();
+  }
+
+  @Override
+  public Status getStatus() {
+    switch(store.getUpdateStatus()) {
+      case ManagedResourceStore.UPDATE_CHECKING:
+        return Status.CHECKING;
+
+      case ManagedResourceStore.UPDATE_DOWNLOADING:
+        return Status.DOWNLOADING;
+
+      default:
+      case ManagedResourceStore.UPDATE_FAILED:
+      case ManagedResourceStore.UPDATE_OK:
+        if(currentVersionIsEmpty()) {
+          return Status.UNCACHED;
+        } else if (!GWT.getPermutationStrongName().equals(store.getCurrentVersion())) {
+          return Status.UPDATE_READY;
+        } else {
+          return Status.IDLE;
+        }
     }
   }
 
@@ -74,4 +100,9 @@ public class GearsAppCache implements AppCache {
   public ManagedResourceStore getStore() {
     return store;
   }
+
+  public static boolean isSupported() {
+    return Factory.getInstance() != null;
+  }
+
 }

@@ -16,7 +16,7 @@
 
 package com.bedatadriven.rebar.appcache.linker;
 
-public interface ManifestWriter {
+interface ManifestWriter {
 
   String getSuffix();
   void appendEntry(String path);

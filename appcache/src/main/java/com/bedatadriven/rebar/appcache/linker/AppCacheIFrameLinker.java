@@ -26,7 +26,10 @@ import com.google.gwt.dev.util.Util;
 import com.google.gwt.util.tools.Utility;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * Extends the standard <code>IFrameLinker</code> to generate manifests for
@@ -48,49 +51,49 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   }
 
   @Override
-  public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException {
+  public ArtifactSet link(TreeLogger logger, LinkerContext linkerContext, ArtifactSet artifacts) throws UnableToCompleteException {
     ArtifactSet toReturn = new ArtifactSet(artifacts);
 
     for (CompilationResult compilation : toReturn.find(CompilationResult.class)) {
-      Collection<EmittedArtifact> compilationArtifacts = doEmitCompilation(logger, context, compilation);
+      PermutationContext context = new PermutationContext(linkerContext, artifacts, compilation);
 
-      List<EmittedArtifact> toCache = new ArrayList<EmittedArtifact>();
-      toCache.addAll(artifacts.find(EmittedArtifact.class));
-      toCache.addAll(compilationArtifacts);
+      Collection<EmittedArtifact> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation);
+
+      context.addToCache(artifacts.find(EmittedArtifact.class));
+      context.addToCache(compilationArtifacts);
 
       toReturn.addAll(compilationArtifacts);
-      toReturn.add(doEmitBootstrapScript(logger, context, artifacts, compilation));
-      toReturn.add(doEmitManifest(logger, context, artifacts, compilation, new GearsManifestWriter(), toCache));
-      toReturn.add(doEmitManifest(logger, context, artifacts, compilation, new Html5ManifestWriter(), toCache));
+      toReturn.add(doEmitBootstrapScript(logger, context));
+      toReturn.add(doEmitManifest(logger, context, new GearsManifestWriter()));
+      toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
     }
 
-    toReturn.add(emitPermutationMap(logger, context, artifacts));
+    toReturn.add(emitPermutationMap(logger, linkerContext, artifacts));
 
     return toReturn;
   }
 
 
-  private EmittedArtifact doEmitBootstrapScript(TreeLogger logger, LinkerContext context,
-                                                ArtifactSet artifacts, CompilationResult compilation) throws UnableToCompleteException {
+  private EmittedArtifact doEmitBootstrapScript(TreeLogger logger, PermutationContext context) throws UnableToCompleteException {
 
-    String selectionScript = generateBootstrapScript(logger, context, artifacts, compilation);
+    String selectionScript = generateBootstrapScript(logger, context);
     selectionScript = context.optimizeJavaScript(logger, selectionScript);
 
     /*
-     * Last modified is important to keep hosted mode refreses from clobbering
+     * Last modified is important to keep hosted mode refreshes from clobbering
      * web mode compiles. We set the timestamp on the hosted mode selection
      * script to the same mod time as the module (to allow updates). For web
      * mode, we just set it to now.
      */
     long lastModified;
-    if (artifacts.find(CompilationResult.class).size() == 0) {
+    if (context.find(CompilationResult.class).size() == 0) {
       lastModified = context.getModuleLastModified();
     } else {
       lastModified = System.currentTimeMillis();
     }
 
     return emitString(logger, selectionScript,
-        compilation.getStrongName()
+        context.getStrongName()
             + ".bootstrap.js", lastModified);
   }
 
@@ -100,8 +103,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
    * straight-line code to load the body of the app.
    *
    */
-  private String generateBootstrapScript(TreeLogger logger,
-                                         LinkerContext context, ArtifactSet artifacts, CompilationResult result)
+  private String generateBootstrapScript(TreeLogger logger, PermutationContext context)
       throws UnableToCompleteException {
 
     // ICK,  copy-and-pasted from SelectionScriptLinker. Ideally work with
@@ -111,7 +113,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     try {
       selectionScript = new StringBuffer(
           Utility.getFileFromClassPath(getSelectionScriptTemplate(logger,
-              context)));
+              context.getLinkerContext())));
     } catch (IOException e) {
       logger.log(TreeLogger.ERROR, "Unable to read selection script template",
           e);
@@ -127,7 +129,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     // Add external dependencies
     startPos = selectionScript.indexOf("// __MODULE_STYLES_END__");
     if (startPos != -1) {
-      for (StylesheetReference resource : artifacts.find(StylesheetReference.class)) {
+      for (StylesheetReference resource : context.find(StylesheetReference.class)) {
         String text = generateStylesheetInjector(resource.getSrc());
         selectionScript.insert(startPos, text);
         startPos += text.length();
@@ -136,7 +138,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
     startPos = selectionScript.indexOf("// __MODULE_SCRIPTS_END__");
     if (startPos != -1) {
-      for (ScriptReference resource : artifacts.find(ScriptReference.class)) {
+      for (ScriptReference resource : context.find(ScriptReference.class)) {
         String text = generateScriptInjector(resource.getSrc());
         selectionScript.insert(startPos, text);
         startPos += text.length();
@@ -148,7 +150,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     if (startPos != -1) {
       StringBuffer text = new StringBuffer();
       // Just one distinct compilation; no need to evaluate properties
-      text.append("strongName = '" + result.getStrongName()  + "';");
+      text.append("strongName = '" + context.getStrongName()  + "';");
       selectionScript.insert(startPos, text);
     }
 
@@ -166,7 +168,8 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
    *
    */
   protected EmittedArtifact emitPermutationMap(TreeLogger logger,
-                                               LinkerContext context, ArtifactSet artifacts)
+                                               LinkerContext context,
+                                               ArtifactSet artifacts)
       throws UnableToCompleteException {
 
     try {
@@ -203,26 +206,24 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     }
   }
 
-  private EmittedArtifact doEmitManifest(TreeLogger logger, LinkerContext context,
-                                         ArtifactSet artifacts,
-                                         CompilationResult compilation,
-                                         ManifestWriter writer,
-                                         Collection<EmittedArtifact> artifactsToCache)
+  private EmittedArtifact doEmitManifest(TreeLogger logger,
+                                         PermutationContext context,
+                                         ManifestWriter writer)
       throws UnableToCompleteException {
 
     logger = logger.branch(TreeLogger.DEBUG, "Generating " + writer.getSuffix() + " contents",
         null);
 
-    StringBuffer out = readManifestTemplate(logger, context, writer.getSuffix(), artifacts);
+    StringBuffer out = readManifestTemplate(logger, context, writer.getSuffix());
 
     // Generate the manifest entries
-    appendEntries(logger, context, writer, artifactsToCache);
+    appendEntries(logger, context, writer);
 
 
 
     // use the current time as the version number
     replaceAll(out, "__NAME__", context.getModuleName());
-    replaceAll(out, "__VERSION__", generateTimestampVersion());
+    replaceAll(out, "__VERSION__", context.getStrongName());
     replaceAll(out, "__ENTRIES__", writer.getEntries());
 
     /*
@@ -232,20 +233,18 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     * would normally be removed.
     */
     return emitBytes(logger, Util.getBytes(out.toString()),
-        compilation.getStrongName() + "." + writer.getSuffix());
+        context.getStrongName() + "." + writer.getSuffix());
   }
 
-  private String generateTimestampVersion() {
-    return Long.toString(new Date().getTime());
-  }
+
 
 
   /**
    * Generate a string containing object literals for each manifest entry.
    */
-  private void appendEntries(TreeLogger logger, LinkerContext context,
-                             ManifestWriter writer,
-                             Collection<EmittedArtifact> artifacts)
+  private void appendEntries(TreeLogger logger,
+                             PermutationContext context,
+                             ManifestWriter writer)
       throws UnableToCompleteException {
 
     logger = logger.branch(TreeLogger.DEBUG, "Generating manifest entries",
@@ -254,7 +253,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     // add the bootstrap script (provided by the server)
     writer.appendEntry("bootstrap.js");
 
-    for (EmittedArtifact artifact : artifacts) {
+    for (EmittedArtifact artifact : context.getToCache()) {
       if (artifact.isPrivate()) {
         logger.log(TreeLogger.DEBUG, "excluding private: " + artifact.getPartialPath());
 
@@ -275,10 +274,10 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   }
 
 
-  private StringBuffer readManifestTemplate(TreeLogger logger, LinkerContext context, String suffix, ArtifactSet artifacts) throws UnableToCompleteException {
+  private StringBuffer readManifestTemplate(TreeLogger logger, PermutationContext context, String suffix) throws UnableToCompleteException {
     // first try to find a template provided in the module's public
     // folder
-    for(PublicResource artifact : artifacts.find(PublicResource.class)) {
+    for(PublicResource artifact : context.find(PublicResource.class)) {
       if(artifact.getPartialPath().equals(context.getModuleName() + "." + suffix)) {
         return readAll(logger, artifact.getContents(logger));
       }
