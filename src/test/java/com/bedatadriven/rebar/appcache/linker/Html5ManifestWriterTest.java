@@ -16,13 +16,20 @@
 
 package com.bedatadriven.rebar.appcache.linker;
 
-import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import org.junit.Test;
 
-interface ManifestWriter {
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
-  String getSuffix();
-  void appendEntry(TreeLogger logger, String path) throws UnableToCompleteException;
-  String getEntries();
+public class Html5ManifestWriterTest {
+
+  @Test
+  public void escape() throws UnableToCompleteException {
+    assertThat(Html5ManifestWriter.escape(null, "path/image.png"), equalTo("path/image.png"));
+    assertThat(Html5ManifestWriter.escape(null, "path/image with space.png"), equalTo("path/image%20with%20space.png"));
+    assertThat(Html5ManifestWriter.escape(null, "path/élite.png"), equalTo("path/%E9lite.png"));
+
+  }
 
 }
