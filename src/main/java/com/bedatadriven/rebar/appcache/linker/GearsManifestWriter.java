@@ -16,6 +16,8 @@
 
 package com.bedatadriven.rebar.appcache.linker;
 
+import com.google.gwt.core.ext.TreeLogger;
+
 class GearsManifestWriter implements ManifestWriter {
 
   private StringBuilder entries = new StringBuilder();
@@ -25,8 +27,9 @@ class GearsManifestWriter implements ManifestWriter {
     return "gears.manifest";
   }
 
+
   @Override
-  public void appendEntry(String path) {
+  public void appendEntry(TreeLogger logger, String path) {
     if(entries.length() != 0) {
       entries.append(",\n");
     }
