@@ -251,13 +251,18 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
         null);
 
     // add the bootstrap script (provided by the server)
-    writer.appendEntry("bootstrap.js");
+    writer.appendEntry(logger, "bootstrap.js");
 
     for (EmittedArtifact artifact : context.getToCache()) {
       if (artifact.isPrivate()) {
         logger.log(TreeLogger.DEBUG, "excluding private: " + artifact.getPartialPath());
 
         // These artifacts won't be in the module output directory
+        continue;
+      }
+
+      if (artifact.getPartialPath().endsWith(".gwt.rpc")) {
+        // only used by the server
         continue;
       }
 
@@ -269,7 +274,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       path = path.replace('\\', '/');
 
       logger.log(TreeLogger.DEBUG, "adding: " + path);
-      writer.appendEntry(path);
+      writer.appendEntry(logger, path);
     }
   }
 
