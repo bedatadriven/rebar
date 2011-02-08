@@ -21,7 +21,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-worker</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.2-SNAPSHOT</version>
+    <version>0.9.2</version>
     <name>Worker API for GWT</name>
     <description>A GWT Linker and support classes that links GWT code into worker
         scripts callable by Gears.</description>
@@ -33,9 +33,9 @@
     </parent>
 	
 	 <scm>
-        <connection>scm:svn:http://rebar.googlecode.com/svn/trunk/worker</connection>
-        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/worker</developerConnection>
-        <url>http://code.google.com/p/rebar/source/browse/trunk/worker</url>
+        <connection>scm:svn:http://rebar.googlecode.com/svn/tags/rebar-worker-0.9.2</connection>
+        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-worker-0.9.2</developerConnection>
+        <url>http://code.google.com/p/rebar/source/browse/tags/rebar-worker-0.9.2</url>
     </scm>
 
     <dependencies>
@@ -173,7 +173,7 @@
                                     <tasks>
                                         <property name="test_classpath" refid="maven.test.classpath" />
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen                                                                 -notHeadless                                                                 -draftCompile                                                                 -style PRETTY                                                                 -port 40100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless                                                                 -draftCompile                                                                 -style PRETTY                                                                 -port 40100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel DEBUG" />
                                             <arg value="com.bedatadriven.rebar.worker.client.WorkerTestSuite" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
