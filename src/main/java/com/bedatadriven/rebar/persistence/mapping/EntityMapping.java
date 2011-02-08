@@ -392,21 +392,21 @@ public class EntityMapping {
 
     // make a list of all columns that are updatable
     // (primary key is excluded a priori)
-    List<ColumnMapping> names = new ArrayList<ColumnMapping>();
+    List<ColumnMapping> updateableColumns = new ArrayList<ColumnMapping>();
     for (PropertyMapping property : properties) {
       if (property.isUpdatable()) {
         for (ColumnMapping column : property.getColumns()) {
-          names.add(column);
+          updateableColumns.add(column);
         }
       }
     }
 
     StringBuilder sb = new StringBuilder();
     sb.append("update ").append(getTableName()).append(" set ");
-    sb.append(makeCSList(names, new Lister<ColumnMapping>() {
+    sb.append(makeCSList(updateableColumns, new Lister<ColumnMapping>() {
       @Override
       public String itemToString(ColumnMapping item) {
-        return item + "=?";
+        return item.getName() + "=?";
       }
     }));
 
