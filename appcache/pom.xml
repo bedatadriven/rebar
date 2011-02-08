@@ -21,17 +21,17 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-appcache</artifactId>
     <packaging>jar</packaging>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <name>AppCache support for GWT</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for HTML5 and for Gears for a given GWT module.</description>
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </parent>
     <scm>
-        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/</developerConnection>
+        <developerConnection>scm:svn:https://rebar.googlecode.com/svn/tags/rebar-appcache-0.6</developerConnection>
     </scm>
     <dependencies>
         <dependency>
