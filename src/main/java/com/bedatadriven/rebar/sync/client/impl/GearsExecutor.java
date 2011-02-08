@@ -50,13 +50,13 @@ public class GearsExecutor {
 
     try {
       openConnection();
-  //    beginTransaction();
+      beginTransaction();
       rowsAffected = executeUpdates(cmd.getOperations());
-    //  commitTransaction();
+      commitTransaction();
       
     } catch(Exception e) {
-    	//rollbackSavePoint();
-    //	throw e;
+    	rollbackSavePoint();
+    	throw e;
     } finally {
       closeConnection();
     }
