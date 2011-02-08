@@ -41,6 +41,7 @@ import java.util.SortedSet;
 @LinkerOrder(Order.PRIMARY)
 public final class AppCacheIFrameLinker extends IFrameLinker {
 
+  private boolean hostedMode = false;
 
   public AppCacheIFrameLinker() {
   }
@@ -52,25 +53,38 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
   @Override
   public ArtifactSet link(TreeLogger logger, LinkerContext linkerContext, ArtifactSet artifacts) throws UnableToCompleteException {
-    ArtifactSet toReturn = new ArtifactSet(artifacts);
-
-    for (CompilationResult compilation : toReturn.find(CompilationResult.class)) {
-      PermutationContext context = new PermutationContext(linkerContext, artifacts, compilation);
-
-      Collection<EmittedArtifact> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation);
-
-      context.addToCache(artifacts.find(EmittedArtifact.class));
-      context.addToCache(compilationArtifacts);
-
-      toReturn.addAll(compilationArtifacts);
-      toReturn.add(doEmitBootstrapScript(logger, context));
-      toReturn.add(doEmitManifest(logger, context, new GearsManifestWriter()));
-      toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
+    
+    Collection<CompilationResult> compilationResults = artifacts.find(CompilationResult.class);
+    
+    hostedMode = compilationResults.size() == 0;
+    
+    if(hostedMode) {
+      // if we are being run in hosted mode, revert entirely to the IFrameLinker
+      
+      return super.link(logger, linkerContext, artifacts);
+    
+    } else {
+      
+      ArtifactSet toReturn = new ArtifactSet(artifacts);
+  
+      for (CompilationResult compilation : compilationResults) {
+        PermutationContext context = new PermutationContext(linkerContext, artifacts, compilation);
+  
+        Collection<EmittedArtifact> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation);
+  
+        context.addToCache(artifacts.find(EmittedArtifact.class));
+        context.addToCache(compilationArtifacts);
+  
+        toReturn.addAll(compilationArtifacts);
+        toReturn.add(doEmitBootstrapScript(logger, context));
+        toReturn.add(doEmitManifest(logger, context, new GearsManifestWriter()));
+        toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
+      }
+  
+      toReturn.add(emitPermutationMap(logger, linkerContext, artifacts));
+     
+      return toReturn;
     }
-
-    toReturn.add(emitPermutationMap(logger, linkerContext, artifacts));
-
-    return toReturn;
   }
 
 
@@ -160,7 +174,12 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   @Override
   protected String getSelectionScriptTemplate(TreeLogger logger,
       LinkerContext context) {
-    return "com/bedatadriven/rebar/appcache/linker/BootstrapTemplate.js";
+    
+    if(hostedMode) {
+      return super.getSelectionScriptTemplate(logger, context);
+    } else {
+      return "com/bedatadriven/rebar/appcache/linker/BootstrapTemplate.js";
+    }
   }
 
   /**
@@ -251,7 +270,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
         null);
 
     // add the bootstrap script (provided by the server)
-    writer.appendEntry(logger, "bootstrap.js");
+    writer.appendEntry(logger, context.getModuleName() + ".nocache.js");
 
     for (EmittedArtifact artifact : context.getToCache()) {
       if (artifact.isPrivate()) {

@@ -58,7 +58,7 @@ public class BootstrapServletTest {
     servlet.init(config);
 
     HttpServletRequest request = createMock(HttpServletRequest.class);
-    expect(request.getRequestURI()).andReturn("/ActivityInfo/bootstrap.js");
+    expect(request.getRequestURI()).andReturn("/ActivityInfo/ActivityInfo.nocache.js");
     expect(request.getHeader(eq("User-Agent"))).andReturn(MS_IE_8).anyTimes();
     replay(request);
 
@@ -67,6 +67,8 @@ public class BootstrapServletTest {
     replay(response);
 
     servlet.doGet(request, response);
+    
+    verify(context, config, request, response);
   }
 
   private ServletOutputStream stdOut() {
