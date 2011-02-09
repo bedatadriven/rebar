@@ -52,7 +52,7 @@ public class UserAgentProvider implements PropertyProvider {
 
   private int matchVersion(String ua) {
     Matcher matcher = geckoRevision.matcher(ua);
-    if(matcher.matches()) {
+    if(matcher.find()) {
 
       int major = Integer.parseInt(matcher.group(1));
       int minor = Integer.parseInt(matcher.group(2));
