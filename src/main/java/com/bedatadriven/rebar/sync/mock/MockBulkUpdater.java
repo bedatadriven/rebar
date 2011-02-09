@@ -41,8 +41,16 @@ public class MockBulkUpdater implements BulkUpdaterAsync {
 
   public void executeUpdates(String databaseName, String json, AsyncCallback<Integer> callback) {
     try {
+      connection.setAutoCommit(false);
       callback.onSuccess(executeUpdates(json));
+      connection.commit();
+    
     } catch (Exception e) {
+      try {
+        connection.rollback();
+      } catch (SQLException ignored) {
+       
+      }
       callback.onFailure(e);
     }
   }
