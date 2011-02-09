@@ -44,6 +44,7 @@ public class BootstrapServlet extends HttpServlet {
 
   private ServletContext context;
   private Map<String, PropertyProvider> providers;
+  
 
   private static final Logger logger = Logger.getLogger(BootstrapServlet.class.getName());
 
@@ -66,25 +67,37 @@ public class BootstrapServlet extends HttpServlet {
   protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     // get the non-permuted version of the file
-    String[] moduleBaseAndFile = getModuleBase(req);
-    String permutation = computePermutation(req, moduleBaseAndFile[0]);
-
+    Path path = getModuleBase(req);
+    String permutation = computePermutation(req, path.moduleBase);
+    
     resp.setHeader("Cache-Control", "no-cache");
     resp.setHeader("Pragma", "no-cache");
     resp.setDateHeader("Expires", new Date().getTime());
 
-    if(moduleBaseAndFile[1].equals("html5.manifest")) {
+    if(path.file.equals("html5.manifest")) {
       resp.setContentType("text/cache-manifest");
 
-    } else if(moduleBaseAndFile[1].endsWith(".js")) {
+    } else if(path.file.endsWith(".js")) {
       resp.setContentType("application/javascript");
     }
-
-    sendFile(resp, moduleBaseAndFile, permutation);
+    
+    sendFile(resp, path, permutation);
   }
 
-  private void sendFile(HttpServletResponse resp, String[] moduleBaseAndFile, String permutation) throws IOException {
-    String path = context.getRealPath(moduleBaseAndFile[0] + permutation + "." + moduleBaseAndFile[1]);
+  private void sendFile(HttpServletResponse resp, Path resource, String permutation) throws IOException {
+    String path;
+    
+    if(permutation == null) {
+      // we may be in hosted mode, try to serve the real thing
+      path = context.getRealPath(resource.moduleBase + resource.file);
+
+    } else if(resource.isSelectionScript()) {
+      // special case for MyModule.nocache.js to stay consistent with the IFrameLinker
+      path = context.getRealPath(resource.moduleBase + permutation + ".bootstrap.js");
+
+    } else {
+      path = context.getRealPath(resource.moduleBase + permutation + "." + resource.file);
+    }
     InputStream is = new FileInputStream(path);
     ServletOutputStream os = resp.getOutputStream();
     byte[] buffer = new byte[1024];
@@ -95,13 +108,19 @@ public class BootstrapServlet extends HttpServlet {
     }
   }
 
-  private String[] getModuleBase(HttpServletRequest req) throws ServletException {
+  private Path getModuleBase(HttpServletRequest req) throws ServletException {
     String uri = req.getRequestURI();
     int lastSlash = uri.lastIndexOf('/');
     if(lastSlash < 1) {
       throw new ServletException("Request for resource must be in module path. URI = " + uri);
     }
-    return new String[] { uri.substring(0, lastSlash+1), uri.substring(lastSlash+1) };
+    String file = uri.substring(lastSlash+1);
+    String path = uri.substring(0, lastSlash+1);
+    
+    lastSlash = path.lastIndexOf('/',path.length()-2);
+    String module = path.substring(lastSlash+1, path.length()-1);
+    
+    return new Path(path, file, module);
   }
 
   private String computePermutation(HttpServletRequest req, String moduleBase) throws ServletException {
@@ -123,10 +142,11 @@ public class BootstrapServlet extends HttpServlet {
         }
       }
     } catch (FileNotFoundException e) {
-      throw new ServletException("Cannot locate permutation map", e);
+      logger.info("No permutations map found, will return default selection script");
+      return null;
     }
     if(matches.size() != 1) {
-      throw new ServletException("No permutation available");
+      return null;
     }
     return matches.iterator().next();
   }
@@ -147,5 +167,22 @@ public class BootstrapServlet extends HttpServlet {
       }
     }
     return true;
+  }
+  
+  private static class Path {
+    
+    public Path(String path, String file, String moduleName) {
+      super();
+      this.moduleBase = path;
+      this.file = file;
+      this.moduleName = moduleName;
+    }
+    public final String moduleBase;
+    public final String file;
+    public final String moduleName;
+    
+    public boolean isSelectionScript() {
+      return file.equals(moduleName + ".nocache.js");
+    }
   }
 }
