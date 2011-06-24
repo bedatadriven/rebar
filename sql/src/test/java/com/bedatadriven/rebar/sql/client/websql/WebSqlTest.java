@@ -16,10 +16,14 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlDatabase;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class WebSqlTest extends GWTTestCase {
 
+
+	
   /**
    * Must refer to a valid module that sources this class.
    */
@@ -31,7 +35,7 @@ public class WebSqlTest extends GWTTestCase {
 
     WebSqlDatabase db = WebSqlDatabase.openDatabase("testInsert", 1, "My test database", 1024 * 50);
     assertNotNull(db);
-    db.transaction(new TransactionCallback() {
+    db.transaction(new WebSqlTransactionCallback() {
       @Override
       public void begin(WebSqlTransaction tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
@@ -52,9 +56,9 @@ public class WebSqlTest extends GWTTestCase {
 
   public void testInsertAndSelect() {
 
-    WebSqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", 1, "My test database", 1024 * 50);
+    SqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", 1, "My test database", 1024 * 50);
     assertNotNull(db);
-    db.transaction(new TransactionCallback() {
+    db.transaction(new WebSqlTransactionCallback() {
       @Override
       public void begin(WebSqlTransaction tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
@@ -62,7 +66,7 @@ public class WebSqlTest extends GWTTestCase {
             new Object[] { 1, "balloons" });
         tx.executeSql("SELECT id, text FROM MyTable", new ResultCallback() {
           @Override
-          public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
+          public void onSuccess(SqlTransaction tx, WebSqlResultSet results) {
             assertEquals(1, results.getRows().length());
             finishTest();
           }

@@ -16,14 +16,19 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public final class WebSqlTransaction extends JavaScriptObject {
+public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
 
   protected WebSqlTransaction() {
   }
 
+  /* (non-Javadoc)
+   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String)
+   */
+  @Override
   public native void executeSql(String statement) /*-{
     this.executeSql(statement, [] );
   }-*/;
@@ -32,6 +37,10 @@ public final class WebSqlTransaction extends JavaScriptObject {
     this.executeSql(statement, parameters);
   }-*/;
 
+  /* (non-Javadoc)
+   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[])
+   */
+  @Override
   public void executeSql(String statement, Object[] parameters) {
     executeSql(statement, toParamArray(parameters));
   }
@@ -45,10 +54,18 @@ public final class WebSqlTransaction extends JavaScriptObject {
     });
   }-*/;
 
+  /* (non-Javadoc)
+   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[], com.bedatadriven.rebar.sql.client.websql.ResultCallback)
+   */
+  @Override
   public void executeSql(String statement, Object[] parameters, ResultCallback callback) {
     executeSql(statement, toParamArray(parameters), callback);
   }
 
+  /* (non-Javadoc)
+   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, com.bedatadriven.rebar.sql.client.websql.ResultCallback)
+   */
+  @Override
   public void executeSql(String statement, ResultCallback resultCallback) {
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }

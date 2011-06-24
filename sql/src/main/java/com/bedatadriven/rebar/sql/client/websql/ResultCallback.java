@@ -16,8 +16,10 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+
 public interface ResultCallback {
-  void onSuccess(WebSqlTransaction tx, WebSqlResultSet results);
+  void onSuccess(SqlTransaction tx, WebSqlResultSet results);
   void onFailure(WebSqlException e);
 
 }
