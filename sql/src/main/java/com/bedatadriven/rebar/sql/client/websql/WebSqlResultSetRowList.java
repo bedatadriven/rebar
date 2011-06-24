@@ -20,7 +20,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public final class WebSqlResultSetRowList extends JavaScriptObject {
 
-
   protected WebSqlResultSetRowList() {
   }
 
@@ -31,5 +30,4 @@ public final class WebSqlResultSetRowList extends JavaScriptObject {
   public native JavaScriptObject getRow(int index) /*-{
     return this.item(index);
   }-*/;
-
 }

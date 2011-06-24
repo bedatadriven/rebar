@@ -20,6 +20,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 public final class WebSqlDatabase extends JavaScriptObject {
 
+
   protected WebSqlDatabase() {
   }
 
@@ -55,7 +56,8 @@ public final class WebSqlDatabase extends JavaScriptObject {
     this.transaction(function(tx) {
       callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::begin(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;)(tx);
     }, function(e) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::onError(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(e);
+      callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::onError(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
+          @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
 

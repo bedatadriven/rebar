@@ -184,7 +184,7 @@
                                             <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
                                               -notHeadless
                                               -prod
-                                              -port 50124
+                                              -port 50125
                                               -codeServerPort 50101
                                               -logdir target/test-logs
                                               -runStyle Manual
