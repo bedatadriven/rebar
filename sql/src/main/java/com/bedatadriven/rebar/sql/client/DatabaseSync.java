@@ -14,22 +14,7 @@
  * the License.
  */
 
-package com.bedatadriven.rebar.sql.client.websql;
+package com.bedatadriven.rebar.sql.client;
 
-public final class WebSqlException extends RuntimeException {
-
-  private int code;
-
-  protected WebSqlException(String message, int code) {
-    super(message);
-    this.code = code;
-  }
-
-  public int getCode() {
-    return code;
-  }
-
-  public void setCode(int code) {
-    this.code = code;
-  }
+public class DatabaseSync {
 }

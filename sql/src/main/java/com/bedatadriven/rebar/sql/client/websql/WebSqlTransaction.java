@@ -40,7 +40,8 @@ public final class WebSqlTransaction extends JavaScriptObject {
     this.executeSql(statement, parameters, function(tx, results) {
       callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
     }, function(e) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(e);
+      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
+          @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
 
