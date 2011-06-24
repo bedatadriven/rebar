@@ -18,7 +18,23 @@
 
 <module>
     <inherits name="com.google.gwt.gears.Gears"/>
+    <inherits name="com.bedatadriven.rebar.sql.Sql"/>
     <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>
-  
+
+
+    <!-- Fall through to this rule when the browser doesn't support WebSQL -->
+    <replace-with class="com.bedatadriven.rebar.sync.client.impl.GearsBulkUpdater">
+        <when-type-is class="com.bedatadriven.rebar.sync.client.BulkUpdaterAsync"/>
+    </replace-with>
+
+    <!-- Webkit + Opera browser support websql -->
+    <replace-with class="com.bedatadriven.rebar.sync.client.impl.WebSqlBulkUpdater">
+        <when-type-is class="com.bedatadriven.rebar.sync.client.BulkUpdaterAsync"/>
+          <any>
+            <when-property-is name="user.agent" value="safari"/>
+            <when-property-is name="user.agent" value="opera" />
+        </any>
+    </replace-with>
+
     <source path='client'/>
 </module>

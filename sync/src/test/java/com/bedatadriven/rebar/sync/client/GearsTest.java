@@ -25,7 +25,6 @@ import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
-import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.Date;
@@ -34,25 +33,8 @@ import java.util.Date;
 /**
  * @author Alex Bertram
  */
-public class GearsTest extends GWTTestCase {
-  private String dbName;
-  private static final String json =
-      "[ { statement: \"create table mytest (number int)\" }, "  +
-        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [1], [2], [3], [4] ] } " +
-      "]";
+public class GearsTest extends BaseTestCase {
 
-  @Override
-  public String getModuleName() {
-    return "com.bedatadriven.rebar.sync.GearsExecutorTest";
-  }
-
-  @Override
-  protected void gwtSetUp() throws Exception {
-    super.gwtSetUp();
-
-    // make unique db name to assure we start each test with a clean slate
-    dbName = "textExecution" + (new Date()).getTime();
-  }
 
   public void testGearsExecution() throws Exception {
     PreparedStatementBatch createOp = PreparedStatementBatch.newInstance();

@@ -18,7 +18,11 @@
 <module rename-to="GearsUpdateWorker">
     <inherits name="com.bedatadriven.rebar.worker.Worker"/>
     <inherits name="com.allen_sauer.gwt.log.gwt-log"/>
-    
+
+    <!-- Not used but silences errors -->
+    <inherits name="com.bedatadriven.rebar.sql.Sql"/>
+
+
     <source path='worker'/>
     <source path='client'/>
     <public path='worker-public'/>
