@@ -27,6 +27,10 @@ public final class WebSqlResultSet extends JavaScriptObject {
     return this.insertId;
   }-*/;
 
+  /**
+   * 
+   * @return the <strong>total</strong> number of rows affected during the transaction in progress.
+   */
   public native int getRowsAffected() /*-{
     return this.insertId;
   }-*/;

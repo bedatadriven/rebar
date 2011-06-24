@@ -16,22 +16,10 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.google.gwt.core.client.JavaScriptObject;
 
-public final class WebSqlDatabaseSync extends JavaScriptObject {
-
-  protected WebSqlDatabaseSync() {
-  }
-
-  public static native WebSqlDatabaseSync openDatabaseSync(String name, String version, String displayName, int estimatedSize,
-                                        CreationCallback creationCallback) /*-{
-
-    return $wnd.openDatabaseSync(name, version, displayName, estimatedSize,
-        function(db) {
-          creationCallback.@com.bedatadriven.rebar.sql.client.websql.CreationCallback::onCreated(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlDatabase;)(db);
-        }
-     );
-
-  }-*/;
-
+public interface WebSqlTransactionCallback {
+ 
+  void begin(WebSqlTransaction tx);
+  
+  void onError(WebSqlException e);
 }

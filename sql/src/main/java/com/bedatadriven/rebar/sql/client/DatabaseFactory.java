@@ -16,8 +16,22 @@
 
 package com.bedatadriven.rebar.sql.client;
 
-public class DatabaseFactory {
+/**
+ * Factory class that provides open 
+ * 
+ * @author alexander
+ *
+ */
+public interface DatabaseFactory {
 
-
+  /**
+   * Opens a database, creating it if necessary. 
+   * This does not lock the database, so it should be possible to have multiple 
+   * instances of the same database within the page or across several pages.
+   * 
+   * @param databaseName the name of the database
+   * @return an SqlDatabase instance
+   */
+  SqlDatabase open(String databaseName);
 
 }

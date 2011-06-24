@@ -16,9 +16,13 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlDatabase;
+import com.bedatadriven.rebar.sql.client.SqlException;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
-public final class WebSqlDatabase extends JavaScriptObject {
+public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabase {
 
 
   protected WebSqlDatabase() {
@@ -52,7 +56,7 @@ public final class WebSqlDatabase extends JavaScriptObject {
     return $wnd.openDatabase(name, version, displayName, estimatedSize);
   }-*/;
 
-  public native WebSqlTransaction transaction(TransactionCallback callback) /*-{
+  public native SqlTransaction transaction(WebSqlTransactionCallback callback) /*-{
     this.transaction(function(tx) {
       callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::begin(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;)(tx);
     }, function(e) {
@@ -60,5 +64,23 @@ public final class WebSqlDatabase extends JavaScriptObject {
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
+
+  @Override
+  public void transaction(final SqlTransactionCallback callback) {
+    transaction(new SqlTransactionCallback() {
+      
+      @Override
+      public void onError(SqlException e) {
+        callback.onError(e);
+      }
+      
+      @Override
+      public void begin(SqlTransaction tx) {
+        callback.begin(tx);        
+      }
+    });
+  }
+  
+  
 
 }

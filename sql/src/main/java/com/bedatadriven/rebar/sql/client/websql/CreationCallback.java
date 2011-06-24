@@ -16,6 +16,8 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlDatabase;
+
 public interface CreationCallback {
-  void onCreated(WebSqlDatabase db);
+  void onCreated(SqlDatabase db);
 }
