@@ -21,8 +21,5 @@
     <inherits name="com.google.gwt.gears.Gears"/>
     <inherits name="com.allen_sauer.gwt.log.gwt-log"/>
 
-    <!-- These are the sources for the java.sql interfaces -->
-    <inherits name="com.bedatadriven.rebar.sql.emul.Emulation"/>
-
     <source path='client'/>
 </module>

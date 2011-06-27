@@ -1,6 +1,6 @@
 package com.bedatadriven.rebar.sql.client;
 
-import com.bedatadriven.rebar.sql.client.websql.ResultCallback;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
 
 public interface SqlTransaction {
 
@@ -30,7 +30,7 @@ public interface SqlTransaction {
    * @param callback
    */
   void executeSql(String statement, Object[] parameters,
-      ResultCallback callback);
+      SqlResultCallback callback);
 
   
   /**
@@ -38,7 +38,6 @@ public interface SqlTransaction {
    * @param statement
    * @param resultCallback
    */
-  void executeSql(String statement,
-      ResultCallback resultCallback);
+  void executeSql(String statement, SqlResultCallback resultCallback);
 
 }

@@ -3,7 +3,13 @@ package com.bedatadriven.rebar.sql.server.sqlite;
 import com.bedatadriven.rebar.sql.client.DatabaseFactory;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 
-public class SqliteDatabaseFactory implements DatabaseFactory {
+/**
+ * Plain JRE implementation of WebSQL for testing purposes.
+ * 
+ * @author alexander
+ *
+ */
+public class SqlJdbcDatabaseFactory implements DatabaseFactory {
 
   @Override
   public SqlDatabase open(String databaseName) {

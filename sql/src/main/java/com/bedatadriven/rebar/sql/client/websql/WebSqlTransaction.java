@@ -16,19 +16,14 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
-public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
+public final class WebSqlTransaction extends JavaScriptObject  {
 
   protected WebSqlTransaction() {
   }
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String)
-   */
-  @Override
   public native void executeSql(String statement) /*-{
     this.executeSql(statement, [] );
   }-*/;
@@ -37,50 +32,31 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     this.executeSql(statement, parameters);
   }-*/;
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[])
-   */
-  @Override
   public void executeSql(String statement, Object[] parameters) {
     executeSql(statement, toParamArray(parameters));
   }
 
-  public native void executeSql(String statement, JavaScriptObject parameters, ResultCallback callback)/*-{
+  public native void executeSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
     this.executeSql(statement, parameters, function(tx, results) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
     }, function(e) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[], com.bedatadriven.rebar.sql.client.websql.ResultCallback)
-   */
-  @Override
-  public void executeSql(String statement, Object[] parameters, ResultCallback callback) {
+  public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
     executeSql(statement, toParamArray(parameters), callback);
   }
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, com.bedatadriven.rebar.sql.client.websql.ResultCallback)
-   */
-  @Override
-  public void executeSql(String statement, ResultCallback resultCallback) {
+  public void executeSql(String statement, WebSqlResultCallback resultCallback) {
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
-
 
   private ParamArray toParamArray(Object[] parameters) {
     ParamArray paramArray = JsArray.createArray().cast();
     for(Object param : parameters) {
-      if(param instanceof Number) {
-        paramArray.push(((Number)param).doubleValue());
-      } else if(param instanceof String) {
-        paramArray.push((String)param);
-      } else {
-        throw new IllegalArgumentException("Param argument of '" + param.getClass().getName() + "'");
-      }
+      paramArray.push(param);
     }
     return paramArray;
   }
@@ -91,17 +67,10 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     protected ParamArray() {
     }
 
-    public native void push(double x) /*-{
+    public native void push(Object x) /*-{
       this.push(x);
     }-*/;
 
-    public native void push(String s) /*-{
-      this.push(s);
-    }-*/;
-
-    public native void push(boolean b) /*-{
-      this.push(b);
-    }-*/;
 
   }
 

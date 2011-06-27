@@ -14,11 +14,11 @@
  * the License.
  */
 
-package com.bedatadriven.rebar.sql.client;
+package com.bedatadriven.rebar.sql.client.websql;
 
-import java.sql.SQLException;
 
-public class DatabaseLockedException extends SQLException {
-  public DatabaseLockedException() {
-  }
+public interface WebSqlResultCallback {
+  void onSuccess(WebSqlTransaction tx, WebSqlResultSet results);
+  void onFailure(WebSqlException e);
+
 }

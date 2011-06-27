@@ -38,9 +38,4 @@ public final class WebSqlResultSet extends JavaScriptObject {
   public native WebSqlResultSetRowList getRows() /*-{
     return this.rows;
   }-*/;
-
-
-
-
-
 }

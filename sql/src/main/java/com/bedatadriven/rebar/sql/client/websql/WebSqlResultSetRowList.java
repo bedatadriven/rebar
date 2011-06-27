@@ -27,7 +27,7 @@ public final class WebSqlResultSetRowList extends JavaScriptObject {
     return this.length;
   }-*/;
 
-  public native JavaScriptObject getRow(int index) /*-{
+  public native WebSqlResultSetRow getRow(int index) /*-{
     return this.item(index);
   }-*/;
 }
