@@ -198,7 +198,7 @@
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
                                             <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
                         -notHeadless -port 50100 -codeServerPort 50103 -logdir target/test-logs
-                          -runStyle Manual -logLevel WARN" />
+                          -runStyle Manual -prod -logLevel WARN -style DETAILED" />
                                             <arg value="com.bedatadriven.rebar.sync.client.BulkUpdaterTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
