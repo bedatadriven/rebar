@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.sync.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class BulkUpdaterTest extends BaseTestCase {
@@ -28,12 +29,14 @@ public class BulkUpdaterTest extends BaseTestCase {
     updater.executeUpdates(dbName, json, new AsyncCallback<Integer>() {
       @Override
       public void onFailure(Throwable throwable) {
+        Window.alert("failed: " + throwable.getMessage());
         fail(throwable.getMessage());
       }
 
       @Override
       public void onSuccess(Integer rowsAffected) {
         assertEquals(4, (int)rowsAffected);
+        finishTest();
       }
     });
 

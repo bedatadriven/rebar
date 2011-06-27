@@ -16,10 +16,15 @@
 
 package com.bedatadriven.rebar.sync.client.impl;
 
-import com.bedatadriven.rebar.sql.client.websql.*;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlDatabase;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlException;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlResultSet;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlTransaction;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback;
 import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -32,17 +37,16 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
   public void executeUpdates(String databaseName, final String bulkOperationJsonArray,
                              final AsyncCallback<Integer> callback) {
 
-    GWT.log("WebSqlBulkUpdater starting", null);
-    
+   
     WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, 1, databaseName,
         1024 * 1024 * 5);
 
-    database.transaction(new TransactionCallback() {
+    database.transaction(new WebSqlTransactionCallback() {
       @Override
       public void begin(WebSqlTransaction tx) {
-        GWT.log("WebSqlBulkUpdater transaction started", null);
+        log("WebSqlBulkUpdater transaction started");
 
-        new Sequence(bulkOperationJsonArray, callback);
+        new Sequence(tx, bulkOperationJsonArray, callback);
       }
 
       @Override
@@ -62,15 +66,18 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     private WebSqlTransaction tx;
     private PreparedStatementBatch currentBatch;
 
-    public Sequence(String statements, AsyncCallback<Integer> callback) {
+    public Sequence(WebSqlTransaction tx, String statements, AsyncCallback<Integer> callback) {
+      log("WebSqlBulkUpdater about to call eval on '" + statements + "'");
+
+      this.tx = tx;
       this.statements = PreparedStatementBatch.fromJson(statements);
       this.callback = callback;
-      GWT.log("WebSqlBulkUpdater starting execution of " + this.statements.length() + " statements", null);
+      log("WebSqlBulkUpdater starting execution of " + this.statements.length() + " statements");
       executeNextStatement();
     }
 
     public void executeNextStatement() {
-      GWT.log("WebSqlBulkUpdater: executing statement " + nextStatementIndex, null);
+      log("WebSqlBulkUpdater: executing statement " + nextStatementIndex);
 
       currentBatch = statements.get(nextStatementIndex++);
       if(currentBatch.getExecutions() == null || currentBatch.getExecutions().length() == 0) {
@@ -82,10 +89,12 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     }
 
     private void executeStatementWithoutParams(PreparedStatementBatch batch) {
-      tx.executeSql(batch.getStatement(), JsArray.createArray(), new ResultCallback() {
+      log("WebSqlBulkUpdater: executeStatementWithoutParams");
+      
+      tx.executeSql(batch.getStatement(), JsArray.createArray(), new WebSqlResultCallback() {
         @Override
         public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          rowsAffected += results.getRowsAffected();
+          rowsAffected = results.getRowsAffected();
           onBatchFinished();
         }
 
@@ -97,11 +106,15 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     }
 
     private void executeNextExecution() {
+      
+      log("WebSqlBulkUpdater: executeNextExecution  = " + nextExecutionIndex);
+
       tx.executeSql(currentBatch.getStatement(), currentBatch.getExecutions().get(nextExecutionIndex++),
-          new ResultCallback() {
+          new WebSqlResultCallback() {
         @Override
         public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          rowsAffected += results.getRowsAffected();
+          log("executeSql succeeded, " + results.getRowsAffected() + " rows affected.");
+          rowsAffected = results.getRowsAffected();
           if(nextExecutionIndex < currentBatch.getExecutions().length()) {
             executeNextExecution();
           } else {
@@ -124,4 +137,9 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
       }
     }
   }
+  
+  private static native final void log(String message) /*-{
+      console.log(message);
+  }-*/;
+  
 }
