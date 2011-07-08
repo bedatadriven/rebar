@@ -36,7 +36,7 @@ public class UserAgentProvider implements PropertyProvider {
       return "opera";
     } else if (ua.contains("webkit")) {
       return "safari";
-    } else if (ua.contains("msie 8")) {
+    } else if (ua.contains("msie 8") || ua.contains("msie 9")) {
       return "ie8";
     } else if (ua.contains("msie 7") || ua.contains("msie 6")) {
       return "ie6";
@@ -47,7 +47,7 @@ public class UserAgentProvider implements PropertyProvider {
       }
       return "gecko";
     }
-    return "unknown";
+    throw new UnknownUserAgentException();
   }
 
   private int matchVersion(String ua) {

@@ -25,7 +25,7 @@ class Html5ManifestWriter implements ManifestWriter {
 
   @Override
   public String getSuffix() {
-    return "html5.manifest";
+    return "appcache";
   }
 
   @Override
