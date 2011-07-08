@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2009-2010 BeDataDriven (alex@bedatadriven.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  ~ use this file except in compliance with the License. You may obtain a copy of
+  ~ the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  ~ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing permissions and limitations under
+  ~ the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bedatadriven.rebar</groupId>
+  <artifactId>parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0</version>
+  <name>Rebar Parent POM</name>
+  <description>Set of tools to facilitate the development of desktop-strength webapps with
+    GWT and Gears, including a jdbc facade, java persistence, a worker-thread linker, and
+    asynchronous database access.</description>
+  <developers>
+    <developer>
+      <name>Alex Bertram</name>
+      <email>alex@bedatadriven.com</email>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>sql</module>
+    <module>sync</module>
+    <module>modulestore</module>
+    <module>worker</module>
+    <module>persistence</module>
+    <module>jpa-mapping</module>
+  </modules>
+
+  <properties>
+    <!--  convenience to define GWT version in one place -->
+    <gwtVersion>2.0.0</gwtVersion>
+
+    <!--  tell the compiler we can use 1.6 -->
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+  </properties>
+
+ 
+
+
+  <dependencies>
+
+    <!-- Testing -->
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>bedatadriven-oss</id>
+      <name>bedatadriven Open-Source releases</name>
+      <url>http://nexus.bedatadriven.com/content/repositories/oss-releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>bedatadriven-oss</id>
+      <name>bedatadriven Open-Source snapshots</name>
+      <url>http://nexus.bedatadriven.com/content/repositories/oss-snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>bedatadriven-thirdparty</id>
+      <name>bedatadriven third party</name>
+      <url>http://nexus.bedatadriven.com/content/repositories/thirdparty/</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <!-- configure the Java Compiler to ignore our emulation
+     sources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF-8</encoding>
+
+          <!-- Don't compile our emulation sources -->
+          <excludes>
+            <exclude>**/emul/**/*.java</exclude>
+          </excludes>
+        </configuration>
+
+      </plugin>
+
+      <!-- Set the resource encoding to UTF-8 for platform independence -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <!-- Disable the surefire plugin for GWT tests -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <excludes>
+            <exclude>**/client/**/*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+
+      <!-- Remove misc temp folders created by GWT -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>cleanup-tomcat</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${basedir}/tomcat</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
