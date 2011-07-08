@@ -16,8 +16,18 @@
 
 package com.bedatadriven.rebar.appcache.server;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -25,19 +35,17 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.easymock.EasyMock.*;
+import org.junit.Before;
+import org.junit.Test;
 
-public class BootstrapServletTest {
+public class ScriptSelectionServletTest {
 
   public static final String MS_IE_8 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; GTB0.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; GACID=)";
 
   @Before
   public void enableLogging() {
-    Logger.getLogger(BootstrapServlet.class.getName()).setLevel(Level.FINEST);
+    Logger.getLogger(DefaultSelectionServlet.class.getName()).setLevel(Level.FINEST);
   }
 
   @Test
@@ -45,16 +53,16 @@ public class BootstrapServletTest {
 
 
     ServletContext context = createMock(ServletContext.class);
-    expect(context.getRealPath(eq("/ActivityInfo/permutations"))).andReturn(permutationPath());
-    expect(context.getRealPath(eq("/ActivityInfo/F461B4925CA75C3608BEFC78A0C4CF03.bootstrap.js")))
-        .andReturn(dummyContentPath());
+    expect(context.getRealPath(eq("/ActivityInfo/permutations"))).andReturn(permutationPath()).anyTimes();
+    expect(context.getRealPath(eq("/ActivityInfo/F461B4925CA75C3608BEFC78A0C4CF03.nocache.js")))
+        .andReturn(dummyContentPath()).anyTimes();
     replay(context);
 
     ServletConfig config = createMock(ServletConfig.class);
     expect(config.getServletContext()).andReturn(context);
     replay(config);
 
-    BootstrapServlet servlet = new BootstrapServlet();
+    DefaultSelectionServlet servlet = new DefaultSelectionServlet();
     servlet.init(config);
 
     HttpServletRequest request = createMock(HttpServletRequest.class);

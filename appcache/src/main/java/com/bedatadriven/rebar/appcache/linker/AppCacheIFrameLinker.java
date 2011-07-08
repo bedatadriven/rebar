@@ -34,8 +34,7 @@ import java.util.SortedSet;
 /**
  * Extends the standard <code>IFrameLinker</code> to generate manifests for
  * <code>ManagedResourceStores</code>, and to enable server-side selection of
- * *
- *
+ * permutations.
  *
  */
 @LinkerOrder(Order.PRIMARY)
@@ -108,7 +107,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
     return emitString(logger, selectionScript,
         context.getStrongName()
-            + ".bootstrap.js", lastModified);
+            + ".nocache.js", lastModified);
   }
 
   /**

@@ -30,7 +30,7 @@ class GearsAppCache implements AppCache  {
   public GearsAppCache() {
     LocalServer server = Factory.getInstance().createLocalServer();
     this.store = server.createManagedStore(GWT.getModuleName());
-    this.store.setManifestUrl(GWT.getModuleBaseURL() + "gears.manifest");
+    this.store.setManifestUrl(GWT.getModuleBaseURL() + GWT.getModuleName() + ".gears.manifest");
   }
 
   @Override
