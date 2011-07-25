@@ -21,7 +21,7 @@
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>rebar-sync</artifactId>
   <packaging>jar</packaging>
-  <version>0.5</version>
+  <version>0.5.1-SNAPSHOT</version>
   <name>Synchronization Tools for GWT</name>
   <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
     the Gears local database.</description>
@@ -68,7 +68,7 @@
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>jpa-mapping</artifactId>
-      <version>1.1</version>
+      <version>1.1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>
@@ -93,6 +93,23 @@
     </dependency>
 
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>http://repo1.maven.org/maven2/</url>
+     </repository>
+     <repository>
+       <id>bedatadriven-public</id>
+       <name>Bedatadriven Public Repo</name>
+       <url>http://nexus.bedatadriven.com/content/groups/public</url>
+       <snapshots>
+         <enabled>true</enabled>
+        </snapshots>
+     </repository>
+  </repositories>
+
 
   <build>
     <!-- Include everything in the jar -->

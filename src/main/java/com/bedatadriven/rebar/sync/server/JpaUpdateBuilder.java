@@ -97,6 +97,10 @@ public class JpaUpdateBuilder {
   }
 
   public <T> void insert(Class<T> entityClass, List<T> entities) throws JSONException {
+    insert("", entityClass, entities);
+  }
+
+  public <T> void insert(String conflictClause, Class<T> entityClass, List<T> entities) throws JSONException {
 
     if (entities.size() == 0) {
       return; // nothing to do
@@ -109,7 +113,7 @@ public class JpaUpdateBuilder {
 
     // first build the insert statement
     json.key("statement");
-    json.value(mapping.getInsertStatement());
+    json.value(mapping.getInsertStatement(conflictClause));
 
     json.key("executions");
     json.array();
