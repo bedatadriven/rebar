@@ -368,9 +368,13 @@ public class EntityMapping {
 
 
   public String getInsertStatement() {
+    return getInsertStatement("");
+  }
+
+  public String getInsertStatement(String conflictClause) {
 
     StringBuilder sb = new StringBuilder();
-    sb.append("insert into ").append(getTableName()).append(" (");
+    sb.append("insert ").append(conflictClause).append(" into ").append(getTableName()).append(" (");
     sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
       @Override
       public String itemToString(ColumnMapping item) {

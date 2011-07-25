@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>jpa-mapping</artifactId>
-  <version>1.1</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>JPA Object Model</name>
 
   <scm>
@@ -44,4 +44,21 @@
       <version>20090211</version>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>http://repo1.maven.org/maven2/</url>
+     </repository>
+     <repository>
+       <id>bedatadriven-public</id>
+       <name>Bedatadriven Public Repo</name>
+       <url>http://nexus.bedatadriven.com/content/groups/public</url>
+       <snapshots>
+         <enabled>true</enabled>
+        </snapshots>
+     </repository>
+  </repositories>
+
 </project>
