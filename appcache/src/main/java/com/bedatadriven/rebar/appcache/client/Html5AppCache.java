@@ -84,15 +84,27 @@ class Html5AppCache implements AppCache {
     return STATUS_MAPPING[getAppCacheStatus()];
   }
 
+  /**
+   * 
+   * @return true if the browser supports the AppCache API
+   */
   public static native boolean isSupported() /*-{
     return typeof $wnd.applicationCache == 'object';
   }-*/;
 
-   public static native int update() /*-{
+  public static native int update() /*-{
     return $wnd.applicationCache.update();
   }-*/;
 
   public static native int getAppCacheStatus() /*-{
     return $wnd.applicationCache.status;
+  }-*/;
+  
+  /**
+   * 
+   * @return true if the document has an AppCache manifest attached
+   */
+  public static native boolean hasManifest() /*-{
+  	return $wnd.document.documentElement.getAttribute('manifest');
   }-*/;
 }

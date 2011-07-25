@@ -21,16 +21,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserAgentProvider implements PropertyProvider {
-
+	
   private final Pattern geckoRevision;
 
   public UserAgentProvider() {
     geckoRevision = Pattern.compile("rv:([0-9]+)\\.([0-9]+)");
+
   }
 
   @Override
   public String get(HttpServletRequest request) {
-    String ua = request.getHeader("User-Agent").toLowerCase();
+    String ua = userAgent(request);
 
     if (ua.contains("opera")) {
       return "opera";
@@ -40,8 +41,8 @@ public class UserAgentProvider implements PropertyProvider {
       return "ie8";
     } else if (ua.contains("msie 7") || ua.contains("msie 6")) {
       return "ie6";
-    } else if (ua.indexOf("gecko") != -1) {
-      int version = matchVersion(ua);
+    } else if (ua.contains("gecko")) {
+      int version = parseGeckoVersion(ua);
       if(version >= 1008) {
           return "gecko1_8";
       }
@@ -50,7 +51,19 @@ public class UserAgentProvider implements PropertyProvider {
     throw new UnknownUserAgentException();
   }
 
-  private int matchVersion(String ua) {
+	private String userAgent(HttpServletRequest request) {
+	  return request.getHeader("User-Agent").toLowerCase();
+  }
+  
+  public boolean isFirefox(HttpServletRequest request) {
+  	return isFirefox(userAgent(request));
+  }
+  
+	public boolean isFirefox(String ua) {
+	  return ua.indexOf("gecko") != -1;
+  }
+
+  private int parseGeckoVersion(String ua) {
     Matcher matcher = geckoRevision.matcher(ua);
     if(matcher.find()) {
 
@@ -60,5 +73,38 @@ public class UserAgentProvider implements PropertyProvider {
       return major * 1000 + minor;
     }
     return 0;
+  }
+  
+  /**
+   * 
+   * @param ua lowercase User-Agent header
+   * @return true if the browser is capable of installing gears
+   */
+  public boolean canSupportGears(String ua) {
+  	if(ua.contains("webkit")) {
+  		// earlier versions of chrome could support gears but 
+  		// updates happen automatically so we can't really count on gears
+  		// be available on chrome for long.
+  		return false;
+  		
+  	} else if(ua.contains("gecko") && ua.contains("rv:")) {
+  		// Gears is supported on FireFox versions up to 3.6x
+  		return parseGeckoVersion(ua) < 2000;
+  		
+  	} else if(ua.contains("msie 6") || ua.contains("msie 7") || ua.contains("msie 8")) {
+  		// Gears is supported on IE 6-8
+  		return true;
+  	} else {
+  		return false;
+  	}
+  }
+  
+  /**
+   * 
+   * @param req http request
+   * @return true if the browser is capable of installing gears
+   */
+  public boolean canSupportGears(HttpServletRequest req) {
+  	return canSupportGears(userAgent(req));
   }
 }

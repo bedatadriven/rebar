@@ -22,7 +22,7 @@ public class AppCacheFactory {
 
   public static AppCache get() {
     if(instance == null) {
-      if(Html5AppCache.isSupported()) {
+      if(Html5AppCache.isSupported() && Html5AppCache.hasManifest()) {
         instance = new Html5AppCache();
 
       } else if(GearsAppCache.isSupported()) {
