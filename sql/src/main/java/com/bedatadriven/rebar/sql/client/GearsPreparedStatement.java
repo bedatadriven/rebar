@@ -50,8 +50,12 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
   	return [];
   }-*/;
 
+  // IMPORTANT: note the explicit call to String() in the js code. Without this we get
+  // a js String object that gears chokes on
+  // c.f. http://code.google.com/p/google-web-toolkit/issues/detail?id=4301
+  
   public native void setString(int parameterIndex, String x) throws SQLException /*-{
-    this.@com.bedatadriven.rebar.sql.client.GearsPreparedStatement::parameters[parameterIndex-1] = x;
+    this.@com.bedatadriven.rebar.sql.client.GearsPreparedStatement::parameters[parameterIndex-1] = String(x);
   }-*/;
 
   @Override
