@@ -16,13 +16,18 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
+import com.google.gwt.core.client.GWT;
+
 public class AppCacheFactory {
 
   private static AppCache instance = null;
 
   public static AppCache get() {
     if(instance == null) {
-      if(Html5AppCache.isSupported() && Html5AppCache.hasManifest()) {
+    	if(!GWT.isScript()) {
+    		instance = new AppCacheStub();
+  
+    	} else if(Html5AppCache.isSupported() && Html5AppCache.hasManifest()) {
         instance = new Html5AppCache();
 
       } else if(GearsAppCache.isSupported()) {

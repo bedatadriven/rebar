@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.appcache.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class AppCacheEntryPoint implements EntryPoint {
@@ -27,19 +28,20 @@ public class AppCacheEntryPoint implements EntryPoint {
     // the default behavior of most HTML5 app cache implementations
     // seems to be to start downloading the cache immediately,
     // so let's standardize that across browsers / implementations
-
-    AppCache appCache = AppCacheFactory.get();
-    appCache.ensureCached(new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(Throwable caught) {
-        /** NOOP */
-      }
-
-      @Override
-      public void onSuccess(Void result) {
-        /** NOOP **/
-      }
-    });
-
+  	// (except when in hosted mode)
+  	if(GWT.isScript()) {
+	    AppCache appCache = AppCacheFactory.get();
+	    appCache.ensureCached(new AsyncCallback<Void>() {
+	      @Override
+	      public void onFailure(Throwable caught) {
+	        /** NOOP */
+	      }
+	
+	      @Override
+	      public void onSuccess(Void result) {
+	        /** NOOP **/
+	      }
+	    });
+  	}
   }
 }
