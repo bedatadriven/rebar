@@ -140,7 +140,15 @@
                                     <tasks>
                                         <property name="test_classpath" refid="maven.test.classpath" />
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen                                                                 -notHeadless                                                                 -prod                                                                 -port 50100                                                                 -codeServerPort 50101                                                                 -logdir target/test-logs                                                                 -runStyle Manual                                                                 -logLevel INFO" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
+                                            			-notHeadless  
+                                            		    -prod
+                                            		    -port 50105
+                                            		    -style pretty
+                                            		    -codeServerPort 50101
+                                            		    -logdir target/test-logs
+                                            		    -runStyle Manual
+                                            		    -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.sql.client.SqlTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />

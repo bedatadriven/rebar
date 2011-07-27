@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.sql.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 class GearsPreparedStatement extends GearsStatement implements PreparedStatement {
 
-  private Map<Integer, String> parameters = new HashMap<Integer, String>();
+	private JavaScriptObject parameters = createParamArray();
   private int numParameters = 0;
 
   public GearsPreparedStatement(GearsConnection connection, Database database) {
@@ -45,32 +46,32 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
     super(connection, database, sql);
   }
 
+  private static native JavaScriptObject createParamArray() /*-{
+  	return [];
+  }-*/;
 
-  public void setString(int parameterIndex, String x) throws SQLException {
-    parameters.put(parameterIndex, x);
-    if (parameterIndex > numParameters) {
-      numParameters = parameterIndex;
-    }
-  }
-
-  private String[] getParameters() {
-    String[] pa = new String[numParameters];
-    for (int i = 0; i != numParameters; ++i) {
-      pa[i] = parameters.get(i + 1);
-    }
-    return pa;
-  }
+  public native void setString(int parameterIndex, String x) throws SQLException /*-{
+    this.@com.bedatadriven.rebar.sql.client.GearsPreparedStatement::parameters[parameterIndex-1] = x;
+  }-*/;
 
   @Override
   protected com.google.gwt.gears.client.database.ResultSet doExecute() throws DatabaseException {
     Log.debug("Executing prepared statement: " + sql);
-    return database.execute(sql, getParameters());
+    return doJsExecute(database, sql);
   }
+  
+  private native com.google.gwt.gears.client.database.ResultSet doJsExecute(Database db, String sql) /*-{
+  	return db.execute(sql, this.@com.bedatadriven.rebar.sql.client.GearsPreparedStatement::parameters);
+  }-*/;
 
 
   public ParameterMetaData getParameterMetaData() throws SQLException {
     return new ParameterMetaDataImpl(this, sql);
   }
+  
+  private native static String paramsToString() /*-{
+  	return this.@com.bedatadriven.rebar.sql.client.GearsPreparedStatement::parameters.join(', ');
+  }-*/;
 
   @Override
   protected SQLException makeSqlException(DatabaseException e) {
@@ -79,10 +80,7 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
       StringBuilder sb = new StringBuilder();
       sb.append("Gears/Sqlite has thrown an exception on the a PreparedStateent with the following SQL: \n").append(sql);
       sb.append("\nParameters: ");
-      String[] pa = getParameters();
-      for (int i = 0; i != pa.length; ++i) {
-        sb.append("\n").append(i + 1).append("=[").append(pa[i]).append("]");
-      }
+      sb.append(paramsToString());
       return new SQLException(sb.toString(), e);
     } catch (Throwable caught) {
       return new SQLException("Gears/sqlite has thrown an exception on the SQL: \n" + sql + " and threw " +
@@ -175,7 +173,7 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
   }
 
   public void clearParameters() throws SQLException {
-    parameters.clear();
+    parameters = createParamArray();
   }
 
   public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
@@ -183,7 +181,9 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
   }
 
   public void setObject(int parameterIndex, Object x) throws SQLException {
-    if (x instanceof Date) {
+    if(x == null) {
+    	setString(parameterIndex, null);
+    } else if (x instanceof Date) {
       setDate(parameterIndex, (Date) x);
     } else {
       setString(parameterIndex, x.toString());
