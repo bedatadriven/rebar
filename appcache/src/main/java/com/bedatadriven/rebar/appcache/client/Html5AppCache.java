@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -104,7 +105,7 @@ class Html5AppCache implements AppCache {
    * 
    * @return true if the document has an AppCache manifest attached
    */
-  public static native boolean hasManifest() /*-{
-  	return $wnd.document.documentElement.getAttribute('manifest');
-  }-*/;
+  public static boolean hasManifest() {
+  	return Document.get().getDocumentElement().hasAttribute("manifest");
+  }
 }
