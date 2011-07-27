@@ -368,26 +368,30 @@ public class EntityMapping {
 
 
   public String getInsertStatement() {
-
-    StringBuilder sb = new StringBuilder();
-    sb.append("insert into ").append(getTableName()).append(" (");
-    sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
-      @Override
-      public String itemToString(ColumnMapping item) {
-        return item.getName();
-      }
-    }));
-    sb.append(") values (");
-    sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
-      @Override
-      public String itemToString(ColumnMapping item) {
-        return "?";
-      }
-    }));
-    sb.append(")");
-    return sb.toString();
+  	return getInsertStatement("");
   }
 
+  public String getInsertStatement(String conflictClause) {
+
+  	StringBuilder sb = new StringBuilder();
+  	sb.append("insert ").append(conflictClause).append(" into ").append(getTableName()).append(" (");
+  	sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
+  		@Override
+  		public String itemToString(ColumnMapping item) {
+  			return item.getName();
+  		}
+  	}));
+  	sb.append(") values (");
+  	sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
+  		@Override
+  		public String itemToString(ColumnMapping item) {
+  			return "?";
+  		}
+  	}));
+  	sb.append(")");
+  	return sb.toString();
+  }
+  
   public String getUpdateStatement() {
 
     // make a list of all columns that are updatable

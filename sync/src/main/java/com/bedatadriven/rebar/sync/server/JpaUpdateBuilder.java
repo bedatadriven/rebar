@@ -97,39 +97,43 @@ public class JpaUpdateBuilder {
   }
 
   public <T> void insert(Class<T> entityClass, List<T> entities) throws JSONException {
+  	insert("", entityClass, entities);
+  }
 
-    if (entities.size() == 0) {
-      return; // nothing to do
-    }
-    // get/create the mapping for this entity
-    EntityMapping mapping = context.getMapping(entityClass);
+  public <T> void insert(String conflictClause, Class<T> entityClass, List<T> entities) throws JSONException {
 
-    // start a new BulkOperation object
-    json.object();
+  	if (entities.size() == 0) {
+  		return; // nothing to do
+  	}
+  	// get/create the mapping for this entity
+  	EntityMapping mapping = context.getMapping(entityClass);
 
-    // first build the insert statement
-    json.key("statement");
-    json.value(mapping.getInsertStatement());
+  	// start a new BulkOperation object
+  	json.object();
 
-    json.key("executions");
-    json.array();
+  	// first build the insert statement
+  	json.key("statement");
+  	json.value(mapping.getInsertStatement(conflictClause));
 
-    // loop through each of the entities in the list
-    for (T entity : entities) {
+  	json.key("executions");
+  	json.array();
 
-      json.array();
+  	// loop through each of the entities in the list
+  	for (T entity : entities) {
 
-      // write the other columns
-      for (PropertyMapping property : mapping.getProperties()) {
-        if (property.isInsertable()) {
-          property.writeColumnValues(json, entity);
-        }
-      }
-      json.endArray();
-    }
+  		json.array();
 
-    json.endArray(); // end our batches
-    json.endObject(); //end the BulkOperation object
+  		// write the other columns
+  		for (PropertyMapping property : mapping.getProperties()) {
+  			if (property.isInsertable()) {
+  				property.writeColumnValues(json, entity);
+  			}
+  		}
+  		json.endArray();
+  	}
+
+  	json.endArray(); // end our batches
+  	json.endObject(); //end the BulkOperation object
   }
 
   public <T> void update(Class<T> entityClass, List<T> entities) throws JSONException {
