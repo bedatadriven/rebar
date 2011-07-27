@@ -41,11 +41,12 @@
     <module>worker</module>
     <module>persistence</module>
     <module>jpa-mapping</module>
+      <module>appcache-test</module>
   </modules>
 
   <properties>
     <!--  convenience to define GWT version in one place -->
-    <gwtVersion>2.0.0</gwtVersion>
+    <gwtVersion>2.0.4</gwtVersion>
 
     <!--  tell the compiler we can use 1.6 -->
     <maven.compiler.source>1.6</maven.compiler.source>
@@ -86,6 +87,11 @@
       <id>bedatadriven-thirdparty</id>
       <name>bedatadriven third party</name>
       <url>http://nexus.bedatadriven.com/content/repositories/thirdparty/</url>
+    </repository>
+    <repository>
+      <id>google-gson</id>
+      <name>Google Gson</name>
+      <url>http://google-gson.googlecode.com/svn/mavenrepo/</url>
     </repository>
   </repositories>
 
