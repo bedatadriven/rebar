@@ -80,5 +80,9 @@ public interface AppCache {
    */
   void ensureCached(AsyncCallback<Void> callback);
 
+  /**
+   * 
+   * @return the current status of the application cache.
+   */
   Status getStatus();
 }

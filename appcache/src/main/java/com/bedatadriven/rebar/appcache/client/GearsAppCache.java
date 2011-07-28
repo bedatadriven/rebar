@@ -16,6 +16,8 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
+import org.mortbay.log.Log;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.localserver.LocalServer;
@@ -31,6 +33,8 @@ class GearsAppCache implements AppCache  {
     LocalServer server = Factory.getInstance().createLocalServer();
     this.store = server.createManagedStore(GWT.getModuleName());
     this.store.setManifestUrl(GWT.getModuleBaseURL() + GWT.getModuleName() + ".gears.manifest");
+    
+    Log.info("GearsAppCache initializing, current version = " + store.getCurrentVersion());
   }
 
   @Override
@@ -54,6 +58,8 @@ class GearsAppCache implements AppCache  {
 
   @Override
   public Status getStatus() {
+  	Log.debug("GearsAppCache: status = " + store.getUpdateStatus() + ", currentVersion = " + store.getCurrentVersion());
+  	
     switch(store.getUpdateStatus()) {
       case ManagedResourceStore.UPDATE_CHECKING:
         return Status.CHECKING;
