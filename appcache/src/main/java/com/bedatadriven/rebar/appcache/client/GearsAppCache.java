@@ -16,8 +16,7 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-import org.mortbay.log.Log;
-
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.localserver.LocalServer;

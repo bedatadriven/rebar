@@ -23,7 +23,8 @@
 
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.gears.Gears'/>
-
+    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>
+    
     <define-linker name="std" class="com.bedatadriven.rebar.appcache.linker.AppCacheIFrameLinker"/>
 
     <entry-point class="com.bedatadriven.rebar.appcache.client.AppCacheEntryPoint"/>
