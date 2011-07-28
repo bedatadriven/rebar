@@ -21,7 +21,6 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-sql</artifactId>
     <packaging>jar</packaging>
-    <version>2.1-SNAPSHOT</version>
     <name>JDBC Façade for GWT</name>
     <description>Provides a JDBC façade for the browser, allowing java developers to write DAO code
         that runs transparently both in the JVM and on evolving browser apis, such as HTML5, Gears, AIR.
@@ -31,7 +30,7 @@
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
         <artifactId>parent</artifactId>
-        <version>2.1-SNAPSHOT</version>
+        <version>2.2-SNAPSHOT</version>
     </parent>
 
 	<scm>
@@ -67,7 +66,6 @@
         <dependency>
             <groupId>com.google.code.gwt-log</groupId>
             <artifactId>gwt-log</artifactId>
-            <version>3.0.1</version>
         </dependency>
     </dependencies>
 

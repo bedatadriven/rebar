@@ -21,15 +21,14 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-appcache</artifactId>
     <packaging>jar</packaging>
-    <version>2.1-SNAPSHOT</version>
     <name>AppCache support for GWT</name>
     <description>A linker that generates common and per-permutation Managed Resource Store manifests
         for HTML5 and for Gears for a given GWT module.</description>
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
         <artifactId>parent</artifactId>
-        <version>2.1-SNAPSHOT</version>
-	<relativePath>../pom.xml</relativePath>
+        <version>2.2-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
     </parent>
     <scm>
         <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/</developerConnection>
@@ -72,7 +71,6 @@
 		<dependency>
 			<groupId>com.google.code.gwt-log</groupId>
 			<artifactId>gwt-log</artifactId>
-			<version>3.0.1</version>
 		</dependency>
     </dependencies>
 
@@ -96,57 +94,5 @@
         </resources>
     </build>
 
-    <profiles>
-        <profile>
-            <id>gears-it</id>
-            <build>
-                <plugins>
-
-                    <!-- Use the maven antrun plugin to launch junit manually as
-                         surefire will not run GWT tests correctly and
-                         the gwt-maven-plugin doesn't allow us to pass the parameters
-                         we need in and the maven-exec-plugin won't let us add the sources
-                          to the classpath-->
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>ant-test</id>
-                                <phase>test</phase>
-                                <configuration>
-                                    <tasks>
-                                        <property name="test_classpath" refid="maven.test.classpath" />
-                                        <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-
-                                            <!--  Notes on test config : -->
-                                            <!--  1) Linkers are only invoked when a module is compiled,
-                                                     so this test will ONLY work in production mode. -->
-                                            <!--  2) If you run a test twice on a given port following success,
-                                                     weird things will happen as gears (the plugin) tries
-                                                     to update the manifest during compilation, so we
-                                                     use -port auto -->
-
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -port auto -codeServerPort 50101 -prod -runStyle Manual -logLevel INFO" />
-                                            <arg value="com.bedatadriven.rebar.appcache.client.ModuleStoreTest" />
-                                            <classpath>
-                                                <pathelement path="${basedir}/src/main/java" />
-                                                <pathelement path="${basedir}/src/test/java" />
-                                                <pathelement path="${test_classpath}" />
-                                            </classpath>
-                                        </java>
-                                    </tasks>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
 

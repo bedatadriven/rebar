@@ -17,7 +17,7 @@
 
 <module rename-to="GearsUpdateWorker">
     <inherits name="com.bedatadriven.rebar.worker.Worker"/>
-    <inherits name="com.allen_sauer.gwt.log.gwt-log"/>
+    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>
     
     <source path='worker'/>
     <source path='client'/>

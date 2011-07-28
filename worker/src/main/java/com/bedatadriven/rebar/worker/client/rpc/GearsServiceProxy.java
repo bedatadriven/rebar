@@ -26,6 +26,8 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 import com.google.gwt.user.client.rpc.impl.RemoteServiceProxy;
 import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter;
+import com.google.gwt.user.client.rpc.impl.RequestCallbackAdapter.ResponseReader;
+import com.google.gwt.user.client.rpc.impl.RpcStatsContext;
 import com.google.gwt.user.client.rpc.impl.Serializer;
 
 /**
@@ -54,10 +56,12 @@ public class GearsServiceProxy extends RemoteServiceProxy {
     }-*/;
 
 
+  
   @SuppressWarnings({"ThrowableInstanceNeverThrown"})
   @Override
-  protected <T> Request doInvoke(final RequestCallbackAdapter.ResponseReader responseReader, String methodName,
-                                 int invocationCount, String requestData, final AsyncCallback<T> callback) {
+  protected <T> Request doInvoke(ResponseReader responseReader,
+			String methodName, RpcStatsContext statsContext, String requestData,
+			AsyncCallback<T> callback) {
 
     try {
       Factory factory = getFactory();
@@ -65,7 +69,7 @@ public class GearsServiceProxy extends RemoteServiceProxy {
       final Request request = new RequestAdapter(httpRequest);
 
       final RequestCallbackAdapter<T> handler = new RequestCallbackAdapter<T>(
-          this, methodName, invocationCount,
+          this, methodName, statsContext,
           callback, responseReader);
 
       httpRequest.open("POST", getServiceEntryPoint());
