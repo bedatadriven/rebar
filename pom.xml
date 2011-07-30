@@ -68,6 +68,12 @@
 
   </dependencies>
 
+  <scm>
+      <connection>scm:git:git@github.com:akbertram/rebar.git</connection>
+      <url>scm:git:git@github.com:akbertram/rebar.git</url>
+      <developerConnection>scm:git:git@github.com:rebar/rebar.git</developerConnection>
+  </scm>
+
   <distributionManagement>
     <repository>
       <id>bedatadriven-oss</id>
