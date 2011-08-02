@@ -21,14 +21,14 @@
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>rebar-sync</artifactId>
   <packaging>jar</packaging>
-  <version>2.2-SNAPSHOT</version>
+  <version>2.1.1-SNAPSHOT</version>
   <name>Synchronization Tools for GWT</name>
   <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
     the Gears local database.</description>
   <parent>
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>parent</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
   </parent>
   <scm>
     <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/sync</developerConnection>
@@ -62,13 +62,13 @@
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>rebar-worker</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>jpa-mapping</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>
