@@ -37,7 +37,7 @@ public class BulkUpdaterTest extends BaseTestCase {
       }
     });
 
-    delayTestFinish(1000);
+    delayTestFinish(10000);
 
   }
 

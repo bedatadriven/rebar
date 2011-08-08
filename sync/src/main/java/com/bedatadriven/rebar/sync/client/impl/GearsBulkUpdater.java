@@ -43,6 +43,8 @@ public class GearsBulkUpdater implements BulkUpdater, BulkUpdaterAsync, WorkerPo
 
   @Override
   public int executeUpdates(String databaseName, String bulkOperationJsonArray) {
+    GWT.log("GearsBulkUpdater: executeUpdates()", null);
+    
     WorkerCommand cmd = WorkerCommand.newInstance(0);
     cmd.setDatabaseName(databaseName);
     cmd.setOperations(bulkOperationJsonArray);

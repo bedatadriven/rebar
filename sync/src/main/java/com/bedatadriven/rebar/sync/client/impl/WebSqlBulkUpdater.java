@@ -19,6 +19,7 @@ package com.bedatadriven.rebar.sync.client.impl;
 import com.bedatadriven.rebar.sql.client.websql.*;
 import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -31,12 +32,16 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
   public void executeUpdates(String databaseName, final String bulkOperationJsonArray,
                              final AsyncCallback<Integer> callback) {
 
+    GWT.log("WebSqlBulkUpdater starting", null);
+    
     WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, 1, databaseName,
         1024 * 1024 * 5);
 
     database.transaction(new TransactionCallback() {
       @Override
       public void begin(WebSqlTransaction tx) {
+        GWT.log("WebSqlBulkUpdater transaction started", null);
+
         new Sequence(bulkOperationJsonArray, callback);
       }
 
@@ -60,9 +65,13 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     public Sequence(String statements, AsyncCallback<Integer> callback) {
       this.statements = PreparedStatementBatch.fromJson(statements);
       this.callback = callback;
+      GWT.log("WebSqlBulkUpdater starting execution of " + this.statements.length() + " statements", null);
+      executeNextStatement();
     }
 
     public void executeNextStatement() {
+      GWT.log("WebSqlBulkUpdater: executing statement " + nextStatementIndex, null);
+
       currentBatch = statements.get(nextStatementIndex++);
       if(currentBatch.getExecutions() == null || currentBatch.getExecutions().length() == 0) {
         executeStatementWithoutParams(currentBatch);
