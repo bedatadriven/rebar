@@ -38,6 +38,10 @@ public final class PreparedStatementBatch extends JavaScriptObject {
     return { executions: [] };
   }-*/;
 
+  public static native JsArray<PreparedStatementBatch> fromJson(String json) /*-{
+    return eval(json);
+  }-*/;
+
   /**
    * Gets the parametrized SQL statement to execute.
 

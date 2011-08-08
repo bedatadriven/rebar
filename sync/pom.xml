@@ -77,6 +77,12 @@
     </dependency>
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
+      <artifactId>rebar-sql</artifactId>
+      <version>${version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.bedatadriven.rebar</groupId>
       <artifactId>jpa-mapping</artifactId>
       <version>${version}</version>
     </dependency>

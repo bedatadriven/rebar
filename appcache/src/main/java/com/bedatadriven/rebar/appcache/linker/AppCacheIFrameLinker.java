@@ -15,35 +15,20 @@
  */
 package com.bedatadriven.rebar.appcache.linker;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-
 import com.google.gson.stream.JsonWriter;
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.linker.Artifact;
-import com.google.gwt.core.ext.linker.ArtifactSet;
-import com.google.gwt.core.ext.linker.CompilationResult;
-import com.google.gwt.core.ext.linker.EmittedArtifact;
+import com.google.gwt.core.ext.linker.*;
 import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
-import com.google.gwt.core.ext.linker.LinkerOrder;
 import com.google.gwt.core.ext.linker.LinkerOrder.Order;
-import com.google.gwt.core.ext.linker.PublicResource;
-import com.google.gwt.core.ext.linker.SelectionProperty;
 import com.google.gwt.core.ext.linker.impl.ResourceInjectionUtil;
 import com.google.gwt.core.linker.IFrameLinker;
 import com.google.gwt.dev.util.Util;
 import com.google.gwt.util.tools.Utility;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * Extends the standard <code>IFrameLinker</code> to generate manifests for
@@ -102,7 +87,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   
   private Collection<EmittedArtifact> emittedArtifacts(Collection<Artifact<?>> artifacts) {
 	  List<EmittedArtifact> list = new ArrayList<EmittedArtifact>();
-	  for(Artifact<?> artifact : artifacts) {
+	  for(Artifact artifact : artifacts) {
 		  if(artifact instanceof EmittedArtifact) {
 			  list.add((EmittedArtifact) artifact);
 		  }

@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  *
- * Executes a PreparedStatementBatch asynchronously, using a web worker.
+ * Executes a PreparedStatementBatch asynchronously, using a gears worker.
  *
  * @author Alex Bertram
  */
