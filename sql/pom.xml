@@ -21,6 +21,7 @@
     <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-sql</artifactId>
     <packaging>jar</packaging>
+
     <name>JDBC Façade for GWT</name>
     <description>Provides a JDBC façade for the browser, allowing java developers to write DAO code
         that runs transparently both in the JVM and on evolving browser apis, such as HTML5, Gears, AIR.
@@ -41,7 +42,7 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwtVersion}</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -148,6 +149,54 @@
                                             		    -runStyle Manual
                                             		    -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.sql.client.SqlTest" />
+                                            <classpath>
+                                                <pathelement path="${basedir}/src/main/java" />
+                                                <pathelement path="${basedir}/src/test/java" />
+                                                <pathelement path="${test_classpath}" />
+                                            </classpath>
+                                        </java>
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+         <profile>
+            <id>websql-it</id>
+            <build>
+                <plugins>
+
+                    <!-- Use the maven antrun plugin to launch junit manually as
+                         surefire will not run GWT tests correctly and
+                         the gwt-maven-plugin doesn't allow us to pass the parameters
+                         we need in and the maven-exec-plugin won't let us add the sources
+                          to the classpath-->
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>ant-test</id>
+                                <phase>test</phase>
+                                <configuration>
+                                    <tasks>
+                                        <property name="test_classpath" refid="maven.test.classpath" />
+                                        <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
+                                              -notHeadless
+                                              -prod
+                                              -port 50124
+                                              -codeServerPort 50101
+                                              -logdir target/test-logs
+                                              -runStyle Manual
+                                              -logLevel INFO" />
+                                            <arg value="com.bedatadriven.rebar.sql.client.websql.WebSqlTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
                                                 <pathelement path="${basedir}/src/test/java" />
