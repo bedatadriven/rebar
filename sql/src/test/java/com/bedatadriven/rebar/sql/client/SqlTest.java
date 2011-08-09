@@ -35,7 +35,7 @@ public class SqlTest extends GWTTestCase {
     return "com.bedatadriven.rebar.sql.SqlTest";
   }
 
-  private boolean firstCallback = false;
+  private int callbacks = 0;
 
   public void testBasic() {
 
@@ -55,7 +55,7 @@ public class SqlTest extends GWTTestCase {
             assertEquals(1, results.getRows().length());
             assertEquals("bar", results.getRows().getRow(0).getString("name"));
 
-            firstCallback = true;
+            callbacks ++;
           }
 
           @Override
@@ -69,9 +69,9 @@ public class SqlTest extends GWTTestCase {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             assertEquals(2, results.getRows().length());
-            assertTrue("firstCallback", firstCallback);
-
-            finishTest();
+            assertEquals(1, callbacks);
+            
+            callbacks ++;
           }
 
           @Override
@@ -81,9 +81,15 @@ public class SqlTest extends GWTTestCase {
         });
       }
 
-      @Override
+			@Override
       public void onError(SqlException e) {
         fail(e.getMessage());
+      }
+			
+      @Override
+      public void onSuccess() {
+      	assertEquals(2, callbacks);
+        finishTest();
       }
     });
 

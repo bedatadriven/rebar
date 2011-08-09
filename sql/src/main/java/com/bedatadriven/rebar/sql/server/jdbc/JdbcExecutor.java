@@ -24,21 +24,39 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
 
   @Override
   public SqlResultSet execute(String statement, Object[] params) throws Exception {
-    PreparedStatement stmt = conn.prepareStatement(statement);
-    if(params != null) {
-      for(int i=0;i!=params.length;++i) {
-        stmt.setObject(i+1, params[i]);
-      }
-    }
-    if(stmt.execute()) {
-        return new JdbcQueryResultSet(stmt);
-     } else {
-        return new JdbcUpdateResultSet(stmt);
+  	PreparedStatement stmt = conn.prepareStatement(statement);
+  	try {
+	    if(params != null) {
+	      for(int i=0;i!=params.length;++i) {
+	        stmt.setObject(i+1, params[i]);
+	      }
+	    }
+	    if(stmt.execute()) {
+	        return new JdbcQueryResultSet(stmt);
+	     } else {
+	        return new JdbcUpdateResultSet(stmt);
+	    }
+    } finally {
+    	try { stmt.close(); } catch(Exception ignored) {}
     }
   }
 
   @Override
   public void commit() throws Exception {
-    conn.commit();
+    try {
+    	conn.commit();
+    } finally {
+    	conn.close();
+    }
   }
+
+	@Override
+  public void rollback() throws Exception {
+    try {
+    	conn.rollback();
+    } finally {
+    	conn.close();
+    }
+	}
+  
 }

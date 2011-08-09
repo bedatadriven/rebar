@@ -19,7 +19,8 @@ public class JdbcTest  {
 
 
   private int callbackCount = 0;
-
+  private boolean successCalled = false;
+  
   @Test
   public void basicTest() throws ClassNotFoundException, SQLException {
 
@@ -65,13 +66,19 @@ public class JdbcTest  {
       }
 
       @Override
+      public void onSuccess() {
+      	successCalled = true;
+      }
+
+			@Override
       public void onError(SqlException e) {
         throw new AssertionError(e);
       }
     });
 
-    assertThat(callbackCount, equalTo(2));
-
+    assertThat("rs callback count", callbackCount, equalTo(2));
+    assertThat("successCalled", successCalled, equalTo(true));
+    
     // verify that commit was called
 
     Class.forName("org.sqlite.JDBC");

@@ -31,6 +31,7 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
       throw new SqlException("Could not create Gears database");
     }
     db.open(databaseName);
+    db.execute("BEGIN TRANSACTION");
   }
 
   @Override
@@ -57,6 +58,19 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   @Override
   public void commit() throws DatabaseException {
-    db.execute("commit");
+  	try {
+  		db.execute("END TRANSACTION");
+  	} finally {
+  		db.close();
+  	}
+  }
+
+	@Override
+  public void rollback() throws Exception {
+  	try {
+  		db.execute("ROLLBACK TRANSACTION");
+  	} finally {
+  		db.close();
+  	}	  
   }
 }

@@ -23,6 +23,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
     SqlResultSet execute(String statement, Object[] params) throws Exception;
     void begin() throws Exception;
     void commit() throws Exception;
+    void rollback() throws Exception;
   }
 
 
@@ -67,6 +68,12 @@ public class SyncTransactionAdapter implements SqlTransaction {
   }
 
   private void errorInCallback(Exception e) {
+  	try {
+  		Log.error("SyncTransactionAdapter: Rolling back transaction");
+  		executor.rollback();
+  	} catch(Exception rollbackException) {
+  		Log.error("SyncTransactionAdapter: Exception while rolling back transaction", rollbackException);
+  	}
     callback.onError(new SqlException(e));
   }
 
@@ -85,7 +92,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
 
   private void commitTransaction() {
-    Log.error("SyncTransactionAdapter: All queued statements have been executed, committing");
+    Log.debug("SyncTransactionAdapter: All queued statements have been executed, committing");
 
     try {
       executor.commit();
@@ -93,7 +100,14 @@ public class SyncTransactionAdapter implements SqlTransaction {
       Log.error("SyncTransactionAdapter: Exception thrown while committing", e);
 
       errorInCallback(e);
+      return;
     }
+    
+    Log.debug("SyncTransactionAdapter: Commit succeeded.");
+    
+    // everything worked! let the caller know
+    callback.onSuccess();
+    
   }
 
   @Override
@@ -131,7 +145,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     public void execute() {
 
-      Log.error("SyncTransactionAdapter: Executing statement '" + statement + "' with parameters " +
+      Log.debug("SyncTransactionAdapter: Executing statement '" + statement + "' with parameters " +
           Arrays.toString(params));
 
       try {

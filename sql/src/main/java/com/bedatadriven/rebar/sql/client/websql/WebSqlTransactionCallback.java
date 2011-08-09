@@ -26,5 +26,7 @@ public interface WebSqlTransactionCallback {
  
   void begin(WebSqlTransaction tx);
   
+  void onSuccess();
+  
   void onError(WebSqlException e);
 }

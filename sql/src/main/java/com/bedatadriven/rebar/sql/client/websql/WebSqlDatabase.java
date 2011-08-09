@@ -85,6 +85,8 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
     }, function(e) {
       callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback::onError(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
+    }, function() {
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback::onSuccess()();
     });
   }-*/;
 
@@ -106,6 +108,11 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
       public void begin(WebSqlTransaction tx) {
         callback.begin(tx);        
       }
+
+			@Override
+      public void onSuccess() {
+				callback.onSuccess();
+	    }
     });
   }
 }

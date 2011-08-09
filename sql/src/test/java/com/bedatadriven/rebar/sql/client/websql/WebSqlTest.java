@@ -16,7 +16,6 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class WebSqlTest extends GWTTestCase {
@@ -40,10 +39,14 @@ public class WebSqlTest extends GWTTestCase {
           tx.executeSql("INSERT INTO MyTable (id, text) VALUES (?, ?) ",
               new Object[]{i, i + " balloons"});
         }
-        finishTest();
       }
 
       @Override
+      public void onSuccess() {
+        finishTest();
+      }
+
+			@Override
       public void onError(WebSqlException e) {
         fail(e.getMessage());
       }
@@ -65,17 +68,21 @@ public class WebSqlTest extends GWTTestCase {
           @Override
           public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
             assertEquals(1, results.getRows().length());
-            finishTest();
           }
-
+      
           @Override
           public void onFailure(WebSqlException e) {
             fail(e.getMessage() + ", Code = " + e.getCode());
           }
         });
       }
-
+      
       @Override
+      public void onSuccess() {
+        finishTest();
+      }
+
+			@Override
       public void onError(WebSqlException e) {
         fail(e.getMessage());
       }
