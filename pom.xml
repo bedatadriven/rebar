@@ -36,11 +36,13 @@
 
   <modules>
     <module>sql</module>
+    <module>dao</module>
     <module>sync</module>
     <module>worker</module>
     <module>jpa-mapping</module>
     <module>appcache</module>
     <module>appcache-test</module>
+      <module>dao-test</module>
   </modules>
 
   <properties>
