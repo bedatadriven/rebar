@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -23,7 +24,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqlresultset">W3 Standard</a>
  */
-public final class WebSqlResultSet extends JavaScriptObject {
+public final class WebSqlResultSet extends JavaScriptObject implements SqlResultSet {
 
   protected WebSqlResultSet() {
   }

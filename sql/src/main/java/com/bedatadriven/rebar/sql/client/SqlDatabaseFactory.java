@@ -22,7 +22,7 @@ package com.bedatadriven.rebar.sql.client;
  * @author alexander
  *
  */
-public interface DatabaseFactory {
+public interface SqlDatabaseFactory {
 
   /**
    * Opens a database, creating it if necessary. 

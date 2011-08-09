@@ -1,13 +1,13 @@
 package com.bedatadriven.rebar.sql.client.gears;
 
-import com.bedatadriven.rebar.sql.client.DatabaseFactory;
+import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 
-public class GearsDatabaseFactory implements DatabaseFactory {
+public class GearsDatabaseFactory implements SqlDatabaseFactory {
 
   @Override
   public SqlDatabase open(String databaseName) {
-    throw new UnsupportedOperationException();
+    return new GearsDatabase(databaseName);
   }
   
 

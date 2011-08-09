@@ -25,4 +25,22 @@
     <inherits name="com.bedatadriven.rebar.sql.emul.Emulation"/>
 
     <source path='client'/>
+    <source path='shared'/>
+
+
+    <!-- Our back up is always Gears, use WebSql only on safari (including chrome) and opera -->
+
+    <replace-with class="com.bedatadriven.rebar.sql.client.gears.GearsDatabaseFactory">
+        <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
+    </replace-with>
+
+    <replace-with class="com.bedatadriven.rebar.sql.client.websql.WebSqlDatabaseFactory">
+        <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
+         <any>
+      <when-property-is name="user.agent" value="safari"/>
+      <when-property-is name="user.agent" value="opera" />
+    </any>
+    </replace-with>
+
+
 </module>

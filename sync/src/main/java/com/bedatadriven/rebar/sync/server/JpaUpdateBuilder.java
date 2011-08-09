@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Generates a jsonnified BulkOperation object that can be sent
- * to and executed by the client against the local sqlite database
+ * to and executed by the client against the local jdbc database
  *
  * @author Alex Bertram
  */

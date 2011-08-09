@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -30,10 +31,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   protected WebSqlTransaction() {
   }
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String)
-   */
-  @Override
+
   public native void executeSql(String statement) /*-{
     this.executeSql(statement, [] );
   }-*/;
@@ -42,10 +40,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     this.executeSql(statement, parameters);
   }-*/;
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[])
-   */
-  @Override
+
   public void executeSql(String statement, Object[] parameters) {
     executeSql(statement, toParamArray(parameters));
   }
@@ -59,22 +54,33 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     });
   }-*/;
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[], com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback)
-   */
-  @Override
   public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
     executeSql(statement, toParamArray(parameters), callback);
   }
 
-  /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, com.bedatadriven.rebar.sql.client.websql.ResultCallback)
-   */
-  @Override
   public void executeSql(String statement, WebSqlResultCallback resultCallback) {
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
 
+  @Override
+  public void executeSql(String statement, Object[] parameters, final SqlResultCallback callback) {
+    executeSql(statement, parameters, new WebSqlResultCallback() {
+      @Override
+      public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
+        callback.onSuccess(tx, results);
+      }
+
+      @Override
+      public void onFailure(WebSqlException e) {
+        callback.onFailure(e);
+      }
+    });
+  }
+
+  @Override
+  public void executeSql(String statement, SqlResultCallback resultCallback) {
+    executeSql(statement, new Object[] {}, resultCallback);
+  }
 
   private ParamArray toParamArray(Object[] parameters) {
     ParamArray paramArray = JsArray.createArray().cast();

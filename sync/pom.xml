@@ -176,14 +176,6 @@ test workers in preparation for our test execution -->
             <id>it</id>
             <build>
                 <plugins>
-                    <!-- Turn off our normal tests -->
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.4.3</version>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
 
 
                     <!-- Use the maven antrun plugin to launch junit manually as
@@ -204,9 +196,16 @@ test workers in preparation for our test execution -->
                                     <tasks>
                                         <property name="test_classpath" refid="maven.test.classpath" />
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
-                        -notHeadless -port 50100 -codeServerPort 50103 -logdir target/test-logs
-                          -runStyle Manual -prod -logLevel WARN -style DETAILED" />
+                                            <sysproperty key="gwt.args" value="
+                                                -out target/test-out
+                                                -gen target/test-gen
+                                                -notHeadless
+                                                -codeServerPort 50103
+                                                -logdir target/test-logs
+                                                -runStyle Manual
+                                                -prod
+                                                -logLevel WARN
+                                                -style PRETTY" />
                                             <arg value="com.bedatadriven.rebar.sync.client.BulkUpdaterTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
@@ -229,15 +228,6 @@ test workers in preparation for our test execution -->
             <id>gears-it</id>
             <build>
                 <plugins>
-                    <!-- Turn off our normal tests -->
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.4.3</version>
-                        <configuration>
-                            <skipTests>true</skipTests>
-                        </configuration>
-                    </plugin>
-
 
                     <!-- Use the maven antrun plugin to launch junit manually as
                  surefire will not run GWT tests correctly and
