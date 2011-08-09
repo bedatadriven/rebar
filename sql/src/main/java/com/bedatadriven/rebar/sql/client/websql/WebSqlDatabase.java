@@ -25,6 +25,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabase {
 
 
+
   protected WebSqlDatabase() {
   }
 
@@ -80,7 +81,6 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
       }
     });
   }
-  
   
 
 }

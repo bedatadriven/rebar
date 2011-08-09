@@ -202,7 +202,7 @@
                                             <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
                                               -notHeadless
                                               -prod
-                                              -style PRETTY
+                                              -codeServerPort 50101
                                               -logdir target/test-logs
                                               -runStyle Manual
                                               -logLevel INFO" />

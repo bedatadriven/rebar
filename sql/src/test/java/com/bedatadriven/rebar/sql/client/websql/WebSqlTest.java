@@ -22,8 +22,6 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 public class WebSqlTest extends GWTTestCase {
 
-
-	
   /**
    * Must refer to a valid module that sources this class.
    */
@@ -56,7 +54,7 @@ public class WebSqlTest extends GWTTestCase {
 
   public void testInsertAndSelect() {
 
-    SqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", 1, "My test database", 1024 * 50);
+    WebSqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", 1, "My test database", 1024 * 50);
     assertNotNull(db);
     db.transaction(new WebSqlTransactionCallback() {
       @Override

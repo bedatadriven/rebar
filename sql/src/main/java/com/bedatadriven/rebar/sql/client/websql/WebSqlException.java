@@ -16,9 +16,8 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlException;
 
-public final class WebSqlException extends SqlException {
+public final class WebSqlException extends RuntimeException {
 
   private int code;
 
