@@ -30,7 +30,7 @@ public class WebSqlTest extends GWTTestCase {
 
   public void testInsert() {
 
-    WebSqlDatabase db = WebSqlDatabase.openDatabase("testInsert", 1, "My test database", 1024 * 50);
+    WebSqlDatabase db = WebSqlDatabase.openDatabase("testInsert", "1", "My test database", 1024 * 50);
     assertNotNull(db);
     db.transaction(new WebSqlTransactionCallback() {
       @Override
@@ -53,7 +53,7 @@ public class WebSqlTest extends GWTTestCase {
 
   public void testInsertAndSelect() {
 
-    WebSqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", 1, "My test database", 1024 * 50);
+    WebSqlDatabase db = WebSqlDatabase.openDatabase("insertAndSelect", "1", "My test database", 1024 * 50);
     assertNotNull(db);
     db.transaction(new WebSqlTransactionCallback() {
       @Override

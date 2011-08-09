@@ -73,6 +73,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+          <groupId>org.xerial</groupId>
+          <artifactId>sqlite-jdbc</artifactId>
+          <version>3.6.17</version>
+          <scope>test</scope>
+        </dependency>
+
+
         <!-- Support for Logging -->
         <dependency>
             <groupId>com.google.code.gwt-log</groupId>
@@ -127,7 +135,7 @@
 
     <profiles>
         <profile>
-            <id>gears-it</id>
+            <id>it</id>
 
             <build>
                 <plugins>
@@ -152,7 +160,6 @@
                                             <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen
                                             			-notHeadless  
                                             		    -prod
-                                            		    -port 50105
                                             		    -style pretty
                                             		    -codeServerPort 50101
                                             		    -logdir target/test-logs

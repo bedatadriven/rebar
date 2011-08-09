@@ -30,7 +30,7 @@ public interface SqlTransaction {
    * @param callback
    */
   void executeSql(String statement, Object[] parameters,
-      WebSqlResultCallback callback);
+      SqlResultCallback callback);
 
   
   /**
@@ -39,6 +39,6 @@ public interface SqlTransaction {
    * @param resultCallback
    */
   void executeSql(String statement,
-      WebSqlResultCallback resultCallback);
+      SqlResultCallback resultCallback);
 
 }

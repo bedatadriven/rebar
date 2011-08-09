@@ -87,7 +87,7 @@ class GearsPreparedStatement extends GearsStatement implements PreparedStatement
       sb.append(paramsToString());
       return new SQLException(sb.toString(), e);
     } catch (Throwable caught) {
-      return new SQLException("Gears/sqlite has thrown an exception on the SQL: \n" + sql + " and threw " +
+      return new SQLException("Gears/jdbc has thrown an exception on the SQL: \n" + sql + " and threw " +
           "antoher exception when I tried to list the parameters", e);
     }
 

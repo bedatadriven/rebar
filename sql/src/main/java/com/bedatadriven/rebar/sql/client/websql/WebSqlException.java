@@ -17,12 +17,14 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
 
+import com.bedatadriven.rebar.sql.client.SqlException;
+
 /**
  * Thrown if an error occurs during a WebSql transaction.
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqlerror">W3 standard</a>
  */
-public final class WebSqlException extends RuntimeException {
+public final class WebSqlException extends SqlException {
 
   private int code;
 

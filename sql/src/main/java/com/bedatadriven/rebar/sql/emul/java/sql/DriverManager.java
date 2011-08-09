@@ -36,7 +36,7 @@ public class DriverManager {
     }
 
     public static Connection getConnection(String url) 	throws SQLException {
-      if(url.startsWith("jdbc:sqlite:")) {
+      if(url.startsWith("jdbc:jdbc:")) {
         return GearsConnectionFactory.getConnection(url.substring(12));
       } else {
         return GearsConnectionFactory.getConnection(url);

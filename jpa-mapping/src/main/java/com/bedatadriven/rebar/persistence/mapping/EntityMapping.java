@@ -322,7 +322,7 @@ public class EntityMapping {
       sb.append(column.getName()).append(" ").append(column.getType().toString());
     }
 
-    // TODO: i don't think sqlite can enforce multiple primary keys. to check.
+    // TODO: i don't think jdbc can enforce multiple primary keys. to check.
     if (id.getColumns().size() == 1) {
       sb.append(" primary key");
 

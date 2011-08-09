@@ -38,7 +38,7 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
                              final AsyncCallback<Integer> callback) {
 
    
-    WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, 1, databaseName,
+    WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, "1", databaseName,
         1024 * 1024 * 5);
 
     database.transaction(new WebSqlTransactionCallback() {

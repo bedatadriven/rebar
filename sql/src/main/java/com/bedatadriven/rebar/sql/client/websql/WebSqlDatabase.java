@@ -31,7 +31,12 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabase {
 
-  private WebSqlDatabase() { }
+
+  public static final String ANY_VERSION = "";
+
+  public static final int DEFAULT_SIZE = 1024 * 1024 * 4;
+
+  protected WebSqlDatabase() { }
 
   /**
    * WebSql-specific method to open a client-side database.
@@ -44,7 +49,7 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
    * @param creationCallback  a callback to be invoked if the database has not yet been created.
    * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
-  public static native WebSqlDatabase openDatabase(String name, double version, String displayName, int estimatedSize,
+  public static native WebSqlDatabase openDatabase(String name, String version, String displayName, int estimatedSize,
                       WebSqlCreationCallback creationCallback) /*-{
     return $wnd.openDatabase(name, version, displayName, estimatedSize,
         function(db) {
@@ -64,7 +69,7 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
    *
    * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
-  public static native WebSqlDatabase openDatabase(String name, double version, String displayName, int estimatedSize) /*-{
+  public static native WebSqlDatabase openDatabase(String name, String version, String displayName, int estimatedSize) /*-{
     return $wnd.openDatabase(name, version, displayName, estimatedSize);
   }-*/;
 
@@ -90,15 +95,15 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
    */
   @Override
   public void transaction(final SqlTransactionCallback callback) {
-    transaction(new SqlTransactionCallback() {
+    transaction(new WebSqlTransactionCallback() {
       
       @Override
-      public void onError(SqlException e) {
+      public void onError(WebSqlException e) {
         callback.onError(e);
       }
       
       @Override
-      public void begin(SqlTransaction tx) {
+      public void begin(WebSqlTransaction tx) {
         callback.begin(tx);        
       }
     });
