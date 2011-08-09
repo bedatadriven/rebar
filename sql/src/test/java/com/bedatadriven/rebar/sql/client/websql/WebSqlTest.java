@@ -16,7 +16,6 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.junit.client.GWTTestCase;
 
@@ -62,9 +61,9 @@ public class WebSqlTest extends GWTTestCase {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
         tx.executeSql("INSERT INTO MyTable (id, text) VALUES (?, ?) ",
             new Object[] { 1, "balloons" });
-        tx.executeSql("SELECT id, text FROM MyTable", new ResultCallback() {
+        tx.executeSql("SELECT id, text FROM MyTable", new WebSqlResultCallback() {
           @Override
-          public void onSuccess(SqlTransaction tx, WebSqlResultSet results) {
+          public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
             assertEquals(1, results.getRows().length());
             finishTest();
           }

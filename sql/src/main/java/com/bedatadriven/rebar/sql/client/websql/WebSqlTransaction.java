@@ -20,6 +20,11 @@ import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
+/**
+ * Javascript overlay for the {@code SQLTransaction} WebSql interface.
+ *
+ * @see <a href="http://www.w3.org/TR/webdatabase/#sqltransaction">W3 Standard</a>
+ */
 public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
 
   protected WebSqlTransaction() {
@@ -45,20 +50,20 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     executeSql(statement, toParamArray(parameters));
   }
 
-  public native void executeSql(String statement, JavaScriptObject parameters, ResultCallback callback)/*-{
+  public native void executeSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
     this.executeSql(statement, parameters, function(tx, results) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
     }, function(e) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.ResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
 
   /* (non-Javadoc)
-   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[], com.bedatadriven.rebar.sql.client.websql.ResultCallback)
+   * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, java.lang.Object[], com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback)
    */
   @Override
-  public void executeSql(String statement, Object[] parameters, ResultCallback callback) {
+  public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
     executeSql(statement, toParamArray(parameters), callback);
   }
 
@@ -66,7 +71,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
    * @see com.bedatadriven.rebar.sql.client.websql.SqlTransaction#executeSql(java.lang.String, com.bedatadriven.rebar.sql.client.websql.ResultCallback)
    */
   @Override
-  public void executeSql(String statement, ResultCallback resultCallback) {
+  public void executeSql(String statement, WebSqlResultCallback resultCallback) {
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
 

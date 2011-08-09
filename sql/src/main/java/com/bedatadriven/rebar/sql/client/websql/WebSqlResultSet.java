@@ -18,11 +18,23 @@ package com.bedatadriven.rebar.sql.client.websql;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * Javascript Overlay for the {@code SQLResultSet} WebSql interface.
+ *
+ * @see <a href="http://www.w3.org/TR/webdatabase/#sqlresultset">W3 Standard</a>
+ */
 public final class WebSqlResultSet extends JavaScriptObject {
 
   protected WebSqlResultSet() {
   }
 
+  /**
+   *
+   * @return  the row ID of the row that the SQLResultSet object's SQL statement inserted into the database,
+   *  if the statement inserted a row. If the statement inserted multiple rows, the ID of the last row must
+   * be the one returned. If the statement did not insert a row, then the
+   * attribute must instead raise an INVALID_ACCESS_ERR exception.
+   */
   public native int getInsertId() /*-{
     return this.insertId;
   }-*/;
@@ -35,6 +47,12 @@ public final class WebSqlResultSet extends JavaScriptObject {
     return this.insertId;
   }-*/;
 
+  /**
+   *
+   * @return a {@link WebSqlResultSetRowList} representing the rows returned, in the order
+   * returned by the database. The same object must be returned each time.
+   * If no rows were returned, then the object will be empty (its length will be zero).
+   */
   public native WebSqlResultSetRowList getRows() /*-{
     return this.rows;
   }-*/;

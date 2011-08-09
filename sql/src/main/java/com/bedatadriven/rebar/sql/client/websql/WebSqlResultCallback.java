@@ -16,8 +16,13 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlDatabase;
+/**
+ * Web-Sql specific callback for query results.
+ *
+ * @see <a href="http://www.w3.org/TR/webdatabase/#sqlstatementcallback">W3 Standard</a>
+ */
+public interface WebSqlResultCallback {
+  void onSuccess(WebSqlTransaction tx, WebSqlResultSet results);
+  void onFailure(WebSqlException e);
 
-public interface CreationCallback {
-  void onCreated(SqlDatabase db);
 }

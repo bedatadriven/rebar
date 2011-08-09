@@ -17,6 +17,11 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
 
+/**
+ * Callback interface for WebSql asynchronous transactions.
+ *
+ * @see <a href="http://www.w3.org/TR/webdatabase/#sqltransactioncallback">W3 Standard</a>
+ */
 public interface WebSqlTransactionCallback {
  
   void begin(WebSqlTransaction tx);

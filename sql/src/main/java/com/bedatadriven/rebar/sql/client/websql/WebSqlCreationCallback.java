@@ -16,10 +16,13 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
-
-public interface ResultCallback {
-  void onSuccess(SqlTransaction tx, WebSqlResultSet results);
-  void onFailure(WebSqlException e);
-
+/**
+ * Callback interface for the WebSql API.
+ *
+ *
+ * @remarks Note that callback on creation is not supported by Gears so this
+ * interface is not present in the common API.
+ */
+public interface WebSqlCreationCallback {
+  void onCreated(WebSqlDatabase db);
 }

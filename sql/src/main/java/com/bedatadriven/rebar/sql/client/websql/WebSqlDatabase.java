@@ -22,50 +22,72 @@ import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * Javascript Overlay of the WebSql API Database object.
+ *
+ * This wrappers also implements the common {@link SqlDatabase} interface.
+ *
+ * @see <a href="http://www.w3.org/TR/webdatabase/#databases for definitions.">W3 standard</a>
+ */
 public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabase {
 
-
-
-  protected WebSqlDatabase() {
-  }
+  private WebSqlDatabase() { }
 
   /**
+   * WebSql-specific method to open a client-side database.
    *
-   * @param name
-   * @param version
-   * @param displayName
+   * @param name the name of the database.
+   * @param version the expected version of the database, or an empty string if any version is acceptable. If a
+   * database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
+   * @param displayName the name to present to the user
    * @param estimatedSize estimated size — in bytes — of the data that will be stored in the database
    * @param creationCallback  a callback to be invoked if the database has not yet been created.
+   * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
   public static native WebSqlDatabase openDatabase(String name, double version, String displayName, int estimatedSize,
-                      CreationCallback creationCallback) /*-{
+                      WebSqlCreationCallback creationCallback) /*-{
     return $wnd.openDatabase(name, version, displayName, estimatedSize,
         function(db) {
-          creationCallback.@com.bedatadriven.rebar.sql.client.websql.CreationCallback::onCreated(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlDatabase;)(db);
+          creationCallback.@com.bedatadriven.rebar.sql.client.websql.WebSqlCreationCallback::onCreated(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlDatabase;)(db);
         }
      );
   }-*/;
 
   /**
+   * WebSql-specific method to open a client-side database.
    *
-   * @param name
-   * @param version
-   * @param displayName
+   * @param name the name of the database.
+   * @param version the expected version of the database, or an empty string if any version is acceptable. If a
+   * database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
+   * @param displayName the name to present to the user
    * @param estimatedSize estimated size — in bytes — of the data that will be stored in the database
+   *
+   * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
   public static native WebSqlDatabase openDatabase(String name, double version, String displayName, int estimatedSize) /*-{
     return $wnd.openDatabase(name, version, displayName, estimatedSize);
   }-*/;
 
-  public native SqlTransaction transaction(WebSqlTransactionCallback callback) /*-{
+  /**
+   * WebSql-specific method to begin an asynchronous transaction/
+   *
+   * @param callback
+   * @return
+   */
+  public native void transaction(WebSqlTransactionCallback callback) /*-{
     this.transaction(function(tx) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::begin(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;)(tx);
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback::begin(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;)(tx);
     }, function(e) {
-      callback.@com.bedatadriven.rebar.sql.client.websql.TransactionCallback::onError(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
+      callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback::onError(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
     });
   }-*/;
 
+  /**
+   * Begins an asynchronous transaction using the common SQL API
+   *
+   * @param callback
+   */
   @Override
   public void transaction(final SqlTransactionCallback callback) {
     transaction(new SqlTransactionCallback() {
@@ -81,6 +103,4 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
       }
     });
   }
-  
-
 }

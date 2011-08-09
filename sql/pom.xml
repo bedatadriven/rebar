@@ -22,10 +22,9 @@
     <artifactId>rebar-sql</artifactId>
     <packaging>jar</packaging>
 
-    <name>JDBC Façade for GWT</name>
-    <description>Provides a JDBC façade for the browser, allowing java developers to write DAO code
-        that runs transparently both in the JVM and on evolving browser apis, such as HTML5, Gears, AIR.
-        Currently provides a Gears implementation.
+    <name>Rebar SQL</name>
+    <description>Provides a common interface to client-side databases, including Gears and
+        WebSQL.
     </description>
 
     <parent>
