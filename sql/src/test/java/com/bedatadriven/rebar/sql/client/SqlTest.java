@@ -52,15 +52,10 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("select * from foobar where id > ?", new Object[] { 1 }, new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(1, results.getRows().length());
-            assertEquals("bar", results.getRows().getRow(0).getString("name"));
+            assertEquals(1, results.getRows().size());
+            assertEquals("bar", results.getRow(0).getString("name"));
 
             callbacks ++;
-          }
-
-          @Override
-          public boolean onFailure(SqlException e) {
-            return false;
           }
         });
 
@@ -68,15 +63,10 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("select * from foobar", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(2, results.getRows().length());
+            assertEquals(2, results.getRows().size());
             assertEquals(1, callbacks);
             
             callbacks ++;
-          }
-
-          @Override
-          public boolean onFailure(SqlException e) {
-            return false;
           }
         });
       }
@@ -95,5 +85,35 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
+  
+
+  public void testSingle() {
+
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("db2");
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table if not exists numbers (x INT)");
+        tx.executeSql("insert into numbers (x) values (33) ");
+        tx.executeSql("insert into numbers (x) values (41) ");
+        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertEquals(74, (int)results.intResult());
+            finishTest();
+          }
+        });
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        fail(e.getMessage());
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+
 
 }

@@ -20,11 +20,11 @@ import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Javascript Overlay for the {@code SQLResultSet} WebSql interface.
+ * JavaScript Overlay for the {@code SQLResultSet} WebSql interface.
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqlresultset">W3 Standard</a>
  */
-public final class WebSqlResultSet extends JavaScriptObject implements SqlResultSet {
+public final class WebSqlResultSet extends JavaScriptObject {
 
   protected WebSqlResultSet() {
   }
@@ -42,12 +42,32 @@ public final class WebSqlResultSet extends JavaScriptObject implements SqlResult
 
   /**
    * 
+   * @return the insertId or -1 if there were no rows inserted
+   */
+  public int safeGetInsertId() {
+  	try {
+  		return getInsertId();
+  	} catch(Exception e) {
+  		return -1;
+  	}
+  }
+  
+  /**
+   * 
    * @return the <strong>total</strong> number of rows affected during the transaction in progress.
    */
   public native int getRowsAffected() /*-{
     return this.insertId;
   }-*/;
 
+  public int safeGetRowsAffected() {
+  	try {
+  		return getInsertId();
+  	} catch(Exception e) {
+  		return 0;
+  	}
+  }
+  
   /**
    *
    * @return a {@link WebSqlResultSetRowList} representing the rows returned, in the order
@@ -59,6 +79,9 @@ public final class WebSqlResultSet extends JavaScriptObject implements SqlResult
   }-*/;
 
 
+  public SqlResultSet toSqlResultSet() {
+  	return new SqlResultSet(safeGetInsertId(), safeGetRowsAffected(), new WebSqlResultListImpl(getRows()));
+  }
 
 
 

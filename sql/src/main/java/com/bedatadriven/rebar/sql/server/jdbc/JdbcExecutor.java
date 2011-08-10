@@ -1,9 +1,13 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
+import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class JdbcExecutor implements SyncTransactionAdapter.Executor {
 
@@ -32,16 +36,55 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	      }
 	    }
 	    if(stmt.execute()) {
-	        return new JdbcQueryResultSet(stmt);
+	        return toQueryResultSet(stmt);
 	     } else {
-	        return new JdbcUpdateResultSet(stmt);
+	        return toUpdateResultSet(stmt);
 	    }
     } finally {
     	try { stmt.close(); } catch(Exception ignored) {}
     }
   }
+   
 
-  @Override
+  private SqlResultSet toQueryResultSet(PreparedStatement stmt) throws SQLException {
+  	 ResultSet rs = stmt.getResultSet();
+  	 try {
+	     ResultSetMetaData metaData = rs.getMetaData();
+	
+	     String[] fieldNames = new String[metaData.getColumnCount()];
+	     for(int i=0;i!=fieldNames.length;++i) {
+	       fieldNames[i] = metaData.getColumnName(i+1);
+	     }
+	
+	     List<SqlResultSetRow> rows = new ArrayList<SqlResultSetRow>();
+	     while(rs.next()) {
+	       rows.add(new JdbcRow(rs, fieldNames));
+	     }
+	
+	     return new SqlResultSet(-1, 0, new JdbcResultSetRowList(rows));
+  	 } finally {
+  		 try { rs.close(); } catch(Exception ignored) {}
+  	 }
+  }
+
+	private SqlResultSet toUpdateResultSet(PreparedStatement stmt) throws SQLException {
+    int rowsAffected = stmt.getUpdateCount();
+    int insertId = -1;
+    ResultSet rs = stmt.getGeneratedKeys();
+    try {
+      if(rs.next()) {
+        insertId = rs.getInt(1);
+        if(rs.wasNull()) {
+          insertId = -1;
+        }
+      }
+      return new SqlResultSet(insertId, rowsAffected, new JdbcResultSetRowList(Collections.<SqlResultSetRow>emptyList()));
+    } finally {
+      try { rs.close(); } catch(Exception ignored) {}
+    }
+  }
+
+	@Override
   public void commit() throws Exception {
     try {
     	conn.commit();

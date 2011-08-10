@@ -16,8 +16,6 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.bedatadriven.rebar.sql.client.SqlResultSet;
-import com.bedatadriven.rebar.sql.client.SqlResultSetRowList;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -25,7 +23,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqlresultsetrowlist">W3 standard</a>
  */
-public final class WebSqlResultSetRowList extends JavaScriptObject implements SqlResultSetRowList {
+public final class WebSqlResultSetRowList extends JavaScriptObject {
 
   protected WebSqlResultSetRowList() {
   }

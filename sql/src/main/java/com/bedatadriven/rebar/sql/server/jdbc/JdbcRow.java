@@ -9,15 +9,17 @@ import java.util.Map;
 
 class JdbcRow implements SqlResultSetRow {
 
+	private int valueCount;
   private Map<String, Object> values;
 
   public JdbcRow(ResultSet rs, String[] fieldNames) throws SQLException {
-    values = new HashMap<String, Object>();
+    valueCount = fieldNames.length;
+  	values = new HashMap<String, Object>();
     for(int i=0;i!=fieldNames.length;++i) {
       Object value = rs.getObject(i+1);
       if(!rs.wasNull()) {
         values.put(fieldNames[i], value);
-      }
+      } 
     }
   }
 
@@ -30,6 +32,11 @@ class JdbcRow implements SqlResultSetRow {
   @Override
   public int getInt(String columnName) {
     return (int)getDouble(columnName);
+  }
+  
+	@Override
+  public <X> X get(String columnName) {
+	  return (X)values.get(columnName);
   }
 
   @Override
@@ -48,4 +55,54 @@ class JdbcRow implements SqlResultSetRow {
   public boolean isNull(String columnName) {
     return values.containsKey(columnName);
   }
+
+	@Override
+  public String getSingleString() {
+		assertSingleColumn();
+		if(values.isEmpty()) {
+			return null;
+		} else {
+			return values.values().iterator().next().toString();
+		}
+  }
+
+	@Override
+  public Integer getSingleInt() {
+		assertSingleColumn();
+		if(values.isEmpty()) {
+			return null;
+		} else {
+			return ((Number)values.values().iterator().next()).intValue();
+		}
+  }
+
+	@Override
+  public Double getSingleDouble() {
+		assertSingleColumn();
+		if(values.isEmpty()) {
+			return null;
+		} else {
+			return ((Number)values.values().iterator().next()).doubleValue();
+		}
+  }
+	
+	@Override
+  public <X> X getSingle() {
+	  assertSingleColumn();
+		if(values.isEmpty()) {
+			return null;
+		} else {
+			return (X) values.values().iterator().next();
+		}
+  }
+
+	private void assertSingleColumn() {
+		if(valueCount != 1) {
+			throw new IllegalStateException("getSingleXXX() can only be called when the row has exactly one column; this row has " + 
+						valueCount + " columns");
+		}
+	}
+
+
+  
 }

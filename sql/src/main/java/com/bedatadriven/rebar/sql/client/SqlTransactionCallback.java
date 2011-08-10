@@ -1,10 +1,14 @@
 package com.bedatadriven.rebar.sql.client;
 
-public interface SqlTransactionCallback {
+public abstract class SqlTransactionCallback {
   
-  void begin(SqlTransaction tx);
+  public abstract void begin(SqlTransaction tx);
   
-  void onError(SqlException e);
+  public void onError(SqlException e) {
+  	
+  }
   
-  void onSuccess();
+  public void onSuccess() {
+  	
+  }
 }

@@ -37,8 +37,8 @@ public class JdbcTest  {
         tx.executeSql("select * from foobar where id > ?", new Object[] { 1 }, new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertThat(results.getRows().length(), equalTo(1));
-            assertThat(results.getRows().getRow(0).getString("name"), equalTo("bar"));
+            assertThat(results.getRows().size(), equalTo(1));
+            assertThat(results.getRow(0).getString("name"), equalTo("bar"));
 
             callbackCount ++;
           }
@@ -53,7 +53,7 @@ public class JdbcTest  {
         tx.executeSql("select * from foobar", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertThat(results.getRows().length(), equalTo(2));
+            assertThat(results.getRows().size(), equalTo(2));
 
             callbackCount++;
           }

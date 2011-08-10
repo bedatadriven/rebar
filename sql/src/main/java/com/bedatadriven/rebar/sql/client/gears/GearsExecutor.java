@@ -38,7 +38,8 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
   public SqlResultSet execute(String statement, Object[] params) throws Exception {
     ResultSet rs = db.execute(statement, toStringArray(params));
     try {
-      return new GearsResultSet(db, rs);
+      return new SqlResultSet(db.getLastInsertRowId(), db.getRowsAffected(), 
+      		new GearsResultSetRowList(rs));
     } finally {
       try { rs.close(); } catch(Exception ignored) {}
     }

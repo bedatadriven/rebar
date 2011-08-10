@@ -2,10 +2,12 @@ package com.bedatadriven.rebar.sql.client;
 
 
 
-public interface SqlResultSetRowList {
+public interface SqlResultSetRowList extends Iterable<SqlResultSetRow> {
 
-  int length();
+  int size();
 
-  SqlResultSetRow getRow(int index);
+  SqlResultSetRow get(int index);
 
+  boolean isEmpty();
+  
 }

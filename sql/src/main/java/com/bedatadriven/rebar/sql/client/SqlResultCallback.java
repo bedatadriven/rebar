@@ -3,18 +3,21 @@ package com.bedatadriven.rebar.sql.client;
 /**
  * Common callback interface for asynchronous SQL results
  */
-public interface SqlResultCallback {
+public abstract class SqlResultCallback {
 
-    void onSuccess(SqlTransaction tx, SqlResultSet results);
+    public abstract void onSuccess(SqlTransaction tx, SqlResultSet results);
 
     /**
      * Called if there is an error while executing the statement.
      *
      * @param e the exception
      *
-     * @return true, if the transaction should continue, or false if the transaction should be aborted
+     * @return true, if the transaction should continue, or false if the transaction should be aborted and the transaction's 
+     * error handler called. 
      */
-    boolean onFailure(SqlException e);
+    public boolean onFailure(SqlException e) {
+    	return false;
+    }
 
 
 }

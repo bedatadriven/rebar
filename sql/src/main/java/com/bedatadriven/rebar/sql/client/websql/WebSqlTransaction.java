@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -67,7 +68,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     executeSql(statement, parameters, new WebSqlResultCallback() {
       @Override
       public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-        callback.onSuccess(tx, results);
+        callback.onSuccess(tx, results.toSqlResultSet());
       }
 
       @Override
@@ -76,6 +77,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
       }
     });
   }
+  
 
   @Override
   public void executeSql(String statement, SqlResultCallback resultCallback) {

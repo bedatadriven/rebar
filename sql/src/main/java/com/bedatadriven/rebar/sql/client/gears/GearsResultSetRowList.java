@@ -6,13 +6,14 @@ import com.bedatadriven.rebar.sql.client.websql.WebSqlResultSetRow;
 import com.google.gwt.gears.client.database.ResultSet;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 class GearsResultSetRowList implements SqlResultSetRowList {
 
-  private final ArrayList<WebSqlResultSetRow> rows;
+  private final ArrayList<SqlResultSetRow> rows;
 
   public GearsResultSetRowList(ResultSet rs) {
-    rows = new ArrayList<WebSqlResultSetRow>();
+    rows = new ArrayList<SqlResultSetRow>();
     while(rs.isValidRow()) {
       rows.add(createRow(rs));
       rs.next();
@@ -20,16 +21,21 @@ class GearsResultSetRowList implements SqlResultSetRowList {
   }
 
   @Override
-  public int length() {
+  public int size() {
     return rows.size();
   }
 
   @Override
-  public SqlResultSetRow getRow(int index) {
+  public SqlResultSetRow get(int index) {
     return rows.get(index);
   }
 
-  private static native WebSqlResultSetRow createRow(ResultSet rs) /*-{
+  @Override
+  public Iterator<SqlResultSetRow> iterator() {
+	  return rows.iterator();
+  }
+
+	private static native WebSqlResultSetRow createRow(ResultSet rs) /*-{
     var row = {};
     var fieldCount = rs.fieldCount();
     for(var i=0;i!=fieldCount;++i) {
@@ -37,4 +43,9 @@ class GearsResultSetRowList implements SqlResultSetRowList {
     }
     return row;
   }-*/;
+
+	@Override
+  public boolean isEmpty() {
+	  return rows.isEmpty();
+  }
 }

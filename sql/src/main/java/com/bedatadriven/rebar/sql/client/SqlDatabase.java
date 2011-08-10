@@ -1,6 +1,7 @@
 package com.bedatadriven.rebar.sql.client;
 
-import com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback;
+
+
 
 /**
  * A handle to an sql database.
@@ -10,6 +11,13 @@ import com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback;
  */
 public interface SqlDatabase {
 
+	/**
+	 * Begins an asynchronous transaction.
+	 * 
+	 * @param callback 
+	 */
   void transaction(SqlTransactionCallback callback);
 
+  
+  
 }

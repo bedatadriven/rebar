@@ -1,11 +1,24 @@
 package com.bedatadriven.rebar.sql.client;
 
 
+
 public interface SqlResultSetRow {
 
-  public String getString(String columnName);
-  public int getInt(String columnName);
-  public double getDouble(String columnName);
-  public boolean isNull(String columnName);
+	<X> X get(String columnName);
+	<X> X getSingle();
+		
+  String getString(String columnName);
+  String getSingleString();
+  
+  int getInt(String columnName);
+  Integer getSingleInt();
+  
+  double getDouble(String columnName);
+  Double getSingleDouble();
+
+  boolean isNull(String columnName);
+  
+  
+  
 
 }

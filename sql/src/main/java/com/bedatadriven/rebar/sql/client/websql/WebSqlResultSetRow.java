@@ -2,14 +2,19 @@ package com.bedatadriven.rebar.sql.client.websql;
 
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.gears.client.database.ResultSet;
 
 public final class WebSqlResultSetRow extends JavaScriptObject implements SqlResultSetRow {
 
   protected WebSqlResultSetRow() {
 
   }
-
+	
+  @Override
+  public native <X> X get(String columnName) /*-{
+	  return this[columnName];
+  }-*/;
+    
+  
   public native String getString(String columnName) /*-{
     return this[columnName];
   }-*/;
@@ -25,6 +30,39 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
   public native boolean isNull(String columnName) /*-{
     return this[columnName] == null;
   }-*/;
+  
 
+  /**
+   * 
+   * @param ci (zero-based) column index
+   * @return the name of the column at index {@code ci}
+   */
+  private native String firstColumnName() /*-{
+  	for(var pn in this) {
+  		return pn;
+		}
+		return null;
+  }-*/;
 
+	@Override
+  public String getSingleString() {
+	  return getString(firstColumnName());
+  }
+
+	@Override
+  public Integer getSingleInt() {
+	  return getInt(firstColumnName());
+  }
+
+	@Override
+  public Double getSingleDouble() {
+	  return getDouble(firstColumnName());
+  }
+
+	@Override
+  public <X> X getSingle() {
+	  return get(firstColumnName());
+  }
+
+  
 }
