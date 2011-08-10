@@ -6,7 +6,7 @@ import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
 import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
 
-public class TestUtil {
+public abstract class TestUtil {
 	
 	public static String uniqueDbName() {
 		return "target/testdb" + new Date().getTime();
