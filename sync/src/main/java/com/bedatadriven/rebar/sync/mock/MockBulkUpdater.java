@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sync.mock;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.json.JSONArray;
@@ -33,40 +34,52 @@ import java.sql.*;
  */
 public class MockBulkUpdater implements BulkUpdaterAsync {
 
-  private Connection connection;
+  private String connectionUrl;
 
-  public MockBulkUpdater(Connection connection) {
-    this.connection = connection;
+  public MockBulkUpdater(String connectionUrl) {
+    this.connectionUrl = connectionUrl;
   }
 
   public void executeUpdates(String databaseName, String json, AsyncCallback<Integer> callback) {
-    try {
+  	try {
+  		callback.onSuccess(executeUpdates(json));
+  	} catch(Exception e) {
+  		callback.onFailure(e);
+  	}
+  }
+ 
+  
+  public int executeUpdates(String json) throws Exception {
+    Connection connection = null;
+  	try {
+    	connection = DriverManager.getConnection(connectionUrl);
       connection.setAutoCommit(false);
-      callback.onSuccess(executeUpdates(json));
+      int rowsUpdated = executeUpdates(connection, json);
       connection.commit();
-    
-    } catch (Exception e) {
-      try {
-        connection.rollback();
-      } catch (SQLException ignored) {
-       
-      }
-      callback.onFailure(e);
+      
+      return rowsUpdated;
+  	} catch(Exception e) {
+  		Log.error("Updates failed: " + e.getMessage(), e);
+  		try { connection.rollback(); } catch(Exception ignored) {}
+  		throw e;
+    } finally {
+    	try { connection.close(); } catch(Exception ignored) {};
     }
+  
   }
 
-  public int executeUpdates(String json) throws SQLException, JSONException {
+  public int executeUpdates(Connection connection, String json) throws SQLException, JSONException {
     int totalRowsAffected = 0;
     JSONArray list = new JSONArray(json);
     for (int i = 0; i != list.length(); ++i) {
       JSONObject bulkOperation = list.getJSONObject(i);
 
-      totalRowsAffected += executeStatement(bulkOperation);
+      totalRowsAffected += executeStatement(connection, bulkOperation);
     }
     return totalRowsAffected;
   }
 
-  private int executeStatement(JSONObject bulkOperation) throws JSONException, SQLException {
+  private int executeStatement(Connection connection, JSONObject bulkOperation) throws JSONException, SQLException {
     String statement = bulkOperation.getString("statement");
     PreparedStatement stmt = connection.prepareStatement(statement);
 

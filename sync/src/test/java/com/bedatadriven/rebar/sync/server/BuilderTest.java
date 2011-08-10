@@ -31,30 +31,24 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BuilderTest {
-  protected Connection conn;
   protected JpaUpdateBuilder builder;
   protected MockBulkUpdater updater;
+	private String connectionUrl;
 
 
   @Before
   public void setUp() throws ClassNotFoundException, SQLException {
     Class.forName("org.sqlite.JDBC");
-    conn = DriverManager.getConnection("jdbc:sqlite:buildertest.db");
+    connectionUrl = "jdbc:sqlite:buildertest" + new java.util.Date().getTime();
+
     builder = new JpaUpdateBuilder();
-    updater = new MockBulkUpdater(conn);
-
-    Statement clean = conn.createStatement();
-    clean.executeUpdate("drop table if exists Contact");
-    clean.executeUpdate("drop table if exists Person");
+		updater = new MockBulkUpdater(connectionUrl);
   }
 
-  @After
-  public void cleanUp() throws SQLException {
-    conn.close();
-  }
+
 
   @Test
-  public void simpleEntity() throws JSONException, SQLException {
+  public void simpleEntity() throws Exception {
     List<Person> list = new ArrayList<Person>();
     list.add(new Person(1, "Bob", makeDate(1982, 1, 16), 1.7, true));
     list.add(new Person(2, "Jim", makeDate(1980, 4, 10), 1.326, true));
@@ -66,6 +60,7 @@ public class BuilderTest {
 
     executeUpdateAndExpectedAffectedRowsToBe(4);
 
+    Connection conn = DriverManager.getConnection(connectionUrl);
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery("select id, name, birthDate, height, active from Person order by id");
 
@@ -78,6 +73,7 @@ public class BuilderTest {
       assertEquals(list.get(i).isActive(), rs.getBoolean(5));
     }
     rs.close();
+    conn.close();
   }
 
   @Test
@@ -100,6 +96,7 @@ public class BuilderTest {
     assertEquals("rows updated", 3, rows);
 
     // now verify that the data were populated correctly
+    Connection conn = DriverManager.getConnection(connectionUrl);
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery("select id, city from Contact order by id");
 
@@ -109,9 +106,11 @@ public class BuilderTest {
       if(list.get(i).getAddress() != null)
         assertEquals(list.get(i).getAddress().getCity(), rs.getString(2));
     }
+    rs.close();
+    conn.close();
   }
 
-  private void executeUpdateAndExpectedAffectedRowsToBe(final int expectedRowsAffected) throws JSONException, SQLException {
+  private void executeUpdateAndExpectedAffectedRowsToBe(final int expectedRowsAffected) throws Exception {
     int rows = updater.executeUpdates(builder.asJson());
     assertEquals("rowsAffected", expectedRowsAffected, rows);
   }
