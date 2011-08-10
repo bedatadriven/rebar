@@ -1,11 +1,11 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
-import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 
 class JdbcRow implements SqlResultSetRow {
 

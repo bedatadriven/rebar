@@ -29,7 +29,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#databases for definitions.">W3 standard</a>
  */
-public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabase {
+public final class WebSqlDatabase extends JavaScriptObject {
 
 
   public static final String ANY_VERSION = "";
@@ -90,29 +90,5 @@ public final class WebSqlDatabase extends JavaScriptObject implements SqlDatabas
     });
   }-*/;
 
-  /**
-   * Begins an asynchronous transaction using the common SQL API
-   *
-   * @param callback
-   */
-  @Override
-  public void transaction(final SqlTransactionCallback callback) {
-    transaction(new WebSqlTransactionCallback() {
-      
-      @Override
-      public void onError(WebSqlException e) {
-        callback.onError(e);
-      }
-      
-      @Override
-      public void begin(WebSqlTransaction tx) {
-        callback.begin(tx);        
-      }
-
-			@Override
-      public void onSuccess() {
-				callback.onSuccess();
-	    }
-    });
-  }
+ 
 }

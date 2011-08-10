@@ -7,7 +7,7 @@ import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
 
-class GearsDatabase implements SqlDatabase {
+class GearsDatabase extends SqlDatabase {
 
   private final String name;
 

@@ -7,6 +7,6 @@ public class WebSqlDatabaseFactory implements SqlDatabaseFactory {
 
   @Override
   public SqlDatabase open(String databaseName) {
-    return WebSqlDatabase.openDatabase(databaseName, WebSqlDatabase.ANY_VERSION, databaseName, WebSqlDatabase.DEFAULT_SIZE);
+    return new SqlDatabaseImpl( WebSqlDatabase.openDatabase(databaseName, WebSqlDatabase.ANY_VERSION, databaseName, WebSqlDatabase.DEFAULT_SIZE) );
   }
 }
