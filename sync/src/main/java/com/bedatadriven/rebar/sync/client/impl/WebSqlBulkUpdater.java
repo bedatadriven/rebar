@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sync.client.impl;
 
+import com.bedatadriven.rebar.persistence.mapping.client.Database;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlDatabase;
@@ -41,20 +42,7 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, "1", databaseName,
         1024 * 1024 * 5);
 
-    database.transaction(new WebSqlTransactionCallback() {
-      @Override
-      public void begin(WebSqlTransaction tx) {
-        log("WebSqlBulkUpdater transaction started");
-
-        new Sequence(tx, bulkOperationJsonArray, callback);
-      }
-
-      @Override
-      public void onError(WebSqlException e) {
-        callback.onFailure(e);
-      }
-    });
-
+    new Sequence(database, bulkOperationJsonArray, callback);
   }
 
   private class Sequence {
@@ -66,14 +54,34 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
     private WebSqlTransaction tx;
     private PreparedStatementBatch currentBatch;
 
-    public Sequence(WebSqlTransaction tx, String statements, AsyncCallback<Integer> callback) {
+    public Sequence(WebSqlDatabase db, String statements, final AsyncCallback<Integer> callback) {
       log("WebSqlBulkUpdater about to call eval on '" + statements + "'");
 
-      this.tx = tx;
       this.statements = PreparedStatementBatch.fromJson(statements);
       this.callback = callback;
       log("WebSqlBulkUpdater starting execution of " + this.statements.length() + " statements");
-      executeNextStatement();
+
+      
+      db.transaction(new WebSqlTransactionCallback() {
+
+				@Override
+				public void begin(WebSqlTransaction tx) {
+					Sequence.this.tx = tx;
+		      executeNextStatement();
+				}
+      	
+				@Override
+				public void onSuccess() {
+					callback.onSuccess(rowsAffected);
+				}
+				
+				@Override
+				public void onError(WebSqlException e) {
+					callback.onFailure(e);
+				}
+				
+
+			});
     }
 
     public void executeNextStatement() {

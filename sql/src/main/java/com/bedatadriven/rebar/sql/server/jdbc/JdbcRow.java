@@ -2,9 +2,13 @@ package com.bedatadriven.rebar.sql.server.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 
 class JdbcRow implements SqlResultSetRow {
@@ -31,7 +35,14 @@ class JdbcRow implements SqlResultSetRow {
 
   @Override
   public int getInt(String columnName) {
-    return (int)getDouble(columnName);
+    Object value = values.get(columnName);
+    if(value == null) {
+      throw new NullPointerException(columnName);
+    } else if(value instanceof Number) {
+      return ((Number) value).intValue();
+    } else  {
+    	return Integer.parseInt(value.toString());
+    }
   }
   
 	@Override
@@ -46,8 +57,8 @@ class JdbcRow implements SqlResultSetRow {
       throw new NullPointerException(columnName);
     } else if(value instanceof Number) {
       return ((Number) value).doubleValue();
-    } else {
-      throw new UnsupportedOperationException("'" + columnName + "' is not numeric");
+    } else  {
+    	return Double.parseDouble(value.toString());
     }
   }
 
@@ -96,13 +107,26 @@ class JdbcRow implements SqlResultSetRow {
 		}
   }
 
+	@Override
+  public Date getDate(String columnName) {
+	   Object value = values.get(columnName);
+	    if(value == null) {
+	      return null;
+	    } else if(value instanceof Number) {
+	      return new Date(((Number) value).longValue());
+	    } else  {
+	    	try {
+	        return SqliteDates.FORMAT.parse(value.toString());
+        } catch (ParseException e) {
+	        throw new SqlException("Could not parse '" + value + "' as date", e);
+        }
+	    }  
+	}
+
 	private void assertSingleColumn() {
 		if(valueCount != 1) {
 			throw new IllegalStateException("getSingleXXX() can only be called when the row has exactly one column; this row has " + 
 						valueCount + " columns");
 		}
 	}
-
-
-  
 }

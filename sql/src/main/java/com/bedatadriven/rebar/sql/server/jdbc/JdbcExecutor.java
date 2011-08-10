@@ -32,7 +32,11 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
   	try {
 	    if(params != null) {
 	      for(int i=0;i!=params.length;++i) {
-	        stmt.setObject(i+1, params[i]);
+	      	if(params[i] instanceof java.util.Date) {
+	      		stmt.setString(i+1, SqliteDates.format((java.util.Date)params[i]));
+	      	} else {
+	      		stmt.setObject(i+1, params[i]);
+	      	}
 	      }
 	    }
 	    if(stmt.execute()) {
@@ -44,8 +48,7 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
     	try { stmt.close(); } catch(Exception ignored) {}
     }
   }
-   
-
+  
   private SqlResultSet toQueryResultSet(PreparedStatement stmt) throws SQLException {
   	 ResultSet rs = stmt.getResultSet();
   	 try {

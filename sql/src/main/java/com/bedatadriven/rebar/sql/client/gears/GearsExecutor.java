@@ -1,5 +1,7 @@
 package com.bedatadriven.rebar.sql.client.gears;
 
+import java.util.Date;
+
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
@@ -7,8 +9,6 @@ import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
-
-import java.util.Arrays;
 
 
 class GearsExecutor implements SyncTransactionAdapter.Executor {
@@ -51,7 +51,13 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
     } else {
       String[] s = new String[params.length];
       for(int i=0;i!=params.length;++i) {
-        s[i] = params[i].toString();
+      	if(params[i] == null) {
+      		s[i] = null;
+      	} else if(params[i] instanceof Date) {
+      		s[i] = Long.toString(((Date)params[i]).getTime());
+      	} else {
+      		s[i] = params[i].toString();
+      	}
       }
       return s;
     }

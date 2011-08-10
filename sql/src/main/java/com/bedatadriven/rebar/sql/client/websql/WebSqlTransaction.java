@@ -16,8 +16,9 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import java.util.Date;
+
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
-import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -91,6 +92,8 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
         paramArray.push(((Number)param).doubleValue());
       } else if(param instanceof String) {
         paramArray.push((String)param);
+      } else if(param instanceof Date) {
+      	paramArray.push(Long.toString(((Date)param).getTime()));
       } else {
         throw new IllegalArgumentException("Param argument of '" + param.getClass().getName() + "'");
       }

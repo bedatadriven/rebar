@@ -107,8 +107,8 @@ public abstract class SqlDatabase {
 		});
   }
   
-  public <K,V> SqlKeyValueTable<K,V> keyValueTable(String tableName, String keyName, String valueName) {
-  	return new SqlKeyValueTable<K, V>(this, tableName, keyName, valueName);
+  public SqlKeyValueTable keyValueTable(String tableName, String keyName, String valueName) {
+  	return new SqlKeyValueTable(this, tableName, keyName, valueName);
   }
   
   public final void dropAllTables() {

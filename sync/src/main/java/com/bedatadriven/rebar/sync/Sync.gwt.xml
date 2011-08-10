@@ -19,7 +19,7 @@
 <module>
     <inherits name="com.google.gwt.gears.Gears"/>
     <inherits name="com.bedatadriven.rebar.sql.Sql"/>
-    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>
+    <inherits name="com.allen_sauer.gwt.log.gwt-log-impl"/>
 
 
     <!-- Fall through to this rule when the browser doesn't support WebSQL -->

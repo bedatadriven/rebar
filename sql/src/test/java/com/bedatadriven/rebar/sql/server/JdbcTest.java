@@ -2,6 +2,8 @@ package com.bedatadriven.rebar.sql.server;
 
 import com.bedatadriven.rebar.sql.client.*;
 import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
+
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -24,10 +26,11 @@ public class JdbcTest  {
   @Test
   public void basicTest() throws ClassNotFoundException, SQLException {
 
-    String dbName = "target/testdb" + new Date().getTime();
-
+    String dbName = TestUtil.uniqueDbName();
+    
     SqlDatabaseFactory factory = new JdbcDatabaseFactory();
     SqlDatabase db = factory.open(dbName);
+    
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
@@ -90,7 +93,48 @@ public class JdbcTest  {
     assertThat(rs.getInt(1), equalTo(2));
     rs.close();
     conn.close();
-
   }
 
+  @Test
+  public void dateTest() throws ClassNotFoundException, SQLException {
+
+    SqlDatabase db = TestUtil.openUniqueDb();
+    
+    final Date startOfTest = new Date();
+    
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table timestamps (time INT)");
+        tx.executeSql("insert into timestamps (time) values (?) ", new Object[] { startOfTest });
+        tx.executeSql("select time, strftime('%Y', time) as year from timestamps", new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertThat("rows", results.getRows().size(), equalTo(1));
+            assertThat("time", results.getRow(0).getDate("time"), equalTo(startOfTest));
+            assertThat("year", results.getRow(0).getInt("year"), equalTo(2011));
+            callbackCount ++;
+          }
+
+          @Override
+          public boolean onFailure(SqlException e) {
+            throw new AssertionError(e);
+          }
+        });
+      }
+
+      @Override
+      public void onSuccess() {
+      	successCalled = true;
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        throw new AssertionError(e);
+      }
+    });
+
+
+  }
+  
 }

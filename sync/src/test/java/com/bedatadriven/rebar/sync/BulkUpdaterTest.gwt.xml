@@ -15,7 +15,7 @@
   -->
 
 <module>
-
+	<inherits name="com.allen_sauer.gwt.log.gwt-log-TRACE"/>
     <inherits name="com.bedatadriven.rebar.sync.Sync"/>
 
 </module>

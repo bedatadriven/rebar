@@ -1,5 +1,7 @@
 package com.bedatadriven.rebar.sql.client;
 
+import java.util.Date;
+
 
 
 public interface SqlResultSetRow {
@@ -15,6 +17,8 @@ public interface SqlResultSetRow {
   
   double getDouble(String columnName);
   Double getSingleDouble();
+  
+  Date getDate(String columnName);
 
   boolean isNull(String columnName);
   

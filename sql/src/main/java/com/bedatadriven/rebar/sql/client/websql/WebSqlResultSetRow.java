@@ -1,5 +1,7 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
+import java.util.Date;
+
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -62,6 +64,11 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
 	@Override
   public <X> X getSingle() {
 	  return get(firstColumnName());
+  }
+
+	@Override
+  public Date getDate(String columnName) {
+	  return new Date((long)getDouble(columnName));
   }
 
   

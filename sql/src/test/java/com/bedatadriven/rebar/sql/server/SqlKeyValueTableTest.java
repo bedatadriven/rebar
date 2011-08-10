@@ -19,11 +19,8 @@ public class SqlKeyValueTableTest {
 	@Test
 	public void simpleTest() {
 		
-    String dbName = "target/keyvalueTest" + new Date().getTime();
-
-    SqlDatabaseFactory factory = new JdbcDatabaseFactory();
-    SqlDatabase db = factory.open(dbName);
-    SqlKeyValueTable<String, String> table = new SqlKeyValueTable<String, String>(db, "sync_regions", "id", "lastUpdate");
+    SqlDatabase db = TestUtil.openUniqueDb();
+    SqlKeyValueTable table = new SqlKeyValueTable(db, "sync_regions", "id", "lastUpdate");
         
     table.put("foo", "bar");
     table.get("foo", new AsyncCallback<String>() {

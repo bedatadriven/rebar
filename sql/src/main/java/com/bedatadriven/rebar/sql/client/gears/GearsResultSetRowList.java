@@ -39,7 +39,7 @@ class GearsResultSetRowList implements SqlResultSetRowList {
     var row = {};
     var fieldCount = rs.fieldCount();
     for(var i=0;i!=fieldCount;++i) {
-      row[rs.fieldName(i)] =rs.field(i);
+      row[rs.fieldName(i)] = rs.field(i);
     }
     return row;
   }-*/;

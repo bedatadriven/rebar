@@ -12,7 +12,7 @@ import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class SqlKeyValueTable<K, V> {
+public class SqlKeyValueTable {
 
 	private final SqlDatabase db;
 	private String tableName;
@@ -28,17 +28,17 @@ public class SqlKeyValueTable<K, V> {
 		db.transaction(new SqlTransactionCallback() {
 			@Override
 			public void begin(SqlTransaction tx) {
-				tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " NONE PRIMARY KEY, " + valueName + " NONE) ");
+				tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " TEXT PRIMARY KEY, " + valueName + " TEXT) ");
 			}
 		});
 	}
 	
 
-	public void get(K key, final AsyncCallback<V> callback) {
+	public void get(String key, final AsyncCallback<String> callback) {
 		get(key, null, callback);
 	}
 	
-	public void get(final K key, final V defaultValue, final AsyncCallback<V> callback) {
+	public void get(final String key, final String defaultValue, final AsyncCallback<String> callback) {
 		db.transaction(new SqlTransactionCallback() {
 			
 			@Override
@@ -50,7 +50,7 @@ public class SqlKeyValueTable<K, V> {
 						if(results.getRows().isEmpty()) {
 							callback.onSuccess(defaultValue);
 						} else {
-							callback.onSuccess((V)results.getRow(0).get(valueName));
+							callback.onSuccess(results.getRow(0).getString(valueName));
 						}
 					}
 				});
@@ -63,8 +63,8 @@ public class SqlKeyValueTable<K, V> {
 		});
 	}
 	
-	public void getAll(final AsyncCallback<Map<K,V>> callback) {
-	db.transaction(new SqlTransactionCallback() {
+	public void getAll(final AsyncCallback<Map<String, String>> callback) {
+		db.transaction(new SqlTransactionCallback() {
 			
 			@Override
 			public void begin(SqlTransaction tx) {
@@ -72,9 +72,9 @@ public class SqlKeyValueTable<K, V> {
 					
 					@Override
 					public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-						Map<K,V> map = new HashMap<K,V>();
+						Map<String, String> map = new HashMap<String, String>();
 						for(SqlResultSetRow row : results.getRows()) {
-							map.put(row.<K>get(keyName), row.<V>get(valueName));
+							map.put(row.getString(keyName), row.getString(valueName));
 						}
 						callback.onSuccess(map);
 					}
@@ -89,7 +89,7 @@ public class SqlKeyValueTable<K, V> {
 		
 	}
 	
-	public void put(final K key, final V value, final AsyncCallback<Void> callback) {
+	public void put(final String key, final String value, final AsyncCallback<Void> callback) {
 		db.transaction(new SqlTransactionCallback() {
 			
 			@Override
@@ -104,7 +104,7 @@ public class SqlKeyValueTable<K, V> {
 		});
 	}
 	
-	public void put(K key, V value) {
+	public void put(String key, String value) {
 		put(key, value, new AsyncCallback<Void>() {
 			
 			@Override

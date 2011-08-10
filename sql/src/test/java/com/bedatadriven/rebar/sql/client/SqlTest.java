@@ -115,5 +115,33 @@ public class SqlTest extends GWTTestCase {
     delayTestFinish(2000);
   }
 
+  public void testDates() {
+
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("dates");
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table if not exists timestamps (t TEXT)");
+        tx.executeSql("insert into timestamps (x) values (33) ");
+        tx.executeSql("insert into numbers (x) values (41) ");
+        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertEquals(74, (int)results.intResult());
+            finishTest();
+          }
+        });
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        fail(e.getMessage());
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+
 
 }
