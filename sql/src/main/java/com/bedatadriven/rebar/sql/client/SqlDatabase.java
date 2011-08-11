@@ -1,5 +1,6 @@
 package com.bedatadriven.rebar.sql.client;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.util.SqlKeyValueTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -89,7 +90,13 @@ public abstract class SqlDatabase {
 					@Override
 					public void onSuccess(SqlTransaction tx, SqlResultSet results) {
 						for(SqlResultSetRow row : results.getRows()) {
-							tx.executeSql("DROP TABLE " + row.getString("name"));
+							String tableName = row.getString("name");
+							// some implementations may store metadata in tables that cannot be deleted,
+							// __WebKitMetadata__ for example
+							if(!tableName.startsWith("_")) {
+								Log.debug("Dropping table " + tableName);
+								tx.executeSql("DROP TABLE " + tableName);
+							}
 						}
 					}
 				});
