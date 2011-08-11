@@ -39,10 +39,14 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
                              final AsyncCallback<Integer> callback) {
 
    
-    WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, "1", databaseName,
-        1024 * 1024 * 5);
-
-    new Sequence(database, bulkOperationJsonArray, callback);
+  	try {
+	    WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, WebSqlDatabase.ANY_VERSION, databaseName,
+	        WebSqlDatabase.DEFAULT_SIZE);
+	
+	    new Sequence(database, bulkOperationJsonArray, callback);
+  	} catch(Exception e) {
+  		callback.onFailure(e);
+  	}
   }
 
   private class Sequence {
