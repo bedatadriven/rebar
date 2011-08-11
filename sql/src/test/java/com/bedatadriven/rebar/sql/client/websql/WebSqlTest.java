@@ -71,8 +71,9 @@ public class WebSqlTest extends GWTTestCase {
           }
       
           @Override
-          public void onFailure(WebSqlException e) {
+          public boolean onFailure(WebSqlException e) {
             fail(e.getMessage() + ", Code = " + e.getCode());
+						return false;
           }
         });
       }

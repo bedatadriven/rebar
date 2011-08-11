@@ -73,8 +73,8 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
       }
 
       @Override
-      public void onFailure(WebSqlException e) {
-        callback.onFailure(e);
+      public boolean onFailure(WebSqlException e) {
+        return callback.onFailure(e);
       }
     });
   }

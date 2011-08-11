@@ -16,11 +16,9 @@
 
 package com.bedatadriven.rebar.sync.client.impl;
 
-import com.bedatadriven.rebar.persistence.mapping.client.Database;
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
-import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlDatabase;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlException;
+import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlResultSet;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlTransaction;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback;
@@ -106,13 +104,13 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
       tx.executeSql(batch.getStatement(), JsArray.createArray(), new WebSqlResultCallback() {
         @Override
         public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          rowsAffected = results.getRowsAffected();
+          rowsAffected = results.safeGetRowsAffected();
           onBatchFinished();
         }
 
         @Override
-        public void onFailure(WebSqlException e) {
-          callback.onFailure(e);
+        public boolean onFailure(WebSqlException e) {
+          return false;
         }
       });
     }
@@ -125,8 +123,8 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
           new WebSqlResultCallback() {
         @Override
         public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          log("executeSql succeeded, " + results.getRowsAffected() + " rows affected.");
-          rowsAffected = results.getRowsAffected();
+          log("executeSql succeeded, " + results.safeGetRowsAffected() + " rows affected.");
+          rowsAffected = results.safeGetRowsAffected();
           if(nextExecutionIndex < currentBatch.getExecutions().length()) {
             executeNextExecution();
           } else {
@@ -135,8 +133,8 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
         }
 
         @Override
-        public void onFailure(WebSqlException e) {
-          callback.onFailure(e);
+        public boolean onFailure(WebSqlException e) {
+          return false; 
         }
       });
     }
