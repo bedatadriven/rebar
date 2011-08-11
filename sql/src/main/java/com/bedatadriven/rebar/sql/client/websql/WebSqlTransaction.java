@@ -16,8 +16,10 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import java.util.Arrays;
 import java.util.Date;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -43,24 +45,29 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   }-*/;
 
 
-  public void executeSql(String statement, Object[] parameters) {
-    executeSql(statement, toParamArray(parameters));
-  }
-
   public native void executeSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
     this.executeSql(statement, parameters, function(tx, results) {
       callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
     }, function(e) {
       callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onFailure(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlException;)(
-          @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code));
+          @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code||-2));
     });
   }-*/;
+  
 
+  public void executeSql(String statement, Object[] parameters) {
+    Log.debug("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+    executeSql(statement, toParamArray(parameters));
+  }
+
+  
   public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
-    executeSql(statement, toParamArray(parameters), callback);
+    Log.debug("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+  	executeSql(statement, toParamArray(parameters), callback);
   }
 
   public void executeSql(String statement, WebSqlResultCallback resultCallback) {
+    Log.debug("WebSql: Queuing statement '" + statement + "' with no parameters");
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
 
