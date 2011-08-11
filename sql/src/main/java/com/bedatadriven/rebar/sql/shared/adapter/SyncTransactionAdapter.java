@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Adapts a synchronous database API to the Web Sql-style asynchronous
+ * Adapts a synchronous database API to the WebSql-style asynchronous
  * transaction API
  */
 public class SyncTransactionAdapter implements SqlTransaction {
@@ -181,7 +181,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
       if(callback == null) {
         return false;
       }
-      return callback.onFailure(e);
+      return callback.onFailure(e) == SqlResultCallback.CONTINUE;
     }
   }
 
