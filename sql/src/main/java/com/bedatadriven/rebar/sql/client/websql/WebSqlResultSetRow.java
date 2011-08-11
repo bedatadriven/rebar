@@ -63,7 +63,7 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
 
 	@Override
   public <X> X getSingle() {
-	  return get(firstColumnName());
+	  return this.<X>get(firstColumnName());
   }
 
 	@Override
