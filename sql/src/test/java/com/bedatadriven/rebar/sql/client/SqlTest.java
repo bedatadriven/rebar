@@ -18,9 +18,12 @@ package com.bedatadriven.rebar.sql.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mortbay.log.Log;
 
 /**
  * Integration test case that verifies that our emulation classes,
@@ -114,24 +117,23 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
-
-  public void testDates() {
+  
+  // make sure onSuccess is called only ONCE
+  public void testTxCallback() {
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
-    SqlDatabase db = factory.open("dates");
+    SqlDatabase db = factory.open("db3");
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
-        tx.executeSql("create table if not exists timestamps (t TEXT)");
-        tx.executeSql("insert into timestamps (x) values (33) ");
-        tx.executeSql("insert into numbers (x) values (41) ");
-        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
-          @Override
-          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(74, (int)results.intResult());
-            finishTest();
-          }
-        });
+        tx.executeSql("create table if not exists numbers1 (x INT)");
+        tx.executeSql("create table if not exists numbers2 (y INT)");
+      }
+      
+			@Override
+      public void onSuccess() {
+				Log.info("Callback called");
+	      callbacks++;
       }
 
 			@Override
@@ -139,9 +141,48 @@ public class SqlTest extends GWTTestCase {
         fail(e.getMessage());
       }
     });
+    
+    new Timer() {
+			
+			@Override
+			public void run() {
+				assertEquals(1, callbacks);
+				finishTest();
+			}
+		}.schedule(4000);
 
-    delayTestFinish(2000);
+    delayTestFinish(5000);
+  	
   }
+  
+
+//  public void testDates() {
+//
+//    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+//    SqlDatabase db = factory.open("dates");
+//    db.transaction(new SqlTransactionCallback() {
+//      @Override
+//      public void begin(SqlTransaction tx) {
+//        tx.executeSql("create table if not exists timestamps (t TEXT)");
+//        tx.executeSql("insert into timestamps (x) values (33) ");
+//        tx.executeSql("insert into numbers (x) values (41) ");
+//        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
+//          @Override
+//          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+//            assertEquals(74, (int)results.intResult());
+//            finishTest();
+//          }
+//        });
+//      }
+//
+//			@Override
+//      public void onError(SqlException e) {
+//        fail(e.getMessage());
+//      }
+//    });
+//
+//    delayTestFinish(2000);
+//  }
 
 
 }
