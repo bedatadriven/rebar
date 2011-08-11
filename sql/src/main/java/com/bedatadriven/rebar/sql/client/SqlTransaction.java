@@ -1,6 +1,5 @@
 package com.bedatadriven.rebar.sql.client;
 
-import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
 
 public interface SqlTransaction {
 
