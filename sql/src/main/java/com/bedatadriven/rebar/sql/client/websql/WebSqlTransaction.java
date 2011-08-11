@@ -53,7 +53,6 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
           @com.bedatadriven.rebar.sql.client.websql.WebSqlException::new(Ljava/lang/String;I)(e.message,e.code||-2));
     });
   }-*/;
-  
 
   public void executeSql(String statement, Object[] parameters) {
     Log.debug("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));

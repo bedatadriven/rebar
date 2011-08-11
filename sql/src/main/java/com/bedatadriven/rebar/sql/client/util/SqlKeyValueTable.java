@@ -98,6 +98,11 @@ public class SqlKeyValueTable {
 			}
 
 			@Override
+      public void onSuccess() {
+				callback.onSuccess(null);
+      }
+
+			@Override
       public void onError(SqlException e) {
 				callback.onFailure(e);
       }

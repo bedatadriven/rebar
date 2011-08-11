@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sync.client.impl;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlDatabase;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlException;
 import com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback;
@@ -25,6 +26,7 @@ import com.bedatadriven.rebar.sql.client.websql.WebSqlTransactionCallback;
 import com.bedatadriven.rebar.sync.client.BulkUpdaterAsync;
 import com.bedatadriven.rebar.sync.client.PreparedStatementBatch;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -41,115 +43,47 @@ public class WebSqlBulkUpdater implements BulkUpdaterAsync {
 	    WebSqlDatabase database = WebSqlDatabase.openDatabase(databaseName, WebSqlDatabase.ANY_VERSION, databaseName,
 	        WebSqlDatabase.DEFAULT_SIZE);
 	
-	    new Sequence(database, bulkOperationJsonArray, callback);
-  	} catch(Exception e) {
-  		callback.onFailure(e);
-  	}
-  }
-
-  private class Sequence {
-    private int rowsAffected = 0;
-    private JsArray<PreparedStatementBatch> statements;
-    private int nextStatementIndex = 0;
-    private int nextExecutionIndex = 0;
-    private AsyncCallback<Integer> callback;
-    private WebSqlTransaction tx;
-    private PreparedStatementBatch currentBatch;
-
-    public Sequence(WebSqlDatabase db, String statements, final AsyncCallback<Integer> callback) {
-      log("WebSqlBulkUpdater about to call eval on '" + statements + "'");
-
-      this.statements = PreparedStatementBatch.fromJson(statements);
-      this.callback = callback;
-      log("WebSqlBulkUpdater starting execution of " + this.statements.length() + " statements");
-
-      
-      db.transaction(new WebSqlTransactionCallback() {
-
+	    database.transaction(new WebSqlTransactionCallback() {
+				
+			
 				@Override
 				public void begin(WebSqlTransaction tx) {
-					Sequence.this.tx = tx;
-		      executeNextStatement();
+			     Log.debug("WebSqlBulkUpdater about to call eval on '" + bulkOperationJsonArray.substring(0, 600) + "'");
+			      JsArray<PreparedStatementBatch> statements = PreparedStatementBatch.fromJson(bulkOperationJsonArray);
+			      
+			      Log.debug("WebSqlBulkUpdater queuing " + statements.length() + " statements");
+			      
+			      for(int i=0;i!=statements.length();++i) {
+			      	PreparedStatementBatch batch = statements.get(i);
+				      Log.debug("WebSqlBulkUpdater queuing statement [" + batch.getStatement() + "]");
+
+			        JsArray<JsArrayString> executions = batch.getExecutions();
+							if(executions == null || executions.length() == 0) {
+			          // simple statement with no parameters
+								tx.executeSql(batch.getStatement());
+			        
+							} else {
+								// statement to be executed several times with different parameters
+			        	for(int j=0;j!=executions.length(); ++j) {
+			        		tx.executeSql(batch.getStatement(), executions.get(j));
+			        	}
+			        }
+			      }
 				}
-      	
+				
 				@Override
 				public void onSuccess() {
-					callback.onSuccess(rowsAffected);
+					callback.onSuccess(0);
 				}
 				
 				@Override
 				public void onError(WebSqlException e) {
 					callback.onFailure(e);
 				}
-				
-
 			});
-    }
-
-    public void executeNextStatement() {
-      log("WebSqlBulkUpdater: executing statement " + nextStatementIndex);
-
-      currentBatch = statements.get(nextStatementIndex++);
-      if(currentBatch.getExecutions() == null || currentBatch.getExecutions().length() == 0) {
-        executeStatementWithoutParams(currentBatch);
-      } else {
-        nextExecutionIndex = 0;
-        executeNextExecution();
-      }
-    }
-
-    private void executeStatementWithoutParams(PreparedStatementBatch batch) {
-      log("WebSqlBulkUpdater: executeStatementWithoutParams");
-      
-      tx.executeSql(batch.getStatement(), JsArray.createArray(), new WebSqlResultCallback() {
-        @Override
-        public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          rowsAffected = results.safeGetRowsAffected();
-          onBatchFinished();
-        }
-
-        @Override
-        public boolean onFailure(WebSqlException e) {
-          return false;
-        }
-      });
-    }
-
-    private void executeNextExecution() {
-      
-      log("WebSqlBulkUpdater: executeNextExecution  = " + nextExecutionIndex);
-
-      tx.executeSql(currentBatch.getStatement(), currentBatch.getExecutions().get(nextExecutionIndex++),
-          new WebSqlResultCallback() {
-        @Override
-        public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-          log("executeSql succeeded, " + results.safeGetRowsAffected() + " rows affected.");
-          rowsAffected = results.safeGetRowsAffected();
-          if(nextExecutionIndex < currentBatch.getExecutions().length()) {
-            executeNextExecution();
-          } else {
-            onBatchFinished();
-          }
-        }
-
-        @Override
-        public boolean onFailure(WebSqlException e) {
-          return false; 
-        }
-      });
-    }
-
-    private void onBatchFinished() {
-      if(nextStatementIndex < statements.length()) {
-        executeNextStatement();
-      } else {
-        callback.onSuccess(rowsAffected);
-      }
-    }
+  	} catch(Exception e) {
+  		callback.onFailure(e);
+  	}
   }
-  
-  private static native final void log(String message) /*-{
-      console.log(message);
-  }-*/;
-  
+ 
 }
