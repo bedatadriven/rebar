@@ -25,8 +25,7 @@ public class JdbcDatabase extends SqlDatabase {
   public void transaction(SqlTransactionCallback callback) {
 		new SyncTransactionAdapter(newExecutor(), StubScheduler.INSTANCE, callback);
 		
-		// run our fake event loop
-		StubScheduler.INSTANCE.process();
+		processEventQueue();
   }
 
 	private JdbcExecutor newExecutor() {
@@ -38,6 +37,10 @@ public class JdbcDatabase extends SqlDatabase {
 	  return databaseName;
   }
   
+	/**
+	 * Processes all pending tasks in the database execution queue.
+	 * (Normally shouldn't need to be called)
+	 */
 	public void processEventQueue() {
 		StubScheduler.INSTANCE.process();
 	}
@@ -112,7 +115,6 @@ public class JdbcDatabase extends SqlDatabase {
       public void onError(SqlException e) {
 				callback.onFailure(e);
       }
-			
 		});
 	}
   

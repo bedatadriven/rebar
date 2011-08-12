@@ -21,7 +21,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
   public static interface Executor {
     SqlResultSet execute(String statement, Object[] params) throws Exception;
-    void begin() throws Exception;
+    boolean begin() throws Exception;
     void commit() throws Exception;
     void rollback() throws Exception;
   }
@@ -43,10 +43,18 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     Log.debug("SyncTx[" + id + "]: Starting Async Transaction...");
 
-    // ask our implementation to set up
+    scheduleBeginTransaction();
+  }
 
-    try {
-      executor.begin();
+	private void beginTransaction() {
+	  try {
+      if(!executor.begin()) {
+
+      	Log.warn("SyncTx[" + id + "]: Unable to acquire tx lock, rescheduling");
+
+      	scheduleBeginTransaction();
+      	return;
+      }
     } catch(Exception e) {
       Log.error("SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
 
@@ -69,7 +77,18 @@ public class SyncTransactionAdapter implements SqlTransaction {
     processNextStatement();
   }
 
-  private void errorInCallback(Exception e) {
+  private void scheduleBeginTransaction() {
+
+  	scheduler.scheduleDeferred(new ScheduledCommand() {
+			
+			@Override
+			public void execute() {
+				beginTransaction();
+			}
+		});
+  }
+
+	private void errorInCallback(Exception e) {
   	try {
   		Log.error("SyncTx[" + id + "]: Rolling back transaction");
   		executor.rollback();

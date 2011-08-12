@@ -20,10 +20,29 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
   }
 
   @Override
-  public void begin() throws Exception {
+  public boolean begin() throws Exception {
     Class.forName("org.sqlite.JDBC");
     conn = DriverManager.getConnection(connectionUrl);
-    conn.setAutoCommit(false);
+    
+    try {
+	    Statement stmt = conn.createStatement();
+	    stmt.execute("BEGIN EXCLUSIVE TRANSACTION");
+	    stmt.close();
+	    return true;
+    
+    } catch(Exception e) {
+    	try {
+    		conn.close();
+    	} catch(Exception ignored) {
+    		// ignore
+    	}
+    	if(e.getMessage().contains("[SQLITE_BUSY]")) {
+    		return false; // database is locked; attempt will be rescheduled
+    	} else {
+    		throw e; // some other fatal error
+    	}
+    }
+  
   }
 
   @Override
@@ -90,7 +109,9 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	@Override
   public void commit() throws Exception {
     try {
-    	conn.commit();
+    	Statement stmt = conn.createStatement();
+    	stmt.execute("END TRANSACTION");
+    	stmt.close();
     } finally {
     	conn.close();
     }

@@ -21,7 +21,7 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
   }
 
   @Override
-  public void begin() throws Exception {
+  public boolean begin() throws Exception {
     Factory factory = Factory.getInstance();
     if(factory == null) {
       throw new SqlException("Gears is not installed");
@@ -31,7 +31,24 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
       throw new SqlException("Could not create Gears database");
     }
     db.open(databaseName);
-    db.execute("BEGIN TRANSACTION");
+    try {
+    	// by including 'EXCLUSIVE' we assure that the transaction begins 
+    	// immediately rather than waiting for the first non-select statement.
+    	// With 'EXCLUSIVE' we don't risk getting a locked exception on subsequent 
+    	// commands
+    	db.execute("BEGIN EXCLUSIVE TRANSACTION");
+    	return true;
+    } catch(Exception e) {
+    	try {
+    		db.close();
+    	} catch(Exception ignored) {
+    	}
+    	if(e.getMessage().contains("locked")) {
+    		return false; // database is locked, we return false to schedule a retry
+    	} else {
+    		throw e; // some other fatal exception
+    	}
+    }
   }
 
   @Override

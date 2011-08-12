@@ -7,9 +7,12 @@ import com.google.gwt.core.client.Scheduler;
 
 class StubScheduler extends Scheduler {
 
-	public Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
-
+	
 	public static final StubScheduler INSTANCE = new StubScheduler();
+
+
+	private Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
+	private boolean running = false;
 	
 	private StubScheduler() {
 		
@@ -56,8 +59,14 @@ class StubScheduler extends Scheduler {
   }
   
   public void process() {
-  	while(!queue.isEmpty()) {
-  		queue.poll().execute();
+  	if(!running) {
+  		running = true;
+	  	
+	  	while(!queue.isEmpty()) {
+	  		queue.poll().execute();
+	  	}
+	  	
+	  	running = false;
   	}
   }
 }
