@@ -4,6 +4,7 @@ package com.bedatadriven.rebar.sql.shared.adapter;
 import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.*;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +17,7 @@ import java.util.logging.Logger;
  */
 public class SyncTransactionAdapter implements SqlTransaction {
 
-  private Logger logger = Logger.getLogger("NameOfYourLogger");
-
+  private static int nextTxId = 1;
 
   public static interface Executor {
     SqlResultSet execute(String statement, Object[] params) throws Exception;
@@ -33,20 +33,22 @@ public class SyncTransactionAdapter implements SqlTransaction {
   private SqlTransactionCallback callback;
   private Executor executor;
   private Scheduler scheduler;
+  private int id;
 
   public SyncTransactionAdapter(Executor executor, Scheduler scheduler, SqlTransactionCallback callback) {
     this.executor = executor;
     this.callback = callback;
     this.scheduler = scheduler;
+    this.id = nextTxId++;
 
-    Log.debug("SyncTransactionAdapter: Starting Async Transaction...");
+    Log.debug("SyncTx[" + id + "]: Starting Async Transaction...");
 
     // ask our implementation to set up
 
     try {
       executor.begin();
     } catch(Exception e) {
-      Log.error("SyncTransactionAdapter: Exception thrown during executor.begin()", e);
+      Log.error("SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
 
       callback.onError(new SqlException(e));
     }
@@ -59,7 +61,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
     try {
       callback.begin(this);
     } catch(Exception e) {
-      Log.error("SyncTransactionAdapter: Exception thrown in transaction callback", e);
+      Log.error("SyncTx[" + id + "]: Exception thrown in transaction callback", e);
 
       errorInCallback(e);
     }
@@ -69,10 +71,10 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
   private void errorInCallback(Exception e) {
   	try {
-  		Log.error("SyncTransactionAdapter: Rolling back transaction");
+  		Log.error("SyncTx[" + id + "]: Rolling back transaction");
   		executor.rollback();
   	} catch(Exception rollbackException) {
-  		Log.error("SyncTransactionAdapter: Exception while rolling back transaction", rollbackException);
+  		Log.error("SyncTx[" + id + "]: Exception while rolling back transaction", rollbackException);
   	}
     callback.onError(new SqlException(e));
   }
@@ -92,18 +94,18 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
 
   private void commitTransaction() {
-    Log.debug("SyncTransactionAdapter: All queued statements have been executed, committing");
+    Log.debug("SyncTx[" + id + "]: All queued statements have been executed, committing");
 
     try {
       executor.commit();
     } catch(Exception e) {
-      Log.error("SyncTransactionAdapter: Exception thrown while committing", e);
+      Log.error("SyncTx[" + id + "]: Exception thrown while committing", e);
 
       errorInCallback(e);
       return;
     }
     
-    Log.debug("SyncTransactionAdapter: Commit succeeded.");
+    Log.debug("SyncTx[" + id + "]: Commit succeeded.");
     
     // everything worked! let the caller know
     callback.onSuccess();
@@ -145,7 +147,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     public void execute() {
 
-      Log.debug("SyncTransactionAdapter: Executing statement '" + statement + "' with parameters " +
+      Log.debug("SyncTx[" + id + "]: Executing statement '" + statement + "' with parameters " +
           Arrays.toString(params));
 
       try {
@@ -157,16 +159,26 @@ public class SyncTransactionAdapter implements SqlTransaction {
       }
     }
 
-    private void handleStatementSuccess(SqlResultSet results) {
+    private void handleStatementSuccess(final SqlResultSet results) {
       if(callback != null) {
-        try {
-          callback.onSuccess(SyncTransactionAdapter.this, results);
-        } catch(Exception e) {
-          errorInCallback(e);
-          return;
-        }
+      		// If the statement has a result set callback that is not null, queue a task to invoke it with the
+      	  // SQLTransaction object as its first argument and the new SQLResultSet object as its second argument, 
+      	  // and wait for that task to be run.
+      	
+        	scheduler.scheduleDeferred(new ScheduledCommand() {
+						@Override
+						public void execute() {
+			        try {
+			        	callback.onSuccess(SyncTransactionAdapter.this, results);
+			          processNextStatement();
+			        } catch(Exception e) {
+			          errorInCallback(e);
+			        }
+						}
+					});
+      } else {
+      	processNextStatement();
       }
-      processNextStatement();
     }
 
     private void handleStatementError(SqlException e) {

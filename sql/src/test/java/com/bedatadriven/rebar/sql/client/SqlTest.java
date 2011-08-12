@@ -16,14 +16,15 @@
 
 package com.bedatadriven.rebar.sql.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Timer;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mortbay.log.Log;
+import com.allen_sauer.gwt.log.client.Log;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Integration test case that verifies that our emulation classes,
@@ -31,13 +32,21 @@ import org.mortbay.log.Log;
  */
 public class SqlTest extends GWTTestCase {
 
+  private static final String JSON_UPDATES  =
+      "[ { statement: \"create table mytest (number int)\" }, "  +
+        "{ statement: \"delete from mytest where number = 99\" }, " +
+        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [1], [2], [3], [4] ] }, " + 
+        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [91], [92], [93], [94] ] } " +
+      "]";
+
+	
   /**
    * Must refer to a valid module that sources this class.
    */
   public String getModuleName() {
     return "com.bedatadriven.rebar.sql.SqlTest";
   }
-
+  
   private int callbacks = 0;
 
   public void testBasic() {
@@ -118,44 +127,30 @@ public class SqlTest extends GWTTestCase {
     delayTestFinish(2000);
   }
   
-  // make sure onSuccess is called only ONCE
-  public void testTxCallback() {
+
+  public void testExecutorWithJson() throws Exception {
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
-    SqlDatabase db = factory.open("db3");
-    db.transaction(new SqlTransactionCallback() {
+    SqlDatabase db = factory.open("db4");    
+    db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
       @Override
-      public void begin(SqlTransaction tx) {
-        tx.executeSql("create table if not exists numbers1 (x INT)");
-        tx.executeSql("create table if not exists numbers2 (y INT)");
-      }
-      
-			@Override
-      public void onSuccess() {
-				Log.info("Callback called");
-	      callbacks++;
+      public void onFailure(Throwable throwable) {
+        Window.alert("failed: " + throwable.getMessage());
+        fail(throwable.getMessage());
       }
 
-			@Override
-      public void onError(SqlException e) {
-        fail(e.getMessage());
+      @Override
+      public void onSuccess(Integer rowsAffected) {
+        assertEquals("rows affected", 8, (int)rowsAffected);
+        finishTest();
       }
     });
-    
-    new Timer() {
-			
-			@Override
-			public void run() {
-				assertEquals(1, callbacks);
-				finishTest();
-			}
-		}.schedule(4000);
 
-    delayTestFinish(5000);
-  	
+    delayTestFinish(1000);
   }
-  
 
+  
+  
 //  public void testDates() {
 //
 //    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);

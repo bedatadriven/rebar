@@ -23,6 +23,24 @@ public abstract class SqlDatabase {
   public abstract void transaction(SqlTransactionCallback callback);
   
   
+
+  /**
+   * Executes a list of BulkOperation objects asynchronously within a transaction, such that
+   * all of the statements fail or succeed together.
+   *
+   * On success, the callback will receive the total number of update rows.
+   *
+   * @param bulkOperationJsonArray
+   * @param callback
+   */
+  public abstract void executeUpdates(String bulkOperationJsonArray, AsyncCallback<Integer> callback);
+  
+  /**
+   * 
+   * @return the name of the database
+   */
+  public abstract String getName();
+  
   public final void executeSql(final String statement, final AsyncCallback<Void> callback) {
   	transaction(new SqlTransactionCallback() {
 			

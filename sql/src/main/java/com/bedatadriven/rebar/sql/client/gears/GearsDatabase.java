@@ -6,6 +6,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 class GearsDatabase extends SqlDatabase {
 
@@ -20,4 +21,13 @@ class GearsDatabase extends SqlDatabase {
     new SyncTransactionAdapter(new GearsExecutor(name), Scheduler.get(), callback);
   }
 
+	@Override
+  public String getName() {
+	  return name;
+  }
+
+	@Override
+  public void executeUpdates(String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
+		GearsBulkUpdater.INSTANCE.executeUpdates(name, bulkOperationJsonArray, callback); 
+  }
 }

@@ -1,32 +1,43 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import com.google.gwt.core.client.Scheduler;
 
-class SyncScheduler extends Scheduler {
+class StubScheduler extends Scheduler {
 
+	public Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
+
+	public static final StubScheduler INSTANCE = new StubScheduler();
+	
+	private StubScheduler() {
+		
+	}
+	
   @Override
   public void scheduleDeferred(ScheduledCommand scheduledCommand) {
-    scheduledCommand.execute();
+  	queue.add(scheduledCommand);
   }
 
   @Override
   public void scheduleEntry(RepeatingCommand repeatingCommand) {
-    while(repeatingCommand.execute()) {}
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void scheduleEntry(ScheduledCommand scheduledCommand) {
-    scheduledCommand.execute();
+  	queue.add(scheduledCommand);
   }
 
   @Override
   public void scheduleFinally(RepeatingCommand repeatingCommand) {
-    while(repeatingCommand.execute()) {}
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void scheduleFinally(ScheduledCommand scheduledCommand) {
-    scheduledCommand.execute();
+  	queue.add(scheduledCommand);
   }
 
   @Override
@@ -42,5 +53,11 @@ class SyncScheduler extends Scheduler {
   @Override
   public void scheduleIncremental(RepeatingCommand repeatingCommand) {
     throw new UnsupportedOperationException();
+  }
+  
+  public void process() {
+  	while(!queue.isEmpty()) {
+  		queue.poll().execute();
+  	}
   }
 }
