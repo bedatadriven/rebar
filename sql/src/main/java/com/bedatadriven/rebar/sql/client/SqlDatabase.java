@@ -1,7 +1,7 @@
 package com.bedatadriven.rebar.sql.client;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.bedatadriven.rebar.sql.builder.SqlDialect;
+import com.bedatadriven.rebar.sql.client.query.SqlDialect;
 import com.bedatadriven.rebar.sql.client.util.SqlKeyValueTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

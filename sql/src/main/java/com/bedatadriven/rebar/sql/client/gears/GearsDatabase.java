@@ -1,8 +1,8 @@
 package com.bedatadriven.rebar.sql.client.gears;
 
-import com.bedatadriven.rebar.sql.builder.SqlDialect;
-import com.bedatadriven.rebar.sql.builder.SqliteDialect;
 import com.bedatadriven.rebar.sql.client.*;
+import com.bedatadriven.rebar.sql.client.query.SqlDialect;
+import com.bedatadriven.rebar.sql.client.query.SqliteDialect;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.gears.client.Factory;

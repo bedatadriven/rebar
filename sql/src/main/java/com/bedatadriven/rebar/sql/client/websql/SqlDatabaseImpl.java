@@ -1,11 +1,11 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.bedatadriven.rebar.sql.builder.SqlDialect;
-import com.bedatadriven.rebar.sql.builder.SqliteDialect;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.bedatadriven.rebar.sql.client.bulk.PreparedStatementBatch;
+import com.bedatadriven.rebar.sql.client.query.SqlDialect;
+import com.bedatadriven.rebar.sql.client.query.SqliteDialect;
 import com.bedatadriven.rebar.sql.server.jdbc.SqliteDates;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;

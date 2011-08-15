@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.sql.builder;
+package com.bedatadriven.rebar.sql.client.query;
 
 /*
  * Copyright 2009-2010 BeDataDriven (alex@bedatadriven.com)

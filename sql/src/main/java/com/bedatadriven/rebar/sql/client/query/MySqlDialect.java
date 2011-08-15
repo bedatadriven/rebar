@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.sql.builder;
+package com.bedatadriven.rebar.sql.client.query;
 
 public class MySqlDialect implements SqlDialect {
 	

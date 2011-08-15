@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.sql.builder;
+package com.bedatadriven.rebar.sql.client.query;
 
 /**
  * Utility class that detects and caches required properties of the

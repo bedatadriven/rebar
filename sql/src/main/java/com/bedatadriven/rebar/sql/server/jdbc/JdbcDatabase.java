@@ -1,12 +1,12 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
-import com.bedatadriven.rebar.sql.builder.SqlDialect;
-import com.bedatadriven.rebar.sql.builder.SqliteDialect;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.query.SqlDialect;
+import com.bedatadriven.rebar.sql.client.query.SqliteDialect;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
