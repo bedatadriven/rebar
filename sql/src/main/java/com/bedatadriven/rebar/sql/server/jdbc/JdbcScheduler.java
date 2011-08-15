@@ -5,17 +5,32 @@ import java.util.Queue;
 
 import com.google.gwt.core.client.Scheduler;
 
-class StubScheduler extends Scheduler {
+/**
+ * 
+ * Server-side scheduler that simulates the asyc-style event loop.
+ * 
+ * @author alex
+ *
+ */
+class JdbcScheduler extends Scheduler {
 
 	
-	public static final StubScheduler INSTANCE = new StubScheduler();
-
-
+	private static ThreadLocal<JdbcScheduler> THREAD_LOCAL = new ThreadLocal<JdbcScheduler>();
+	
 	private Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
 	private boolean running = false;
 	
-	private StubScheduler() {
+	private JdbcScheduler() {
 		
+	}
+	
+	public static JdbcScheduler get() {
+		JdbcScheduler instance = THREAD_LOCAL.get();
+		if(instance == null) {
+			instance = new JdbcScheduler();
+			THREAD_LOCAL.set(instance);
+		}
+		return instance;
 	}
 	
   @Override

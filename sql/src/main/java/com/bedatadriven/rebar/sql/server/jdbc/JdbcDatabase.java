@@ -1,5 +1,7 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
+import com.bedatadriven.rebar.sql.builder.SqlDialect;
+import com.bedatadriven.rebar.sql.builder.SqliteDialect;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
@@ -13,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+//TODO: make abstract. testers should use the SqliteStubDatabase subclass 
 public class JdbcDatabase extends SqlDatabase {
 
   private final String databaseName;
@@ -23,13 +26,19 @@ public class JdbcDatabase extends SqlDatabase {
 
   @Override
   public void transaction(SqlTransactionCallback callback) {
-		new SyncTransactionAdapter(newExecutor(), StubScheduler.INSTANCE, callback);
+		new SyncTransactionAdapter(newExecutor(), JdbcScheduler.get(), callback);
 		
 		processEventQueue();
   }
 
-	private JdbcExecutor newExecutor() {
-	  return new JdbcExecutor("jdbc:sqlite:" + databaseName);
+  
+	@Override
+  public SqlDialect getDialect() {
+		return SqliteDialect.INSTANCE;
+  }
+
+	protected JdbcExecutor newExecutor() {
+	  return new SqliteExecutor("jdbc:sqlite:" + databaseName);
   }
 
 	@Override
@@ -42,7 +51,7 @@ public class JdbcDatabase extends SqlDatabase {
 	 * (Normally shouldn't need to be called)
 	 */
 	public void processEventQueue() {
-		StubScheduler.INSTANCE.process();
+		JdbcScheduler.get().process();
 	}
   
 	public String selectString(String sqlStatement, Object... params) { 

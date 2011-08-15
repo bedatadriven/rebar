@@ -9,44 +9,41 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class JdbcExecutor implements SyncTransactionAdapter.Executor {
-
-
-  private final String connectionUrl;
-  private Connection conn;
-
-  public JdbcExecutor(String connectionUrl) {
-    this.connectionUrl = connectionUrl;
-  }
+public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
+  
+  protected Connection conn;
 
   @Override
-  public boolean begin() throws Exception {
-    Class.forName("org.sqlite.JDBC");
-    conn = DriverManager.getConnection(connectionUrl);
+  public final boolean begin() throws Exception {
+    conn = openConnection();
     
     try {
-	    Statement stmt = conn.createStatement();
-	    stmt.execute("BEGIN EXCLUSIVE TRANSACTION");
-	    stmt.close();
-	    return true;
+	    boolean available = doBeginTransaction();
+	    if(!available) {
+	    	closeConnectionIgnoringAnyExceptions();
+	    }
+	    return available;
     
-    } catch(Exception e) {
-    	try {
-    		conn.close();
-    	} catch(Exception ignored) {
-    		// ignore
-    	}
-    	if(e.getMessage().contains("[SQLITE_BUSY]")) {
-    		return false; // database is locked; attempt will be rescheduled
-    	} else {
-    		throw e; // some other fatal error
-    	}
+    } catch(SQLException e) {
+    	closeConnectionIgnoringAnyExceptions();
+    	throw e;
     }
-  
   }
 
+	protected abstract Connection openConnection() throws Exception;
+ 
+
+  private void closeConnectionIgnoringAnyExceptions() {
+  	try {
+  		conn.close();
+  	} catch(SQLException ignored) {
+  		// ignore
+  	}
+  }
+  
+  
   @Override
-  public SqlResultSet execute(String statement, Object[] params) throws Exception {
+  public final SqlResultSet execute(String statement, Object[] params) throws Exception {
   	PreparedStatement stmt = conn.prepareStatement(statement);
   	try {
 	    if(params != null) {
@@ -107,14 +104,21 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
   }
 
 	@Override
-  public void commit() throws Exception {
+  public final void commit() throws Exception {
     try {
-    	Statement stmt = conn.createStatement();
-    	stmt.execute("END TRANSACTION");
-    	stmt.close();
+    	doCommit();
     } finally {
     	conn.close();
     }
+  }
+
+	protected boolean doBeginTransaction() throws SQLException {
+		conn.setAutoCommit(false);
+		return true;
+  }
+	
+	protected void doCommit() throws SQLException {
+		conn.commit();
   }
 
 	@Override
@@ -125,5 +129,4 @@ class JdbcExecutor implements SyncTransactionAdapter.Executor {
     	conn.close();
     }
 	}
-  
 }

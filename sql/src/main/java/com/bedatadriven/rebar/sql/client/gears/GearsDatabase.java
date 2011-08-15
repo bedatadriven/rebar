@@ -1,5 +1,7 @@
 package com.bedatadriven.rebar.sql.client.gears;
 
+import com.bedatadriven.rebar.sql.builder.SqlDialect;
+import com.bedatadriven.rebar.sql.builder.SqliteDialect;
 import com.bedatadriven.rebar.sql.client.*;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
 import com.google.gwt.core.client.Scheduler;
@@ -29,5 +31,10 @@ class GearsDatabase extends SqlDatabase {
 	@Override
   public void executeUpdates(String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
 		GearsBulkUpdater.INSTANCE.executeUpdates(name, bulkOperationJsonArray, callback); 
+  }
+
+	@Override
+  public SqlDialect getDialect() {
+		return SqliteDialect.INSTANCE;
   }
 }

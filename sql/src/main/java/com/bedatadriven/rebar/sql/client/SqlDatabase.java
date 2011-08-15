@@ -1,6 +1,7 @@
 package com.bedatadriven.rebar.sql.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.sql.builder.SqlDialect;
 import com.bedatadriven.rebar.sql.client.util.SqlKeyValueTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -22,7 +23,7 @@ public abstract class SqlDatabase {
 	 */
   public abstract void transaction(SqlTransactionCallback callback);
   
-  
+  public abstract SqlDialect getDialect();
 
   /**
    * Executes a list of BulkOperation objects asynchronously within a transaction, such that
@@ -151,7 +152,6 @@ public abstract class SqlDatabase {
     public void onSuccess(T result) {
 			
     }
-  	
-  	
+  
   }
 }

@@ -2,11 +2,12 @@ package com.bedatadriven.rebar.sql.server.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.mortbay.log.Log;
 
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
@@ -37,7 +38,7 @@ class JdbcRow implements SqlResultSetRow {
   public int getInt(String columnName) {
     Object value = values.get(columnName);
     if(value == null) {
-      throw new NullPointerException(columnName);
+      throw new NullPointerException("Column " + columnName + " not found. Columns present: " + values.keySet().toString());
     } else if(value instanceof Number) {
       return ((Number) value).intValue();
     } else  {
@@ -64,7 +65,7 @@ class JdbcRow implements SqlResultSetRow {
 
   @Override
   public boolean isNull(String columnName) {
-    return values.containsKey(columnName);
+    return !values.containsKey(columnName);
   }
 
 	@Override
@@ -112,6 +113,8 @@ class JdbcRow implements SqlResultSetRow {
 	   Object value = values.get(columnName);
 	    if(value == null) {
 	      return null;
+	    } else if(value instanceof java.util.Date) {
+	    	return (java.util.Date)value;
 	    } else if(value instanceof Number) {
 	      return new Date(((Number) value).longValue());
 	    } else  {
