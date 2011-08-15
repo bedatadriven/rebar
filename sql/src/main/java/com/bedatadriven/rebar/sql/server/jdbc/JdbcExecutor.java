@@ -72,7 +72,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	
 	     String[] fieldNames = new String[metaData.getColumnCount()];
 	     for(int i=0;i!=fieldNames.length;++i) {
-	       fieldNames[i] = metaData.getColumnName(i+1);
+	       fieldNames[i] = metaData.getColumnLabel(i+1);
 	     }
 	
 	     List<SqlResultSetRow> rows = new ArrayList<SqlResultSetRow>();

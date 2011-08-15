@@ -15,6 +15,9 @@ public interface SqlResultSetRow {
   int getInt(String columnName);
   Integer getSingleInt();
   
+  boolean getBoolean(String columnName);
+  Boolean getSingleBoolean();
+  
   double getDouble(String columnName);
   Double getSingleDouble();
   

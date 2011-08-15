@@ -29,11 +29,15 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
     return this[columnName];
   }-*/;
 
+  public native boolean getBoolean(String columnName) /*-{
+    return Boolean(this[columnName]);
+  }-*/;
+  
   public native boolean isNull(String columnName) /*-{
     return this[columnName] == null;
   }-*/;
   
-
+  
   /**
    * 
    * @param ci (zero-based) column index
@@ -69,6 +73,11 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
 	@Override
   public Date getDate(String columnName) {
 	  return new Date((long)getDouble(columnName));
+  }
+
+	@Override
+  public Boolean getSingleBoolean() {
+		return getBoolean(firstColumnName());
   }
 
   

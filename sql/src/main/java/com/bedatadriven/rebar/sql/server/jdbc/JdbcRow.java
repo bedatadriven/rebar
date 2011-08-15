@@ -38,12 +38,16 @@ class JdbcRow implements SqlResultSetRow {
   public int getInt(String columnName) {
     Object value = values.get(columnName);
     if(value == null) {
-      throw new NullPointerException("Column " + columnName + " not found. Columns present: " + values.keySet().toString());
+      throw new NullPointerException(missingColumnMessage(columnName));
     } else if(value instanceof Number) {
       return ((Number) value).intValue();
     } else  {
     	return Integer.parseInt(value.toString());
     }
+  }
+
+	private String missingColumnMessage(String columnName) {
+	  return "Column " + columnName + " not found. Columns present: " + values.keySet().toString();
   }
   
 	@Override
@@ -55,15 +59,41 @@ class JdbcRow implements SqlResultSetRow {
   public double getDouble(String columnName) {
     Object value = values.get(columnName);
     if(value == null) {
-      throw new NullPointerException(columnName);
+      throw new NullPointerException(missingColumnMessage(columnName));
     } else if(value instanceof Number) {
       return ((Number) value).doubleValue();
     } else  {
     	return Double.parseDouble(value.toString());
     }
   }
+  
+  
 
   @Override
+  public boolean getBoolean(String columnName) {
+  	Object value = values.get(columnName);
+    if(value == null) {
+      throw new NullPointerException(missingColumnMessage(columnName));
+    } else if(value instanceof Boolean) {
+    	return ((Boolean) value);
+    } else if(value instanceof Number) {
+      return ((Number) value).intValue() != 0;
+    } else  {
+    	return Integer.parseInt(value.toString()) != 0;
+    } 
+  }
+
+	@Override
+  public Boolean getSingleBoolean() {
+		assertSingleColumn();
+		if(values.isEmpty()) {
+			return null;
+		} else {
+			return ((Boolean)values.values().iterator().next());
+		}
+  }
+
+	@Override
   public boolean isNull(String columnName) {
     return !values.containsKey(columnName);
   }

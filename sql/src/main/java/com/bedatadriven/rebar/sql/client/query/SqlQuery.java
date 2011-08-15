@@ -138,7 +138,7 @@ public class SqlQuery {
 	}
 	
 	public SqlQuery appendColumn(String expr, String alias) {
-		return appendColumn(expr + " AS " + alias);
+		return appendColumn(expr + " " + alias);
 	}
 	
 	public SqlQuery appendColumns(String... exprs) {
@@ -202,8 +202,6 @@ public class SqlQuery {
 		return this;
 	}
 	
-	
-
 	public String sql() {
 		StringBuilder sql = new StringBuilder("SELECT ")
 		.append(columnList.toString())
@@ -290,6 +288,11 @@ public class SqlQuery {
 
 			return SqlQuery.this;
 		}
+
+		public SqlQuery isNull() {
+			whereClause.append(" IS NULL ");
+			return SqlQuery.this;
+    }
 	}
 
 	public class JoinBuilder {
