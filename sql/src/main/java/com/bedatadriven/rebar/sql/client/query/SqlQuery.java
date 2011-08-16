@@ -187,7 +187,11 @@ public class SqlQuery {
 		parameters.add(param);
 		return this;
 	}
-
+	
+	public SqlQuery appendLikeParameter(String param) {
+		parameters.add("%" + param + "%");
+		return this;
+	}
 
 	public SqlQuery whereTrue(String expr) {
 		if(whereClause.length() > 0) {
@@ -292,7 +296,12 @@ public class SqlQuery {
 		public SqlQuery isNull() {
 			whereClause.append(" IS NULL ");
 			return SqlQuery.this;
-    }
+		}
+		
+		public SqlQuery like() {
+			whereClause.append(" like ?");
+			return SqlQuery.this;
+		}
 	}
 
 	public class JoinBuilder {
