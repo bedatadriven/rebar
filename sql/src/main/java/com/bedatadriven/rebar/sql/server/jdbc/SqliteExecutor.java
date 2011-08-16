@@ -43,4 +43,13 @@ public class SqliteExecutor extends JdbcExecutor {
 		 stmt.execute("END TRANSACTION");
 		 stmt.close();
   }
+
+	@Override
+  public void rollback() throws Exception {
+		 Statement stmt = conn.createStatement();
+		 stmt.execute("ROLLBACK TRANSACTION");
+		 stmt.close();
+  }
+	
+	
 }
