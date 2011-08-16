@@ -12,7 +12,7 @@ import com.google.gwt.core.client.Scheduler;
  * @author alex
  *
  */
-class JdbcScheduler extends Scheduler {
+public class JdbcScheduler extends Scheduler {
 
 	
 	private static ThreadLocal<JdbcScheduler> THREAD_LOCAL = new ThreadLocal<JdbcScheduler>();
@@ -83,5 +83,15 @@ class JdbcScheduler extends Scheduler {
 	  	
 	  	running = false;
   	}
+  }
+  
+  /**
+   * Removes all pending tasks from the task queue.
+   * Should only be called from tests to assure clean isolation from other tests
+   */
+  public void forceCleanup() {
+  	queue.clear();
+  	running = false;
+  	
   }
 }
