@@ -22,7 +22,7 @@ class JdbcRow implements SqlResultSetRow {
   	values = new HashMap<String, Object>();
     for(int i=0;i!=fieldNames.length;++i) {
       Object value = rs.getObject(i+1);
-      if(!rs.wasNull()) {
+      if(value != null && !rs.wasNull()) {
         values.put(fieldNames[i], value);
       } 
     }
