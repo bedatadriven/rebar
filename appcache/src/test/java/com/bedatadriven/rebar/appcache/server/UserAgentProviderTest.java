@@ -13,14 +13,27 @@ public class UserAgentProviderTest {
   @Test
   public void testUbuntuFirefox() {
     
-    HttpServletRequest request = createMock(HttpServletRequest.class);
+    assertThat(devineUserAgent("Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13"), 
+    		 equalTo("gecko1_8"));
+    
+  }
+
+  @Test
+  public void testChrome() {
+    
+    assertThat(devineUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1 Paros/3.2.13"), 
+    		 equalTo("safari"));
+    
+  }
+  
+	private String devineUserAgent(String userAgentString) {
+	  HttpServletRequest request = createMock(HttpServletRequest.class);
     expect(request.getHeader(eq("User-Agent")))
-      .andReturn("Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13");
+      .andReturn(userAgentString);
     replay(request);
     
     UserAgentProvider provider = new UserAgentProvider();
-    assertThat(provider.get(request), equalTo("gecko1_8"));
-    
+    return provider.get(request);
   }
 
   

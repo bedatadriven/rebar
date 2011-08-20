@@ -56,6 +56,8 @@ public class DefaultSelectionServlet extends HttpServlet {
   private ServletContext context;
   private Map<String, PropertyProvider> providers;
   
+  protected static final int CACHE_OBSOLETE = 404;
+  
 
   private static final Logger logger = Logger.getLogger(DefaultSelectionServlet.class.getName());
 
@@ -220,7 +222,8 @@ public class DefaultSelectionServlet extends HttpServlet {
   }
   
 	/**
-	 * Handles the case in which an exception was thrown during 
+	 * Handles the case in which an exception was thrown while trying to compute
+	 * properties for the selection of the permutation. 
 	 * 
 	 * @param path
 	 * @param e
@@ -240,7 +243,7 @@ public class DefaultSelectionServlet extends HttpServlet {
   		resp.setContentType("application/javascript");
   		resp.getWriter().println("window.alert('" + message.replace("'", "\'") + "');");
   	} else {
-  		resp.sendError(HttpServletResponse.SC_BAD_GATEWAY, message);
+  		resp.sendError(CACHE_OBSOLETE, message);
   	}
   }
   
