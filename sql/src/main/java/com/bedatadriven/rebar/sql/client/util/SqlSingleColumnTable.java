@@ -28,15 +28,15 @@ public class SqlSingleColumnTable<T> {
 			}
 		});
   }
-	
-	
-	public void put(final T value, final AsyncCallback<Void> callback) {
+		
+	public final void put(final T value, final AsyncCallback<Void> callback) {
 		db.transaction(new SqlTransactionCallback() {
 			
 			@Override
 			public void begin(SqlTransaction tx) {
 				tx.executeSql("delete from " + tableName);
-				tx.executeSql("insert into " + tableName + " (" + columnName + ") VALUES (?)", new Object[] {value} );
+				tx.executeSql("insert into " + tableName + " (" + columnName + ") VALUES (?)", 
+						new Object[] {convertToParameter(value)} );
 			}
 
 			@Override
@@ -46,7 +46,7 @@ public class SqlSingleColumnTable<T> {
 		});
 	}
 	
-	public void get(final AsyncCallback<T> callback) {
+	public final void get(final AsyncCallback<T> callback) {
 		db.transaction(new SqlTransactionCallback() {
 			
 			@Override
@@ -58,7 +58,7 @@ public class SqlSingleColumnTable<T> {
 						if(results.getRows().isEmpty()) {
 							callback.onSuccess(null);
 						} else {
-							callback.onSuccess((T)results.getRow(0).get(columnName));
+							callback.onSuccess(convertFromResultSet(results));
 						}	
 					}
 				});
@@ -71,4 +71,12 @@ public class SqlSingleColumnTable<T> {
 		});
 		
 	}
+
+	protected T convertFromResultSet(SqlResultSet results) {
+	  return (T)results.getRow(0).get(columnName);
+  }
+
+	protected Object convertToParameter(final T value) {
+	  return value;
+  }
 }
