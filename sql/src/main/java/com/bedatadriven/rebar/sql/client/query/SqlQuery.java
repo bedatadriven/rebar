@@ -174,6 +174,11 @@ public class SqlQuery {
 	public void setLimitClause(String clause) {
 		this.limitClause = clause;
 	}
+	
+	public WhereClauseBuilder onlyWhere(String expr) {
+		whereClause.append(expr);
+		return new WhereClauseBuilder();
+	}
 
 	public WhereClauseBuilder where(String expr) {
 		if(whereClause.length() > 0) {
@@ -188,7 +193,7 @@ public class SqlQuery {
 		return this;
 	}
 	
-	public SqlQuery appendLikeParameter(String param) {
+	private SqlQuery appendLikeParameter(String param) {
 		parameters.add("%" + param + "%");
 		return this;
 	}
@@ -203,6 +208,11 @@ public class SqlQuery {
 
 	public SqlQuery and(String expr) {
 		whereClause.append(" AND (").append(expr).append(") ");
+		return this;
+	}
+	
+	public SqlQuery or() {
+		whereClause.append(" OR ");
 		return this;
 	}
 	
@@ -298,8 +308,9 @@ public class SqlQuery {
 			return SqlQuery.this;
 		}
 		
-		public SqlQuery like() {
+		public SqlQuery like(String sqlParameter) {
 			whereClause.append(" like ?");
+			appendLikeParameter(sqlParameter);
 			return SqlQuery.this;
 		}
 	}
