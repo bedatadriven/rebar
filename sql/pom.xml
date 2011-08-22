@@ -106,6 +106,8 @@
 				<includes>
 					<include>**/emul/**/*.java</include>
 					<include>**/client/**/*.java</include>
+                    <include>**/public/**/*.*</include>
+                    
 					<include>**/shared/**/*.java</include>
 					<include>**/*.gwt.xml</include>
 					<include>**/*.properties</include>
@@ -174,8 +176,6 @@
 									<jvmarg value="-Xmx256M" />
 									<arg value="-XdisableClassMetadata"/>
 									<arg value="-XdisableCastChecking"/>
-                                    <arg value="-style"/>
-                                    <arg value="OBF"/>
 									<arg value="-war"/>
 									<arg value="target/worker-output"/>
 									<arg value="com.bedatadriven.rebar.sql.worker.GearsSqlWorker" />
