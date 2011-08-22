@@ -15,6 +15,14 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   private String databaseName;
   private Database db;
+  
+  /**
+   * Keep our own global track of whether a lock is open for the 
+   * database. We still need to handle possible locking exceptions in the 
+   * event that the lock is held by a worker, but we want to avoid 
+   * waiting for the full 10-second time out if we can.
+   */
+  private static boolean transactionInProgress = false;
 
   public GearsExecutor(String databaseName) {
     this.databaseName = databaseName;
@@ -22,6 +30,10 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   @Override
   public boolean begin() throws Exception {
+  	if(transactionInProgress) {
+  		return false;
+  	}
+  	
     Factory factory = Factory.getInstance();
     if(factory == null) {
       throw new SqlException("Gears is not installed");
@@ -37,6 +49,7 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
     	// commands
       db.open(databaseName);
     	db.execute("BEGIN EXCLUSIVE TRANSACTION");
+    	transactionInProgress = true;
     	return true;
     } catch(Exception e) {
     	try {
@@ -81,6 +94,7 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
   	try {
   		db.execute("END TRANSACTION");
   	} finally {
+  		transactionInProgress = false;
   		db.close();
   	}
   }
@@ -90,6 +104,7 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
   	try {
   		db.execute("ROLLBACK TRANSACTION");
   	} finally {
+  		transactionInProgress = false;
   		db.close();
   	}	  
   }
