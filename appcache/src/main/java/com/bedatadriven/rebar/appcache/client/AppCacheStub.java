@@ -23,6 +23,4 @@ class AppCacheStub implements AppCache {
 	  return AppCache.Status.IDLE;
   }
 
-	
-	
 }

@@ -27,7 +27,5 @@
     
     <define-linker name="std" class="com.bedatadriven.rebar.appcache.linker.AppCacheIFrameLinker"/>
 
-    <entry-point class="com.bedatadriven.rebar.appcache.client.AppCacheEntryPoint"/>
-
 </module>
 
