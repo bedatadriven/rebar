@@ -19,7 +19,7 @@ package com.bedatadriven.rebar.sql.worker.client;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerResponse;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
 
-public class WorkerLogger implements GearsExecutor.Logger {
+public class WorkerLogger implements GearsUpdateExecutor.Logger {
   private final int ownerWorkerId;
   private final WorkerPool pool;
   private final int executionId;
@@ -49,7 +49,7 @@ public class WorkerLogger implements GearsExecutor.Logger {
    * be used in testing.
    * 
    */
-  public static GearsExecutor.Logger createNullLogger() {
+  public static GearsUpdateExecutor.Logger createNullLogger() {
     return new WorkerLogger(null, 0, 0);
   }
 

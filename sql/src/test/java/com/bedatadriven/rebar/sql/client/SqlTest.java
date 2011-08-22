@@ -50,8 +50,7 @@ public class SqlTest extends GWTTestCase {
   private int callbacks = 0;
 
   public void testBasic() {
-
-    final List<SqlResultSet> list = new ArrayList<SqlResultSet>();
+  	Log.debug("================= testBasic == db1 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db1");
@@ -95,11 +94,12 @@ public class SqlTest extends GWTTestCase {
       }
     });
 
-    delayTestFinish(2000);
+    delayTestFinish(30000);
   }
   
 
   public void testSingle() {
+  	Log.debug("================= testSingle == db2 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db2");
@@ -127,9 +127,11 @@ public class SqlTest extends GWTTestCase {
     delayTestFinish(2000);
   }
   
-
   public void testExecutorWithJson() throws Exception {
 
+  	Log.debug("================= testExecutorWithJson == db4 ========");
+
+  	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db4");    
     db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
@@ -141,14 +143,73 @@ public class SqlTest extends GWTTestCase {
 
       @Override
       public void onSuccess(Integer rowsAffected) {
-        assertEquals("rows affected", 8, (int)rowsAffected);
+        assertEquals("testExecutorWithJson: rows affected", 8, (int)rowsAffected);
         finishTest();
       }
     });
 
-    delayTestFinish(1000);
+    delayTestFinish(30000);
   }
 
+  public void testExecutorWithJsonAndLocking() throws Exception {
+
+  	Log.debug("================= testExecutorWithJsonAndLocking == db5 ========");
+  	
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    final SqlDatabase db = factory.open("db5"); 
+    db.transaction(new SqlTransactionCallback() {
+			
+			@Override
+			public void begin(SqlTransaction tx) {
+
+				// we've know got a lock on the main js event loop for this database
+				
+				tx.executeSql("create table nonsense (id INTEGER)");
+				tx.executeSql("select * from sqlite_master", new SqlResultCallback() {
+					
+					@Override
+					public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+
+						// this should queue a transaction on the worker 
+						db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
+							@Override
+							public void onFailure(Throwable throwable) {
+								Window.alert("failed: " + throwable.getMessage());
+								fail(throwable.getMessage());
+							}
+
+							@Override
+							public void onSuccess(Integer rowsAffected) {
+								assertEquals("testExecutorWithJsonAndLocking: rows affected", 8, (int)rowsAffected);
+								finishTest();
+							}
+						});	
+					}
+				});
+				
+				// spend more time in the main event loop, keeping the transaction alive
+				// and the lock active. we want to assure that even if the worker thread times out 
+				// waiting for a lock, the 
+				Log.debug("starting busy work");
+				for(int i=0;i!=5000;++i) {
+					tx.executeSql("insert into nonsense (id) values (?)", new Object[] { i });
+				}
+			}
+			
+			@Override
+      public void onSuccess() {
+				Log.debug("transaction commited on the main event loop");
+      }
+
+
+			@Override
+      public void onError(SqlException e) {
+	      fail(e.getMessage());
+      }
+		});
+   
+    delayTestFinish(30000);
+  }
   
   
 //  public void testDates() {

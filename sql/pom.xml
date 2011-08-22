@@ -174,12 +174,15 @@
 									<jvmarg value="-Xmx256M" />
 									<arg value="-XdisableClassMetadata"/>
 									<arg value="-XdisableCastChecking"/>
+                                    <arg value="-style"/>
+                                    <arg value="OBF"/>
 									<arg value="-war"/>
 									<arg value="target/worker-output"/>
 									<arg value="com.bedatadriven.rebar.sql.worker.GearsSqlWorker" />
 								</java>
 								<copy file="${basedir}/target/worker-output/GearsSqlWorker/GearsSqlWorker.js" 
-								      toFile="${basedir}/src/main/java/com/bedatadriven/rebar/sql/public/GearsSqlWorker.js"/>
+								      toFile="${basedir}/src/main/java/com/bedatadriven/rebar/sql/public/GearsSqlWorker.js"
+                                      overwrite="true"/>
 							</tasks>
 						</configuration>
 						<goals>

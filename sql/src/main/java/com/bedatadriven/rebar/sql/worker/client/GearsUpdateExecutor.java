@@ -26,8 +26,14 @@ import com.google.gwt.gears.client.database.Database;
 import com.google.gwt.gears.client.database.DatabaseException;
 import com.google.gwt.gears.client.database.ResultSet;
 
-public class GearsExecutor {
-  private final WorkerCommand cmd;
+public class GearsUpdateExecutor {
+	
+	/**
+	 * maximum time to wait for a lock
+	 */
+  private static final int MAX_WAIT_MS = 120 * 1000;
+  
+	private final WorkerCommand cmd;
   private final Logger logger;
   private Database database;
 
@@ -37,11 +43,10 @@ public class GearsExecutor {
   }
 
   public static int execute(WorkerCommand cmd, Logger logger) throws Exception {
-    return new GearsExecutor(cmd, logger).execute();
+    return new GearsUpdateExecutor(cmd, logger).execute();
   }
 
-  private GearsExecutor(WorkerCommand cmd, Logger logger) {
-	 
+  private GearsUpdateExecutor(WorkerCommand cmd, Logger logger) {
     this.cmd = cmd;
     this.logger = logger;
   }
@@ -50,7 +55,6 @@ public class GearsExecutor {
     int rowsAffected = 0;
 
     try {
-      openConnection();
       beginTransaction();
       rowsAffected = executeUpdates(cmd.getOperations());
       commitTransaction();
@@ -88,18 +92,41 @@ public class GearsExecutor {
     return rowsAffectedCount;
   }
 
-  private void beginTransaction() throws DatabaseException {
-    database.execute("begin");
+  private void beginTransaction() throws Exception {
+  	double startTime = now();
+  	
+  	//logger.log("Starting attempt to obtain lock...");
+  	
+  	// the database may be locked by the main thread.
+  	// keep retrying until we get a lock
+  	while(true) {
+	  	try {
+	  		// by including 'EXCLUSIVE' we assure that the transaction begins 
+	  		// immediately rather than waiting for the first non-select statement.
+	  		// With 'EXCLUSIVE' we don't risk getting a locked exception on subsequent 
+	  		// commands
+	      database = Factory.getInstance().createDatabase();
+	      database.open(this.cmd.getDatabaseName());
+	  		database.execute("BEGIN EXCLUSIVE TRANSACTION");
+	  		return;
+	  		
+	  	} catch(Exception e) {
+	  		if(database != null) {
+	  			try {
+	  				database.close();
+	  			} catch(Exception ignored) {
+	  			}
+	  		}
+	  		if(now() > startTime + MAX_WAIT_MS) {
+	  			throw new RuntimeException("Failed to obtain a lock after wating for " + MAX_WAIT_MS + " ms", e);
+	  		}
+	  		logger.log("Database locked, retrying...");
+	  	}
+  	}
   }
 
   private void commitTransaction() throws DatabaseException {
     database.execute("commit");
-  }
-
-
-  private void openConnection() {
-    database = Factory.getInstance().createDatabase();
-    database.open(this.cmd.getDatabaseName());
   }
 
   private void closeConnection() {
@@ -120,5 +147,10 @@ public class GearsExecutor {
    */
   private native ResultSet execute(Database db, String sqlStatement, JavaScriptObject args) /*-{
         return db.execute(sqlStatement, args);
+  }-*/;
+  
+  private static native double now() /*-{
+  	var d = new Date();
+  	return d.getMilliseconds();
   }-*/;
 }

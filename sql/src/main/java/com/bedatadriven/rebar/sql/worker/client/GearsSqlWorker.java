@@ -29,10 +29,10 @@ public class GearsSqlWorker extends AbstractWorkerEntryPoint {
   @Override
   public void onMessageReceived(WorkerPoolMessageHandler.MessageEvent event) {
     WorkerCommand cmd = event.getBodyObject().cast();
-    GearsExecutor.Logger logger = new WorkerLogger(getPool(), event.getSender(), cmd.getExecutionId());
+    GearsUpdateExecutor.Logger logger = new WorkerLogger(getPool(), event.getSender(), cmd.getExecutionId());
 
     try {
-      int rowsAffected = GearsExecutor.execute(cmd, logger);
+      int rowsAffected = GearsUpdateExecutor.execute(cmd, logger);
       getPool().sendMessage(WorkerResponse.newSuccessResponse(cmd.getExecutionId(), rowsAffected),
           event.getSender());
     } catch(Exception e) {
