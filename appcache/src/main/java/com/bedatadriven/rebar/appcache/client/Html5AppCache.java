@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.appcache.client;
 
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -85,6 +86,8 @@ public class Html5AppCache extends AbstractAppCache {
 
   @Override
   public void ensureUpToDate(final AsyncCallback<Void> callback) {
+
+  	
   	// an error retrieving the cache does not neccessarily
   	// alter the status if it is just a network problem.
   	// but we want to make sure that we have an answer so we
@@ -92,15 +95,20 @@ public class Html5AppCache extends AbstractAppCache {
   	sinkErrorEvent(this);
   	final ErrorListener errors = new ErrorListener();
   
-  	
-  	try {
-  		update();
-  	} catch(Exception e) {
-  		callback.onFailure(e);
-  		return;
+  	if(getAppCacheStatus() == IDLE || 
+  		 getAppCacheStatus() == UPDATE_READY) {
+  
+  		try {
+    		update();
+  		} catch(Exception e) {
+  			Log.error("Html5AppCache: call to update() threw exception. Current state = " + 
+  						getAppCacheStatus(), e);
+    		callback.onFailure(e);
+    		return;
+    	}
   	}
-	  // otherwise we need to wait until the attempt is complete.
-     new Timer() {
+  	
+	  new Timer() {
       @Override
       public void run() {
     	
