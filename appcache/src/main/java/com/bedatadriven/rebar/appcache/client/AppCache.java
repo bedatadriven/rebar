@@ -16,6 +16,10 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
+import com.bedatadriven.rebar.appcache.client.events.ProgressEventHandler;
+import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEvent;
+import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AppCache {
@@ -72,17 +76,52 @@ public interface AppCache {
 
   /**
    * Ensures that the current application is completely cached and
-   * ready to serve offline.
+   * ready to serve off line.
    *
-   * This does not necessary trigger an update.
-   *
+   * This does not necessarily trigger an update, and the call will
+   * succeed even if the cache is outdated, as long as the app is completely
+   * cached.
+   * 
    * @param callback an asynchronous callback that will receive the version upon completion
    */
   void ensureCached(AsyncCallback<Void> callback);
 
+  
+  /**
+   * Ensures that the current application cache is up to date.
+   * This call will fail if the server cannot be reached to check for the version.
+   *  
+   */
+  void ensureUpToDate(AsyncCallback<Void> callback);
+  
+  
+  /**
+   * Initiates an attempt to update the application asynchronously
+   */
+  void checkForUpdate();
+  
   /**
    * 
    * @return the current status of the application cache.
    */
   Status getStatus();
+
+  /**
+   * 
+   * @return true if the current user agent will begin caching the app
+   * immediately on page load. Chrome and Opera will, but not Gears.
+   */
+  boolean isCachedOnStartup();
+  
+  /**
+   * 
+   * @return true if the current user agent asks for permission from the user before
+   * caching the app.
+   */
+  boolean requiresPermission();
+
+  HandlerRegistration addProgressHandler(ProgressEventHandler handler);
+
+	HandlerRegistration addUpdateReadyHandler(UpdateReadyEventHandler handler);
+  
 }

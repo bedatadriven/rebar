@@ -3,7 +3,8 @@
  "betaManifestVersion" : 1,
  "version" : "__VERSION__",
  "entries" : [
-     { "url": "../index.html" },
+     { "url": "../" },
+     { "url": "../forcegears.html" },
      __ENTRIES__
     ]
 }

@@ -24,16 +24,34 @@ import com.google.gwt.gears.client.localserver.ManagedResourceStore;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-class GearsAppCache implements AppCache  {
+public class GearsAppCache extends AbstractAppCache {
 
-  private ManagedResourceStore store;
-
+  private ManagedResourceStore store = null;
+  
   public GearsAppCache() {
-    LocalServer server = Factory.getInstance().createLocalServer();
-    this.store = server.createManagedStore(GWT.getModuleName());
-    this.store.setManifestUrl(GWT.getModuleBaseURL() + GWT.getModuleName() + ".gears.manifest");
-    
-    Log.info("GearsAppCache initializing, current version = " + store.getCurrentVersion());
+  	// if we already have permission, then go ahead and
+  	// initialize the store, we are probably be loaded from the cache
+  	if(Factory.getInstance().hasPermission()) {
+  		initStore();
+  	}
+  }
+  
+  public ManagedResourceStore getStore() {
+  	if(store == null) {
+  	  initStore();
+  	}
+  	return store;
+  }
+
+	private void initStore() {
+	  LocalServer server = Factory.getInstance().createLocalServer();
+	  store = server.createManagedStore(GWT.getModuleName());
+	  store.setManifestUrl(GWT.getModuleBaseURL() + GWT.getModuleName() + ".gears.manifest");
+	  
+	  sinkProgressEvent(store, this);
+	  sinkCompleteEevent(store, this);
+	  
+	  Log.info("GearsAppCache initializing, current version = " + store.getCurrentVersion());
   }
 
   @Override
@@ -43,7 +61,7 @@ class GearsAppCache implements AppCache  {
 
   @Override
   public void ensureCached(final AsyncCallback<Void> callback) {
-    store.setEnabled(true);
+    getStore().setEnabled(true);
     if(currentVersionIsEmpty()) {
       download(callback);
     } else {
@@ -51,15 +69,35 @@ class GearsAppCache implements AppCache  {
     }
   }
 
+  @Override
+  public void ensureUpToDate(final AsyncCallback<Void> callback) {
+  	download(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				callback.onSuccess(null);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				callback.onFailure(caught);
+			}
+		});
+  }
+
   private boolean currentVersionIsEmpty() {
-    return store.getCurrentVersion() == null || store.getCurrentVersion().isEmpty();
+    return getStore().getCurrentVersion() == null || getStore().getCurrentVersion().isEmpty();
   }
 
   @Override
   public Status getStatus() {
-  	Log.debug("GearsAppCache: status = " + store.getUpdateStatus() + ", currentVersion = " + store.getCurrentVersion());
+  	if(store == null) {
+  		return Status.UNCACHED;
+  	}
   	
-    switch(store.getUpdateStatus()) {
+  	Log.debug("GearsAppCache: status = " + getStore().getUpdateStatus() + ", currentVersion = " + getStore().getCurrentVersion());
+  	
+    switch(getStore().getUpdateStatus()) {
       case ManagedResourceStore.UPDATE_CHECKING:
         return Status.CHECKING;
 
@@ -71,8 +109,10 @@ class GearsAppCache implements AppCache  {
       case ManagedResourceStore.UPDATE_OK:
         if(currentVersionIsEmpty()) {
           return Status.UNCACHED;
-        } else if (!GWT.getPermutationStrongName().equals(store.getCurrentVersion())) {
+          
+        } else if (!GWT.getPermutationStrongName().equals(getStore().getCurrentVersion())) {
           return Status.UPDATE_READY;
+        
         } else {
           return Status.IDLE;
         }
@@ -80,19 +120,20 @@ class GearsAppCache implements AppCache  {
   }
 
   private void download(final AsyncCallback<Void> callback) {
-    store.checkForUpdate();
+    getStore().checkForUpdate();
     new Timer() {
       @Override
       public void run() {
-        switch(store.getUpdateStatus()) {
+        switch(getStore().getUpdateStatus()) {
           case ManagedResourceStore.UPDATE_CHECKING:
-            break;
           case ManagedResourceStore.UPDATE_DOWNLOADING:
             break;
+
           case ManagedResourceStore.UPDATE_FAILED:
-            callback.onFailure(new Exception(store.getLastErrorMessage()));
+            callback.onFailure(new Exception(getStore().getLastErrorMessage()));
             this.cancel();
             break;
+
           case ManagedResourceStore.UPDATE_OK:
             callback.onSuccess(null);
             this.cancel();
@@ -101,13 +142,51 @@ class GearsAppCache implements AppCache  {
       }
     }.scheduleRepeating(500);
   }
+  
+	// the wrapper in the GWT gears library is just wrong.
+  private static native void sinkProgressEvent(ManagedResourceStore store, GearsAppCache appcache) /*-{
+    store.onprogress = function(details) {
+      appcache.@com.bedatadriven.rebar.appcache.client.GearsAppCache::fireProgress(II)(details.filesComplete, details.filesTotal);
+    };
+  }-*/;
+  
+  private static native void sinkCompleteEevent(ManagedResourceStore store, GearsAppCache appcache) /*-{
+	  store.oncomplete = function(details) {
+	    appcache.@com.bedatadriven.rebar.appcache.client.GearsAppCache::onComplete()();
+	  };
+	}-*/;
 
-  public ManagedResourceStore getStore() {
-    return store;
+  private void onComplete() {
+  	// This event is fired when a ManagedResourceStore completes an update.
+  	// Note that updates can be either started explicitly, by calling checkForUpdate(), 
+  	// or implicitly, when resources are served from the store.
+
+  	// An update may or may not result in a new version of the store. 
+  	if(getStatus() == Status.UPDATE_READY) {
+  		fireUpdateReady();
+  	}
+  } 
+  
+  
+  
+  @Override
+  public void checkForUpdate() {
+  	getStore().checkForUpdate();
   }
 
-  public static boolean isSupported() {
+	public static boolean isSupported() {
     return Factory.getInstance() != null;
   }
 
+	@Override
+  public boolean isCachedOnStartup() {
+		return false;
+  }
+
+	@Override
+  public boolean requiresPermission() {
+	  return true;
+  }
+
+  
 }

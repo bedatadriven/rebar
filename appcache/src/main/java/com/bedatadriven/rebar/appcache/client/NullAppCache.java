@@ -18,7 +18,7 @@ package com.bedatadriven.rebar.appcache.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-class NullAppCache implements AppCache {
+class NullAppCache extends AbstractAppCache {
 
   @Override
   public String getImplementation() {
@@ -29,9 +29,30 @@ class NullAppCache implements AppCache {
   public void ensureCached(AsyncCallback<Void> callback) {
     callback.onFailure(new AppCacheException("Your browser does not support AppCache"));
   }
-
+  
   @Override
+  public void ensureUpToDate(AsyncCallback<Void> callback) {
+  	callback.onFailure(new AppCacheException("Your browser does not support AppCache"));
+  }
+
+	@Override
   public Status getStatus() {
     return Status.UNSUPPORTED;
   }
+
+	@Override
+  public boolean isCachedOnStartup() {
+	  return false;
+  }
+
+	@Override
+  public boolean requiresPermission() {
+	  return false;
+  }
+
+	@Override
+  public void checkForUpdate() {
+	  
+  }
+
 }

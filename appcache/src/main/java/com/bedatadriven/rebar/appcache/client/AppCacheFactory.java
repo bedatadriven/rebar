@@ -26,11 +26,11 @@ public class AppCacheFactory {
     if(instance == null) {
     	if(!GWT.isScript()) {
     		instance = new AppCacheStub();
-  
+
     	} else if(Html5AppCache.isSupported() && Html5AppCache.hasManifest()) {
         instance = new Html5AppCache();
-
-      } else if(GearsAppCache.isSupported()) {
+    		
+    	} else if(GearsAppCache.isSupported()) {
         instance = new GearsAppCache();
 
       } else {
@@ -39,4 +39,5 @@ public class AppCacheFactory {
     }
     return instance;
   }
+ 
 }

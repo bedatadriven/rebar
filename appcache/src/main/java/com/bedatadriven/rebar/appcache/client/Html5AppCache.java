@@ -16,11 +16,12 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-class Html5AppCache implements AppCache {
+public class Html5AppCache extends AbstractAppCache {
 
   public static final int UNCACHED = 0;
   public static final int IDLE = 1;
@@ -28,37 +29,39 @@ class Html5AppCache implements AppCache {
   public static final int DOWNLOADING = 3;
   public static final int UPDATE_READY = 4;
   public static final int OBSOLETE = 5;
-
+  
   public static final Status[] STATUS_MAPPING = new Status[] {
       Status.UNCACHED, Status.IDLE, Status.CHECKING, Status.DOWNLOADING, Status.UPDATE_READY, Status.OBSOLETE
   };
-
+  
+  private int errorCount = 0;
+  
 
   @Override
   public String getImplementation() {
     return "HTML5";
   }
-
+ 
   @Override
   public void ensureCached(final AsyncCallback<Void> callback) {
-    if (checkStatus(callback))
+     	
+  	if (callbackIfCached(callback))
       return;
 
-    // otherwise we need to wait until the download is complete.
+	  // otherwise we need to wait until the download is complete.
     // unfortunately there doesn't seem to be a way to determine whether we're busy
     // downloading for the first time, or a new version
      new Timer() {
       @Override
       public void run() {
-        if(checkStatus(callback)) {
+        if(callbackIfCached(callback)) {
           this.cancel();
         }
       }
     }.scheduleRepeating(500);
+  } 
 
-  }
-
-  private boolean checkStatus(AsyncCallback<Void> callback) {
+	private boolean callbackIfCached(AsyncCallback<Void> callback) {
     int status = 0;
     try {
       status = getAppCacheStatus();
@@ -81,6 +84,54 @@ class Html5AppCache implements AppCache {
   }
 
   @Override
+  public void ensureUpToDate(final AsyncCallback<Void> callback) {
+  	// an error retrieving the cache does not neccessarily
+  	// alter the status if it is just a network problem.
+  	// but we want to make sure that we have an answer so we
+  	// have to trap the errors ourselves
+  	sinkErrorEvent(this);
+  	final ErrorListener errors = new ErrorListener();
+  
+  	
+  	try {
+  		update();
+  	} catch(Exception e) {
+  		callback.onFailure(e);
+  		return;
+  	}
+	  // otherwise we need to wait until the attempt is complete.
+     new Timer() {
+      @Override
+      public void run() {
+    	
+        switch(getAppCacheStatus()) {
+        case IDLE:
+        	if(errors.haveOccurred()) {
+        		callback.onFailure(new AppCacheException("AppCache connection failure"));
+        	} else {
+        		callback.onSuccess(null);
+        	}
+        	this.cancel();
+        	break;
+        	
+        case UPDATE_READY:
+          callback.onSuccess(null);
+          this.cancel();
+          break;
+        case UNCACHED:
+          callback.onFailure(new AppCacheException("There is no manifest attached to this application (Status = UNCACHED)"));
+          this.cancel();
+          break;
+        case OBSOLETE:
+          callback.onFailure(new AppCacheException("The attached manifest no longer exists on the server (Status = OBSOLETE"));
+          this.cancel();
+          break;
+        }
+    	}
+    }.scheduleRepeating(500);
+  }
+ 
+	@Override
   public Status getStatus() {
     return STATUS_MAPPING[getAppCacheStatus()];
   }
@@ -108,4 +159,61 @@ class Html5AppCache implements AppCache {
   public static boolean hasManifest() {
   	return Document.get().getDocumentElement().hasAttribute("manifest");
   }
+	
+	@Override
+  protected void sinkProgressEvents() {
+	  sinkProgressEvent(this);
+  }
+
+	private static native void sinkProgressEvent(Html5AppCache appCache) /*-{
+		$wnd.applicationCache.onprogress = function(event) {
+			appCache.@com.bedatadriven.rebar.appcache.client.AbstractAppCache::fireProgress(II)(event.loaded, event.total);
+		}
+	}-*/;
+
+	@Override
+  protected void sinkUpdateReadyEvents() {
+		sinkUpdateReadyEvent(this);
+  }
+
+	private static native void sinkUpdateReadyEvent(Html5AppCache appCache) /*-{
+		$wnd.applicationCache.onupdateready = function(event) {
+			appCache.@com.bedatadriven.rebar.appcache.client.AbstractAppCache::fireUpdateReady()();
+		}
+	}-*/;
+
+	private static native void sinkErrorEvent(Html5AppCache appCache) /*-{
+		$wnd.applicationCache.onerror = function(event) {
+			appCache.@com.bedatadriven.rebar.appcache.client.Html5AppCache::onError()();
+		}
+	}-*/;
+
+	private void onError() {
+		errorCount++;
+	}
+	
+	private class ErrorListener {
+		private int initialCount = errorCount;
+		
+		public boolean haveOccurred() {
+			return errorCount > initialCount;
+		}
+	}
+	
+	@Override
+  public boolean isCachedOnStartup() {
+		return true;
+  }
+
+	@Override
+  public boolean requiresPermission() {
+	  return true;
+  }
+
+	@Override
+  public void checkForUpdate() {
+		update();
+  }
+	
+	
 }

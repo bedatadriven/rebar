@@ -19,6 +19,6 @@ package com.bedatadriven.rebar.appcache.test.client;
 public class FFGreeter extends Greeter {
   @Override
   public String greet() {
-    return "Hi Firefox 3 user!";
+    return "Hi FireFox 3 user!";
   }
 }
