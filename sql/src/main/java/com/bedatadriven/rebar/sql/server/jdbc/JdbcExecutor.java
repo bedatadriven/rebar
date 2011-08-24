@@ -1,5 +1,6 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
@@ -60,6 +61,9 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	     } else {
 	        return toUpdateResultSet(stmt);
 	    }
+  	} catch(Exception e) {
+  		Log.debug("Exception thrown while executing statement: " + statement, e);
+  		throw e;
     } finally {
     	try { stmt.close(); } catch(Exception ignored) {}
     }

@@ -54,7 +54,20 @@ public class SqlQuery {
 			 builder.appendColumn(column);
 		 }
 		 return builder;
- }
+	}
+	
+
+	public static SqlQuery selectAll() {
+		 SqlQuery builder = new SqlQuery();	
+		 builder.columnList.append("*");
+		 return builder;
+  }
+	
+	public static SqlQuery selectSingle(String expr) {
+		 SqlQuery builder = new SqlQuery();	
+		 builder.columnList.append(expr);
+		 return builder;
+	}
 	
 	/**
 	 * Appends a table list to the {@code FROM} clause
@@ -127,18 +140,48 @@ public class SqlQuery {
 
 	/**
 	 * Appends a column a comma-separated list of columns to the select list.
-	 *
+	 *  
 	 */
 	public SqlQuery appendColumn(String expr) {
-		if(columnList.length() != 0) {
-			columnList.append(", ");
+		
+		if(expr.contains(",")) {
+			throw new IllegalArgumentException("Cannot accept a column name with a comma. Hint: " +
+						"You can no longer pass \"a,b,c\" as an argument you should be passing \"a\", \"b\", \"c\"");
 		}
-		columnList.append(expr);
-		return this;
+		
+		if(expr.contains("*")) {
+			throw new IllegalArgumentException("Cannot accept a column name with a '*'. Hint: " +
+						"use SqlQuery.selectAll() instead");
+		}
+		
+		if(expr.contains(")")) {
+			throw new IllegalArgumentException("You must provide an explicit alias for complicated expressions: " + expr);
+		}
+		
+		// unfortunately the API mandated by WebSQL uses case-sensitive
+		// names to lookup results. 
+		// to smooth over differences between the way MySQL and Sqlite
+		// handle casing of implicit column aliases, we will always
+		// provide an explicit alias with the same casing as provided to expr
+		
+		int dot = expr.indexOf('.');
+		if(dot == -1) {
+			return appendColumn(expr, expr);
+		} else {
+			String alias = expr.substring(dot+1);
+			return appendColumn(expr, alias);
+		}
 	}
 	
 	public SqlQuery appendColumn(String expr, String alias) {
-		return appendColumn(expr + " " + alias);
+		if(columnList.length() != 0) {
+			columnList.append(", ");
+		}
+		columnList.append(expr)
+			.append(" ")
+			.append(alias);
+		
+		return this;
 	}
 	
 	public SqlQuery appendColumns(String... exprs) {
@@ -217,6 +260,14 @@ public class SqlQuery {
 	}
 	
 	public String sql() {
+		if(columnList.length() == 0) {
+			throw new IllegalStateException("No columns have been specified");
+		}
+		if(tableList.length() == 0) {
+			throw new IllegalStateException("No FROM clause has been provided");
+		}
+		
+		
 		StringBuilder sql = new StringBuilder("SELECT ")
 		.append(columnList.toString())
 		.append(" FROM ")
@@ -321,5 +372,6 @@ public class SqlQuery {
 			return SqlQuery.this;
 		}
 	}
+
 
 }
