@@ -45,7 +45,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
   
   @Override
   public final SqlResultSet execute(String statement, Object[] params) throws Exception {
-  	PreparedStatement stmt = conn.prepareStatement(statement);
+  	PreparedStatement stmt = prepareStatement(statement);
   	try {
 	    if(params != null) {
 	      for(int i=0;i!=params.length;++i) {
@@ -67,6 +67,17 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
     } finally {
     	try { stmt.close(); } catch(Exception ignored) {}
     }
+  }
+
+	private PreparedStatement prepareStatement(String statement)
+      throws SQLException {
+		// workaround for incomplete SQL implementation
+		// TODO: move to sqlite-specific subclass
+		if(conn.getClass().getName().equals("org.sqlite.Conn")) {
+			return conn.prepareStatement(statement);
+		} else {
+			return conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
+		}
   }
   
   private SqlResultSet toQueryResultSet(PreparedStatement stmt) throws SQLException {
