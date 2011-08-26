@@ -112,9 +112,22 @@ public abstract class SqlDatabase {
 							String tableName = row.getString("name");
 							// some implementations may store metadata in tables that cannot be deleted,
 							// __WebKitMetadata__ for example
-							if(!tableName.startsWith("_")) {
+							if(!tableName.startsWith("_") && !tableName.startsWith("sqlite_")) {
 								Log.debug("Dropping table " + tableName);
-								tx.executeSql("DROP TABLE " + tableName);
+								tx.executeSql("DROP TABLE " + tableName, new SqlResultCallback() {
+
+									@Override
+                  public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+										// noop
+                  }
+
+									@Override
+                  public boolean onFailure(SqlException e) {
+										// ignore other errors; there may be protected tables introduced
+										// by other implementations
+	                  return SqlResultCallback.CONTINUE;
+                  }
+								});
 							}
 						}
 					}
