@@ -109,6 +109,7 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("create table if not exists numbers (x INT)");
         tx.executeSql("insert into numbers (x) values (33) ");
         tx.executeSql("insert into numbers (x) values (41) ");
+        tx.executeSql("insert into numbers (x) values (?) ", new Object[] {null});
         tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {

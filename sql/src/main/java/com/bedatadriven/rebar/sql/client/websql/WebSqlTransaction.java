@@ -94,7 +94,9 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   private ParamArray toParamArray(Object[] parameters) {
     ParamArray paramArray = JsArray.createArray().cast();
     for(Object param : parameters) {
-      if(param instanceof Number) {
+    	if(param == null) {
+    		paramArray.push(null);
+    	} else if(param instanceof Number) {
         paramArray.push(((Number)param).doubleValue());
       } else if(param instanceof String) {
         paramArray.push((String)param);
