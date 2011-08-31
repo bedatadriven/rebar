@@ -89,7 +89,19 @@
 	      <version>${version}</version>
 	      <scope>provided</scope>
 	    </dependency>
-	    
+
+        <dependency>
+            <groupId>net.sf.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+    	    
         <!-- Support for Logging -->
         <dependency>
             <groupId>com.google.code.gwt-log</groupId>
