@@ -74,7 +74,7 @@ class SqlDatabaseImpl extends SqlDatabase {
 			
 				@Override
 				public void begin(WebSqlTransaction tx) {
-			     Log.debug("WebSqlBulkUpdater about to call eval on '" + bulkOperationJsonArray.substring(0, 600) + "'");
+			     Log.debug("WebSqlBulkUpdater about to call eval on '" + shortenJson(bulkOperationJsonArray) + "'");
 			      JsArray<PreparedStatementBatch> statements = PreparedStatementBatch.fromJson(bulkOperationJsonArray);
 			      
 			      Log.debug("WebSqlBulkUpdater queuing " + statements.length() + " statements");
@@ -112,4 +112,12 @@ class SqlDatabaseImpl extends SqlDatabase {
   	}
   }
  
+	private String shortenJson(final String json) {
+		if(json.length() <= 600) {
+			return json;
+		} else {
+      return json.substring(0, 550) + "...";
+		}
+  }
+  
 }

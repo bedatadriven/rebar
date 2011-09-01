@@ -37,6 +37,8 @@ public class JdbcTest  {
         tx.executeSql("create table if not exists foobar (id INT, name TEXT)");
         tx.executeSql("insert into foobar (id, name) values (1, 'foo') ");
         tx.executeSql("insert into foobar (id, name) values (2, 'bar') ");
+        tx.executeSql("insert into foobar (id, name) values (?, ?) ", new Object[] { 0, null } );
+
         tx.executeSql("select * from foobar where id > ?", new Object[] { 1 }, new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
@@ -56,7 +58,7 @@ public class JdbcTest  {
         tx.executeSql("select * from foobar", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertThat(results.getRows().size(), equalTo(2));
+            assertThat(results.getRows().size(), equalTo(3));
 
             callbackCount++;
           }
@@ -90,7 +92,7 @@ public class JdbcTest  {
     PreparedStatement stmt = conn.prepareStatement("select count(*) from foobar");
     ResultSet rs = stmt.executeQuery();
     assertTrue(rs.next());
-    assertThat(rs.getInt(1), equalTo(2));
+    assertThat(rs.getInt(1), equalTo(3));
     rs.close();
     conn.close();
   }
