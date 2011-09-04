@@ -19,12 +19,12 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>com.bedatadriven.rebar</groupId>
-    <version>2.1.1</version>
+    <version>2.1.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>jpa-mapping</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.2-SNAPSHOT</version>
   <name>JPA Object Model</name>
 
   <scm>
