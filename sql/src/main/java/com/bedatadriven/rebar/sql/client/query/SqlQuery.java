@@ -214,8 +214,9 @@ public class SqlQuery {
 	  return orderBy("(" + subQuery.sql() + ")", ascending);
   }
 
-	public void setLimitClause(String clause) {
+	public SqlQuery setLimitClause(String clause) {
 		this.limitClause = clause;
+		return this;
 	}
 	
 	public WhereClauseBuilder onlyWhere(String expr) {
