@@ -19,6 +19,7 @@ package com.bedatadriven.rebar.sql.client.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
@@ -41,6 +42,7 @@ public class SqlQuery {
 	protected final StringBuilder tableList = new StringBuilder();
 	protected final StringBuilder whereClause = new StringBuilder();
 	protected final StringBuilder orderByClause = new StringBuilder();
+	protected final StringBuilder groupByClause = new StringBuilder();
 	protected final List<Object> parameters = new ArrayList<Object>();
 
 	private String limitClause = "";
@@ -207,6 +209,14 @@ public class SqlQuery {
 		return this;
 	}
 	
+	public SqlQuery groupBy(String expr) {
+		if(groupByClause.length() > 0) {
+			groupByClause.append(", ");
+		}
+		groupByClause.append(expr);
+		return this;
+	}
+	
 
 	public SqlQuery orderBy(SqlQuery subQuery, boolean ascending) {
 		assert subQuery.parameters.isEmpty();
@@ -270,17 +280,21 @@ public class SqlQuery {
 		
 		
 		StringBuilder sql = new StringBuilder("SELECT ")
-		.append(columnList.toString())
+		.append(columnList)
 		.append(" FROM ")
-		.append(tableList.toString());
+		.append(tableList);
 
 		if(whereClause.length() > 0) {
 			sql.append(" WHERE ")
-			.append(whereClause.toString());
+			.append(whereClause);
+		}
+		if(groupByClause.length() > 0) {
+			sql.append(" GROUP BY ")
+				.append(groupByClause);
 		}
 		if(orderByClause.length() > 0) {
 			sql.append(" ORDER BY ")
-			.append(orderByClause.toString());
+			.append(orderByClause);
 		}
 		sql.append(" ")
 		.append(limitClause);
@@ -365,6 +379,28 @@ public class SqlQuery {
 			appendLikeParameter(sqlParameter);
 			return SqlQuery.this;
 		}
+		
+		public SqlQuery greaterThanOrEqualTo(Object value) {
+			return comparison(">=", value);
+    }
+	
+		public SqlQuery greaterThan(Object value) {
+			return comparison(">", value);
+    }
+	
+		public SqlQuery lessThan(Object value) {
+			return comparison("<", value);
+    }
+	
+		public SqlQuery lessThanOrEqualTo(Object value) {
+			return comparison("<=", value);
+    }
+		
+		private SqlQuery comparison(String operator, Object value) {
+			whereClause.append(" ").append(operator).append(" ?");
+			appendParameter(value);
+			return SqlQuery.this;
+    }
 	}
 
 	public class JoinBuilder {
