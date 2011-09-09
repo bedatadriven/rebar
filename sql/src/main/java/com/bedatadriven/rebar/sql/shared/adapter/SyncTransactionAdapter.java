@@ -68,7 +68,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     try {
       callback.begin(this);
-    } catch(Exception e) {
+    } catch(Throwable e) {
       Log.error("SyncTx[" + id + "]: Exception thrown in transaction callback", e);
 
       errorInCallback(e);
@@ -88,7 +88,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 		});
   }
 
-	private void errorInCallback(Exception e) {
+	private void errorInCallback(Throwable e) {
   	try {
   		Log.error("SyncTx[" + id + "]: Rolling back transaction");
   		executor.rollback();
