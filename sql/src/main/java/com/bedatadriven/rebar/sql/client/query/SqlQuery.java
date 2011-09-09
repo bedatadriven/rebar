@@ -283,23 +283,24 @@ public class SqlQuery {
 			throw new IllegalStateException("No FROM clause has been provided");
 		}
 		
-		
+		// append(StringBuilder) fails bizarely in hosted mode
+		// See: http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
 		StringBuilder sql = new StringBuilder("SELECT ")
-		.append(columnList)
+		.append((CharSequence)columnList)
 		.append(" FROM ")
-		.append(tableList);
+		.append((CharSequence)tableList);
 
 		if(whereClause.length() > 0) {
 			sql.append(" WHERE ")
-			.append(whereClause);
+			.append((CharSequence)whereClause);
 		}
 		if(groupByClause.length() > 0) {
 			sql.append(" GROUP BY ")
-				.append(groupByClause);
+				.append((CharSequence)groupByClause);
 		}
 		if(orderByClause.length() > 0) {
 			sql.append(" ORDER BY ")
-			.append(orderByClause);
+			.append((CharSequence)orderByClause);
 		}
 		sql.append(" ")
 		.append(limitClause);
