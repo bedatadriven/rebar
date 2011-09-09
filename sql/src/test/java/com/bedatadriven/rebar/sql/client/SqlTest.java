@@ -110,13 +110,25 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("insert into numbers (x) values (33) ");
         tx.executeSql("insert into numbers (x) values (41) ");
         tx.executeSql("insert into numbers (x) values (?) ", new Object[] {null});
+        tx.executeSql("insert into numbers (x) values (?) ", new Object[] {true});
         tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(74, (int)results.intResult());
-            finishTest();
+            assertEquals(75, (int)results.intResult());
           }
         });
+        tx.executeSql("select count(*) from numbers where x is null", new SqlResultCallback() {
+
+					@Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+						assertEquals(1, (int)results.intResult());
+          }
+        });
+      }
+
+			@Override
+      public void onSuccess() {
+				finishTest();
       }
 
 			@Override

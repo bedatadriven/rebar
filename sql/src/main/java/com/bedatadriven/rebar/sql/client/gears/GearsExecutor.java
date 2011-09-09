@@ -98,10 +98,10 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   /**
    * There is a slight bug in the gears C++ implementation that results
-   * in an 'SQL paramter X has unknown type' because it does not handle 
+   * in an 'SQL parameter X has unknown type' because it does not handle 
    * 'boxed' JavaScript strings.
    * 
-   * This class creates an array of primtive strings that the gears
+   * This class makes sure to create an array of primitives that the gears
    * module can handle without problems.
    */
   private final static class ParamArray extends JavaScriptObject {
@@ -118,12 +118,16 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
   		if(values != null) {
 	  		for(int i=0;i!=values.length;++i) {
 	  			Object value = values[i];
-	  			if(value instanceof Date) {
-	    			array.set(i, (double)((Date) value).getTime());  				
+	  			if(value == null) {
+	  				array.setNull(i);
+	  			} else if(value instanceof Date) {
+	    			array.setNumber(i, (double)((Date) value).getTime());  				
 	  			} else if(value instanceof Long) {
-	  				array.set(i, ((Long) value).doubleValue());
+	  				array.setNumber(i, ((Long) value).doubleValue());
+	  			} else if(value instanceof Boolean) {
+	  				array.setNumber(i, ((Boolean)value).booleanValue() ? 1 : 0);
 	  			} else {
-	  				array.set(i, value);
+	  				array.setString(i, value.toString());
 	  			}
 	  		}
   		}
@@ -132,8 +136,17 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   	// cast the value explicitly to a primitive js string that
   	// gears can understand with String()
-  	public native void set(int i, Object value) /*-{
+  	public native void setString(int i, Object value) /*-{
   		this[i] = String(value);
   	}-*/;
+  	
+  	public native void setNumber(int i, double value) /*-{
+  		this[i] = Number(value);
+  	}-*/;
+  	
+  	public native void setNull(int i) /*-{
+  		this[i] = null;
+  	}-*/;
+  	
   }
 }

@@ -100,6 +100,8 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
         paramArray.push(((Number)param).doubleValue());
       } else if(param instanceof String) {
         paramArray.push((String)param);
+      } else if(param instanceof Boolean) {
+      	paramArray.push( ((Boolean)param) ? 1 : 0 );
       } else if(param instanceof Date) {
       	paramArray.push(Long.toString(((Date)param).getTime()));
       } else {
