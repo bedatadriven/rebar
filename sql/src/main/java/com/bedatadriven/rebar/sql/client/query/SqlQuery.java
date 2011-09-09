@@ -234,6 +234,11 @@ public class SqlQuery {
 		return new WhereClauseBuilder();
 	}
 
+	public WhereClauseBuilder whereLikes(String expr) {
+		whereClause.append(expr);
+		return new WhereClauseBuilder(expr);
+	}
+
 	public WhereClauseBuilder where(String expr) {
 		if(whereClause.length() > 0) {
 			whereClause.append(" AND ");
@@ -334,6 +339,14 @@ public class SqlQuery {
 	}
 	
 	public class WhereClauseBuilder {
+		String column;
+
+		public WhereClauseBuilder() {
+		}
+
+		public WhereClauseBuilder(String column) {
+			this.column = column;
+		}
 
 		public SqlQuery in(Collection<?> ids) {
 			if (ids.isEmpty()) {
@@ -377,6 +390,20 @@ public class SqlQuery {
 		public SqlQuery like(String sqlParameter) {
 			whereClause.append(" like ?");
 			appendLikeParameter(sqlParameter);
+			return SqlQuery.this;
+		}
+		
+		public SqlQuery likeMany(List<String> sqlParameters) {
+			assert(column != null); // Ensure you call onlyWhere first where the column is set as a variable
+			for (int i=0; i<sqlParameters.size(); i++) {
+				String parameter = sqlParameters.get(i);
+				whereClause.append(" like ?");
+				appendLikeParameter(parameter);
+				if (i != sqlParameters.size() -1) { // Append OR only to non-last parameters
+					or();
+					onlyWhere(column);
+				}
+			}
 			return SqlQuery.this;
 		}
 		
