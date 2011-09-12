@@ -75,9 +75,9 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
 	    callbacks.put(executionId, callback);
 	
 	    // Dispatch our command to the worker
-    	Log.trace("GearsBulkUpdater: about to send message to worker");
+    	Log.trace("GearsBulkUpdater: about to send message to worker " + workerId);
 
-    	sendMessageSafe( pool, command, workerId );    
+    	sendMessageSafe( pool, command, workerId.intValue() );    
     	
     	Log.trace("GearsBulkUpdater: sent message to worker");
     } catch(Throwable e) {
@@ -124,7 +124,7 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
   }
   
 	private static native void sendMessageSafe(WorkerPool pool, String message, int workerId) /*-{
-		pool.sendMessage(String(message), workerId);
+		pool.sendMessage(String(message), Number(workerId));
 	}-*/;
 
   

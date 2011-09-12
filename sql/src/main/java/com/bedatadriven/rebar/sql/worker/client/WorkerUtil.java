@@ -6,7 +6,7 @@ public class WorkerUtil {
 
 	
 	public static native void sendMessageSafe(WorkerPool pool, String message, int ownerWorkerId) /*-{
-  	pool.sendMessage(String(message), ownerWorkerId);
+  	pool.sendMessage(String(message), Number(ownerWorkerId));
 	}-*/;
 
 }
