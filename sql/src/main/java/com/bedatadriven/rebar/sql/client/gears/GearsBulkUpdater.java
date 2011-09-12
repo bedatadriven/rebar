@@ -49,16 +49,22 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
 
   public void executeUpdates(String databaseName, String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
 
+  	int executionId = nextExecutionId++;
+  	Log.trace("GearsBulkUpdater: starting executeUpdates() for executionId=" + executionId);
+    
     // Create our worker if we haven't already
     if(pool == null) {
       pool = Factory.getInstance().createWorkerPool();
       pool.setMessageHandler(this);
       workerId = pool.createWorkerFromUrl(GWT.getModuleBaseURL() +
           "GearsSqlWorker.js");
+      
+      Log.debug("GearsBulkUpdater: Created worker pool, workerId = " + workerId);
     }
 
     // Construct our message
-    WorkerCommand cmd = WorkerCommand.newInstance(nextExecutionId++);
+      	
+		WorkerCommand cmd = WorkerCommand.newInstance(executionId);
     cmd.setDatabaseName(databaseName);
     cmd.setOperations(bulkOperationJsonArray);
 
@@ -66,7 +72,12 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
     callbacks.put(cmd.getExecutionId(), callback);
 
     // Dispatch our command to the worker
-    pool.sendMessage(cmd, workerId);
+    try {
+    	pool.sendMessage(cmd, workerId);
+    	Log.trace("GearsBulkUpdater: sent message to worker");
+    } catch(Exception e) {
+    	Log.debug("GearsBulkUpdater: exception thrown while sending message: " + e.getMessage(), e);
+    }
   }
 
   public void onMessageReceived(MessageEvent messageEvent) {
@@ -81,12 +92,12 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
       AsyncCallback<Integer> callback = callbacks.get(response.getExecutionId());
 
       if(response.getType() == WorkerResponse.EXCEPTION) {
-        Log.error("WorkerBulkExecutor[" + response.getExecutionId() + "] : Exception thrown during execution: " + response.getMessage());
+        Log.error("GearsBulkUpdater[" + response.getExecutionId() + "] : Exception thrown during execution: " + response.getMessage());
         callback.onFailure(new Exception(response.getMessage()));
         callbacks.remove(response.getExecutionId());
 
       } else if(response.getType() == WorkerResponse.SUCCESS) {
-        Log.debug("WorkerBulkExecutor[" + response.getExecutionId() + "] : Completed successfully: " +
+        Log.debug("GearsBulkUpdater[" + response.getExecutionId() + "] : Completed successfully: " +
             response.getRowsAffected() + " row(s) affected");
 
         callback.onSuccess(response.getRowsAffected());
