@@ -48,35 +48,34 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
   }
 
   public void executeUpdates(String databaseName, String bulkOperationJsonArray, AsyncCallback<Integer> callback) {
-
-  	int executionId = nextExecutionId++;
-  	Log.trace("GearsBulkUpdater: starting executeUpdates() for executionId=" + executionId);
-    
-    // Create our worker if we haven't already
-    if(pool == null) {
-      pool = Factory.getInstance().createWorkerPool();
-      pool.setMessageHandler(this);
-      workerId = pool.createWorkerFromUrl(GWT.getModuleBaseURL() +
-          "GearsSqlWorker.js");
-      
-      Log.debug("GearsBulkUpdater: Created worker pool, workerId = " + workerId);
-    }
-
-    // Construct our message
-      	
-		WorkerCommand cmd = WorkerCommand.newInstance(executionId);
-    cmd.setDatabaseName(databaseName);
-    cmd.setOperations(bulkOperationJsonArray);
-
-    // Register our callback
-    callbacks.put(cmd.getExecutionId(), callback);
-
-    // Dispatch our command to the worker
     try {
-    	pool.sendMessage(cmd, workerId);
-    	Log.trace("GearsBulkUpdater: sent message to worker");
-    } catch(Exception e) {
+	  	int executionId = nextExecutionId++;
+	  	Log.trace("GearsBulkUpdater: starting executeUpdates() for executionId=" + executionId);
+	    
+	    // Create our worker if we haven't already
+	    if(pool == null) {
+	      pool = Factory.getInstance().createWorkerPool();
+	      pool.setMessageHandler(this);
+	      workerId = pool.createWorkerFromUrl(GWT.getModuleBaseURL() +
+	          "GearsSqlWorker.js");
+	      
+	      Log.debug("GearsBulkUpdater: Created worker pool, workerId = " + workerId);
+	    }
+	
+	    // Construct our message
+	      	
+			WorkerCommand cmd = WorkerCommand.newInstance(executionId);
+	    cmd.setDatabaseName(databaseName);
+	    cmd.setOperations(bulkOperationJsonArray);
+	
+	    // Register our callback
+	    callbacks.put(cmd.getExecutionId(), callback);
+	
+	    // Dispatch our command to the worker
+    	pool.sendMessage(cmd, workerId);    	Log.trace("GearsBulkUpdater: sent message to worker");
+    } catch(Throwable e) {
     	Log.debug("GearsBulkUpdater: exception thrown while sending message: " + e.getMessage(), e);
+    	callback.onFailure(e);
     }
   }
 
