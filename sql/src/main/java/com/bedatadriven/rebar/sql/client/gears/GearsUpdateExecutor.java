@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.bedatadriven.rebar.sql.worker.client;
+package com.bedatadriven.rebar.sql.client.gears;
 
 
 import com.bedatadriven.rebar.sql.client.bulk.PreparedStatementBatch;
@@ -42,8 +42,8 @@ public class GearsUpdateExecutor {
     void log(String message, Exception e);
   }
 
-  public static int execute(WorkerCommand cmd, Logger logger) throws Exception {
-    return new GearsUpdateExecutor(cmd, logger).execute();
+  public static int execute(WorkerCommand cmd, Logger logger) throws Exception {   
+		return new GearsUpdateExecutor(cmd, logger).execute();
   }
 
   private GearsUpdateExecutor(WorkerCommand cmd, Logger logger) {
@@ -55,8 +55,11 @@ public class GearsUpdateExecutor {
     int rowsAffected = 0;
 
     try {
-      beginTransaction();
-      rowsAffected = executeUpdates(cmd.getOperations());
+    	
+      JsArray<PreparedStatementBatch> operations = cmd.getOperations();
+      
+    	beginTransaction();
+			rowsAffected = executeUpdates(operations);
       commitTransaction();
       
     } catch(Exception e) {

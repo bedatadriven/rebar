@@ -31,26 +31,29 @@ public final class WorkerCommand extends JavaScriptObject {
     // required for overlay types
   }
 
-  public static native WorkerCommand newInstance(int executionId) /*-{
-    return { executionId: executionId, operations: [ ] } ;
+  public static native WorkerCommand fromJson(String json) /*-{
+    return eval('(' + json + ')');
   }-*/;
+  
+  public static String newCommandAsJson(int executionId, String databaseName, String executionsJson) {
+  	return new StringBuilder()
+  		.append("{ \"executionId\": ").append(executionId)
+  		.append(", \"databaseName\": \"").append(databaseName)
+  		.append("\", \"operations\": ")
+  		.append(executionsJson)
+  		.append("}")
+  		.toString();
+  }
 
   public native String getDatabaseName() /*-{
     return this.databaseName;
-  }-*/;
-
-  public native void setDatabaseName(String name) /*-{
-    this.databaseName = name;
   }-*/;
 
   public native JsArray<PreparedStatementBatch> getOperations() /*-{
     return this.operations;
   }-*/;
 
-  public native void setOperations(String json) /*-{
-    this.operations = eval(json);
-  }-*/;
-
+  
   public native int getExecutionId() /*-{
     return this.executionId;
   }-*/;
@@ -59,9 +62,5 @@ public final class WorkerCommand extends JavaScriptObject {
   public native String getExecutionIdAsString() /*-{
     return this.executionId;
   }-*/;
-
-
-  public void addOperation(PreparedStatementBatch operation) {
-    getOperations().push(operation);
-  }
+  
 }

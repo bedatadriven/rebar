@@ -22,4 +22,5 @@
     <inherits name="com.bedatadriven.rebar.sql.Sql"/>
     
     <entry-point class='com.bedatadriven.rebar.sql.worker.client.GearsSqlWorker'/>
+    
 </module>

@@ -147,6 +147,12 @@
 								<fileset>
 									<directory>${basedir}/tomcat</directory>
 								</fileset>
+                                <fileset>
+                                    <directory>${basedir}/src/main/java/com/bedatadriven/rebar/sql/public</directory>
+                                    <includes>
+                                        <include>GearsSqlWorker.js</include>
+                                    </includes>
+                                </fileset>
 							</filesets>
 						</configuration>
 					</execution>

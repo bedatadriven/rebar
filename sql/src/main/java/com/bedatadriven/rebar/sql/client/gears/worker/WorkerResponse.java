@@ -17,6 +17,9 @@
 package com.bedatadriven.rebar.sql.client.gears.worker;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 /**
  * @author Alex Bertram
@@ -31,18 +34,34 @@ public final class WorkerResponse extends JavaScriptObject {
   protected WorkerResponse() {
   }
 
-  public static native WorkerResponse newExceptionResponse(int executionId, String message) /*-{
-    return { executionId: executionId, type: 1,  message: message };
-  }-*/;
+  public static String newExceptionResponse(int executionId, String message) {
+  	JSONObject response = new JSONObject();
+  	response.put("executionId", new JSONNumber(executionId));
+  	response.put("message", new JSONString(message));
+  	response.put("type", new JSONNumber(EXCEPTION));
+  	return response.toString();
+  }
 
-  public static native WorkerResponse newLogResponse(int executionId, String message) /*-{
-    return { executionId: executionId, type: 2,  message: message };
-  }-*/;
+  public static String newLogResponse(int executionId, String message) {
+  	JSONObject response = new JSONObject();
+  	response.put("executionId", new JSONNumber(executionId));
+  	response.put("message", new JSONString(message));
+  	response.put("type", new JSONNumber(LOG));
+  	return response.toString();
+  }
 
-  public static native WorkerResponse newSuccessResponse(int executionId, int rowsAffected) /*-{
-    return { executionId: executionId, type: 3,  rowsAffected: rowsAffected };
-  }-*/;
+  public static String newSuccessResponse(int executionId, int rowsAffected) {
+  	JSONObject response = new JSONObject();
+  	response.put("executionId", new JSONNumber(executionId));
+  	response.put("rowsAffected", new JSONNumber(rowsAffected));
+  	response.put("type", new JSONNumber(SUCCESS));
+  	return response.toString();
+  }
 
+  public static native WorkerResponse parse(String json) /*-{
+  	return eval('(' + json + ')');
+  }-*/;
+    
   public native int getExecutionId() /*-{
     return this.executionId;
   }-*/;

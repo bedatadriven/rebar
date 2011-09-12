@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sql.worker.client;
 
+import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerResponse;
 import com.bedatadriven.rebar.worker.client.AbstractWorkerEntryPoint;
@@ -28,9 +29,10 @@ public class GearsSqlWorker extends AbstractWorkerEntryPoint {
 
   @Override
   public void onMessageReceived(WorkerPoolMessageHandler.MessageEvent event) {
-    WorkerCommand cmd = event.getBodyObject().cast();
+    WorkerCommand cmd = WorkerCommand.fromJson(event.getBody());
+    
     GearsUpdateExecutor.Logger logger = new WorkerLogger(getPool(), event.getSender(), cmd.getExecutionId());
-
+    logger.log("GearSqlWorker received message");
     try {
       int rowsAffected = GearsUpdateExecutor.execute(cmd, logger);
       getPool().sendMessage(WorkerResponse.newSuccessResponse(cmd.getExecutionId(), rowsAffected),

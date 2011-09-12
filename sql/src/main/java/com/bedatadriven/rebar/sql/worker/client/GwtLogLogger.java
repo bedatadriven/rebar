@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.sql.worker.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 
 class GwtLogLogger implements GearsUpdateExecutor.Logger {
   @Override

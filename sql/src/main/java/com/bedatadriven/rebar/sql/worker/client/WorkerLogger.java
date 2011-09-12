@@ -16,6 +16,7 @@
 
 package com.bedatadriven.rebar.sql.worker.client;
 
+import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerResponse;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
 
@@ -33,14 +34,14 @@ public class WorkerLogger implements GearsUpdateExecutor.Logger {
   @Override
   public void log(final String message) {
     if(pool != null) {
-      pool.sendMessage(WorkerResponse.newLogResponse(executionId, message), ownerWorkerId);
+      WorkerUtil.sendMessageSafe(pool, WorkerResponse.newLogResponse(executionId, message), ownerWorkerId);
     }
   }
 
   @Override
   public void log(String message, Exception e) {
     if(pool != null) {
-      pool.sendMessage(WorkerResponse.newLogResponse(executionId, message + e.getMessage()), ownerWorkerId);
+      WorkerUtil.sendMessageSafe(pool, WorkerResponse.newExceptionResponse(executionId, message +  "(Cause: " + e.getMessage() + ")"), ownerWorkerId);
     }
   }
 

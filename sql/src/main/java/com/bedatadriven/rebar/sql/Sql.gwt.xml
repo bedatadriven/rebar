@@ -18,7 +18,10 @@
 <module>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.json.JSON" />
+    
     <inherits name="com.google.gwt.gears.Gears"/>
+
     <inherits name="com.allen_sauer.gwt.log.gwt-log-impl"/>
 
     <!-- These are the sources for the java.sql interfaces -->

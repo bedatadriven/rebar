@@ -19,6 +19,8 @@ package com.bedatadriven.rebar.sql.client.gears;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mortbay.util.ajax.JSON;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerResponse;
@@ -26,6 +28,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.workerpool.WorkerPool;
 import com.google.gwt.gears.client.workerpool.WorkerPoolMessageHandler;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -63,16 +67,19 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
 	    }
 	
 	    // Construct our message
-	      	
-			WorkerCommand cmd = WorkerCommand.newInstance(executionId);
-	    cmd.setDatabaseName(databaseName);
-	    cmd.setOperations(bulkOperationJsonArray);
-	
+    	Log.trace("GearsBulkUpdater: constructing message");
+
+    	String command = WorkerCommand.newCommandAsJson(executionId, databaseName, bulkOperationJsonArray);
+
 	    // Register our callback
-	    callbacks.put(cmd.getExecutionId(), callback);
+	    callbacks.put(executionId, callback);
 	
 	    // Dispatch our command to the worker
-    	pool.sendMessage(cmd, workerId);    	Log.trace("GearsBulkUpdater: sent message to worker");
+    	Log.trace("GearsBulkUpdater: about to send message to worker");
+
+    	sendMessageSafe( pool, command, workerId );    
+    	
+    	Log.trace("GearsBulkUpdater: sent message to worker");
     } catch(Throwable e) {
     	Log.debug("GearsBulkUpdater: exception thrown while sending message: " + e.getMessage(), e);
     	callback.onFailure(e);
@@ -80,11 +87,19 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
   }
 
   public void onMessageReceived(MessageEvent messageEvent) {
-    WorkerResponse response = messageEvent.getBodyObject().cast();
+  	 	
+  	WorkerResponse response;
+  	try {
+  		response =  WorkerResponse.parse( messageEvent.getBody() );
+  	} catch(Throwable t) {
+  		Log.debug("GearsBulkUpdater: exception parsing worker response. response = " + messageEvent.getBody()
+  					+ ", exception = " + t.getMessage());
+  		return;
+  	}
 
     if(response.getType() == WorkerResponse.LOG) {
       // Log message from Worker
-      Log.debug("WorkerBulkExecutor[" + response.getExecutionId() + "] : " + response.getMessage());
+      Log.error("WorkerBulkExecutor[" + response.getExecutionId() + "] : " + response.getMessage());
 
     } else {
       // Find the callback for this execution
@@ -107,5 +122,10 @@ class GearsBulkUpdater implements WorkerPoolMessageHandler {
       }
     }
   }
+  
+	private static native void sendMessageSafe(WorkerPool pool, String message, int workerId) /*-{
+		pool.sendMessage(String(message), workerId);
+	}-*/;
 
+  
 }

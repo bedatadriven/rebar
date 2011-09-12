@@ -16,13 +16,12 @@
 
 package com.bedatadriven.rebar.sql.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
+import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.gears.client.Factory;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -49,6 +48,42 @@ public class SqlTest extends GWTTestCase {
   
   private int callbacks = 0;
 
+  public void testGearsExecutor() throws Exception {
+  
+  	Log.debug("================= testGearsExecutor == gears_test ========");
+
+  	if(Factory.getInstance() == null) {
+  		Log.debug("Not a gears platform, skipping.");
+  		return;
+  	}
+  	
+  	String json = WorkerCommand.newCommandAsJson(1, "gears_test", JSON_UPDATES);
+  	
+  	GearsUpdateExecutor.Logger logger = new GearsUpdateExecutor.Logger() {
+			
+			@Override
+			public void log(String message, Exception e) {
+				Log.debug(message, e);
+			}
+			
+			@Override
+			public void log(String message) {
+				Log.debug(message);
+			}
+		}; 
+		
+		Log.debug("json = " + json);
+  	
+  	WorkerCommand cmd = WorkerCommand.fromJson(json);
+  	Log.debug("json parsed");
+  	
+		int rowsAffected = GearsUpdateExecutor.execute(cmd, logger);
+  	
+  	assertEquals(8, rowsAffected);
+  	
+  }
+  
+  
   public void testBasic() {
   	Log.debug("================= testBasic == db1 ========");
 
