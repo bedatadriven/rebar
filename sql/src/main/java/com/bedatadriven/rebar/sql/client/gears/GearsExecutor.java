@@ -15,7 +15,7 @@ import com.google.gwt.gears.client.database.ResultSet;
 class GearsExecutor implements SyncTransactionAdapter.Executor {
 
   private String databaseName;
-  private Database db;
+  private Database db = null;
   
   /**
    * Keep our own global track of whether a lock is open for the 
@@ -84,12 +84,14 @@ class GearsExecutor implements SyncTransactionAdapter.Executor {
 
 	@Override
   public void rollback() throws Exception {
-  	try {
-  		db.execute("ROLLBACK TRANSACTION");
-  	} finally {
-  		transactionInProgress = false;
-  		db.close();
-  	}	  
+		if(db != null) {
+			try {
+	  		db.execute("ROLLBACK TRANSACTION");
+	  	} finally {
+	  		transactionInProgress = false;
+	  		db.close();
+	  	}
+		}
   }
 	
 	private native ResultSet execute(Database db, String sqlStatement, JavaScriptObject args) /*-{

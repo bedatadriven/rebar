@@ -59,6 +59,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
       Log.error("SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
 
       callback.onError(new SqlException(e));
+      return;
     }
 
     // 4. If the transaction callback is not null, queue a task to invoke the transaction callback with the
@@ -72,6 +73,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
       Log.error("SyncTx[" + id + "]: Exception thrown in transaction callback", e);
 
       errorInCallback(e);
+      return;
     }
 
     processNextStatement();
