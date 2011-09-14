@@ -4,13 +4,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.junit.Test;
 
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
-import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
-import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SqlDatabaseTest {
@@ -19,9 +18,16 @@ public class SqlDatabaseTest {
   @Test
   public void basicTest() throws ClassNotFoundException, SQLException {
 
-    SqlDatabase db = TestUtil.openUniqueDb();
+    final SqlDatabase db = TestUtil.openUniqueDb();
     db.executeSql("CREATE TABLE table1 (id INT PRIMARY KEY, name TEXT)");
-    db.dropAllTables();
+    db.transaction(new SqlTransactionCallback() {
+			
+			@Override
+			public void begin(SqlTransaction tx) {
+		    db.dropAllTables(tx);				
+			}
+		});
+
     db.selectSingleInt("select count(*) from sqlite_master", new AsyncCallback<Integer>() {
 			
 			@Override

@@ -20,14 +20,11 @@ public class SqlSingleColumnTable<T> {
 	  this.db = db;
 	  this.tableName = tableName;
 	  this.columnName = columnName;
-	  
-		db.transaction(new SqlTransactionCallback() {
-			@Override
-			public void begin(SqlTransaction tx) {
-				tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + columnName + " NONE)");
-			}
-		});
   }
+	
+	public void createTableIfNotExists(SqlTransaction tx) {
+		tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + columnName + " NONE)");
+	}
 		
 	public final void put(final T value, final AsyncCallback<Void> callback) {
 		db.transaction(new SqlTransactionCallback() {

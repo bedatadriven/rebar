@@ -99,60 +99,41 @@ public abstract class SqlDatabase {
    * 
    * @param callback called upon completion of the transaction
    */
-  public final void dropAllTables(final AsyncCallback<Void> callback) {
-  	transaction(new InnerSqlTxCallback<Void>(callback) {
-			
-			@Override
-			public void begin(SqlTransaction tx) {
-				tx.executeSql("select name from sqlite_master where type = 'table'", new SqlResultCallback() {
-					
-					@Override
-					public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-						for(SqlResultSetRow row : results.getRows()) {
-							String tableName = row.getString("name");
-							// some implementations may store metadata in tables that cannot be deleted,
-							// __WebKitMetadata__ for example
-							if(!tableName.startsWith("_") && !tableName.startsWith("sqlite_")) {
-								Log.debug("Dropping table " + tableName);
-								tx.executeSql("DROP TABLE " + tableName, new SqlResultCallback() {
+  public final void dropAllTables(SqlTransaction tx) {
+			tx.executeSql("select name from sqlite_master where type = 'table'", new SqlResultCallback() {
+				
+				@Override
+				public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+					for(SqlResultSetRow row : results.getRows()) {
+						String tableName = row.getString("name");
+						// some implementations may store metadata in tables that cannot be deleted,
+						// __WebKitMetadata__ for example
+						if(!tableName.startsWith("_") && !tableName.startsWith("sqlite_")) {
+							Log.debug("Dropping table " + tableName);
+							tx.executeSql("DROP TABLE " + tableName, new SqlResultCallback() {
 
-									@Override
-                  public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-										// noop
-                  }
+								@Override
+                public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+									// noop
+                }
 
-									@Override
-                  public boolean onFailure(SqlException e) {
-										// ignore other errors; there may be protected tables introduced
-										// by other implementations
-	                  return SqlResultCallback.CONTINUE;
-                  }
-								});
-							}
+								@Override
+                public boolean onFailure(SqlException e) {
+									// ignore other errors; there may be protected tables introduced
+									// by other implementations
+                  return SqlResultCallback.CONTINUE;
+                }
+							});
 						}
 					}
-				});
-			}
-			
-			@Override
-      public void onSuccess() {
-	      callback.onSuccess(null);
-      }
-
-			@Override
-      public void onError(SqlException e) {
-	      callback.onFailure(e);
-      }
-		});
+				}
+			});
   }
   
   public SqlKeyValueTable keyValueTable(String tableName, String keyName, String valueName) {
   	return new SqlKeyValueTable(this, tableName, keyName, valueName);
   }
-  
-  public final void dropAllTables() {
-  	dropAllTables(new NullCalback<Void>());
-  }
+ 
   
   private static class NullCalback<T> implements AsyncCallback<T> {
 

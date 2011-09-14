@@ -24,13 +24,10 @@ public class SqlKeyValueTable {
 		this.tableName = tableName;
 		this.keyName = keyName;
 		this.valueName = valueName;
-		
-		db.transaction(new SqlTransactionCallback() {
-			@Override
-			public void begin(SqlTransaction tx) {
-				tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " TEXT PRIMARY KEY, " + valueName + " TEXT) ");
-			}
-		});
+	}
+	
+	public void createTableIfNotExists(SqlTransaction tx) {
+		tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " TEXT PRIMARY KEY, " + valueName + " TEXT) ");
 	}
 	
 

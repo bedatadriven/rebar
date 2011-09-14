@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.bedatadriven.rebar.sql.client.util.SqlKeyValueTable;
 import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,8 +22,16 @@ public class SqlKeyValueTableTest {
 	public void simpleTest() {
 		
     SqlDatabase db = TestUtil.openUniqueDb();
-    SqlKeyValueTable table = new SqlKeyValueTable(db, "sync_regions", "id", "lastUpdate");
+    final SqlKeyValueTable table = new SqlKeyValueTable(db, "sync_regions", "id", "lastUpdate");
         
+    db.transaction(new SqlTransactionCallback() {
+			
+			@Override
+			public void begin(SqlTransaction tx) {
+				table.createTableIfNotExists(tx);
+			}
+		});
+    
     table.put("foo", "bar");
     table.get("foo", new AsyncCallback<String>() {
 			
