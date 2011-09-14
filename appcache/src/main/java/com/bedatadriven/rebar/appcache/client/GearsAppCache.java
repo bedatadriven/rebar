@@ -61,11 +61,15 @@ public class GearsAppCache extends AbstractAppCache {
 
   @Override
   public void ensureCached(final AsyncCallback<Void> callback) {
-    getStore().setEnabled(true);
-    if(currentVersionIsEmpty()) {
-      download(callback);
-    } else {
-      callback.onSuccess(null);
+    try {
+    	getStore().setEnabled(true);
+	    if(currentVersionIsEmpty()) {
+	      download(callback);
+	    } else {
+	      callback.onSuccess(null);
+	    }
+    } catch(Throwable e) {
+    	callback.onFailure(e);
     }
   }
 
@@ -120,27 +124,38 @@ public class GearsAppCache extends AbstractAppCache {
   }
 
   private void download(final AsyncCallback<Void> callback) {
-    getStore().checkForUpdate();
-    new Timer() {
+  	try {
+  		getStore().checkForUpdate();
+  	} catch(Throwable e) {
+  		callback.onFailure(e);
+  	}
+  	
+  	new Timer() {
       @Override
       public void run() {
-        switch(getStore().getUpdateStatus()) {
-          case ManagedResourceStore.UPDATE_CHECKING:
-          case ManagedResourceStore.UPDATE_DOWNLOADING:
-            break;
-
-          case ManagedResourceStore.UPDATE_FAILED:
-            callback.onFailure(new Exception(getStore().getLastErrorMessage()));
-            this.cancel();
-            break;
-
-          case ManagedResourceStore.UPDATE_OK:
-            callback.onSuccess(null);
-            this.cancel();
-            break;
-        }
+      	try {
+	      	switch(getStore().getUpdateStatus()) {
+	          case ManagedResourceStore.UPDATE_CHECKING:
+	          case ManagedResourceStore.UPDATE_DOWNLOADING:
+	            break;
+	
+	          case ManagedResourceStore.UPDATE_FAILED:
+	            callback.onFailure(new Exception(getStore().getLastErrorMessage()));
+	            this.cancel();
+	            break;
+	
+	          case ManagedResourceStore.UPDATE_OK:
+	            callback.onSuccess(null);
+	            this.cancel();
+	            break;
+	        }
+      	} catch(Throwable e) {
+      		this.cancel();
+      		callback.onFailure(e);
+      	}
       }
     }.scheduleRepeating(500);
+
   }
   
 	// the wrapper in the GWT gears library is just wrong.
