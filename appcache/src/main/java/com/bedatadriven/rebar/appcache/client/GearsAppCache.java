@@ -29,10 +29,16 @@ public class GearsAppCache extends AbstractAppCache {
   private ManagedResourceStore store = null;
   
   public GearsAppCache() {
+
   	// if we already have permission, then go ahead and
   	// initialize the store, we are probably be loaded from the cache
-  	if(Factory.getInstance().hasPermission()) {
-  		initStore();
+  	try {
+	  	if(Factory.getInstance().hasPermission()) {
+	  		initStore();
+	  	}
+  	} catch(Throwable t) {
+  		Log.debug("GearsAppCache: Factory.getInstance().hasPermission() threw exception", t);
+  		store = null;
   	}
   }
   
