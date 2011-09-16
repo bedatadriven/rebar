@@ -42,7 +42,7 @@
     <module>jpa-mapping</module>
     <module>appcache</module>
     <module>appcache-test</module>
-      <module>dao-test</module>
+    <module>time</module>
   </modules>
 
   <properties>

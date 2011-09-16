@@ -19,25 +19,43 @@ package com.bedatadriven.rebar.persistence.mapping;
 import org.json.JSONException;
 import org.json.JSONStringer;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author Alex Bertram
  */
 public class DateMapping extends SingleColumnPropertyMapping {
 
+	private static final SimpleDateFormat ISO_8601_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private TemporalType type = TemporalType.TIME;
 
-  public DateMapping(MethodInfo getterMethod) {
+	public DateMapping(MethodInfo getterMethod) {
     super(getterMethod);
+    
+    Temporal annotation = getterMethod.getAnnotation(Temporal.class);
+    if(annotation != null) {
+    	type = annotation.value();
+    }
   }
 
   // TODO: we should probably be doing something we zeroing out times/dates
   // depending on the @Temporal annotation
 
-
   @Override
   protected SqliteTypes getSqlTypeName() {
-    return SqliteTypes.integer;
+  	if(type == TemporalType.DATE) {
+  		// store dates as LocalDates without timezone
+  		// see http://www.sqlite.org/lang_datefunc.html
+  		return SqliteTypes.text;
+  	} else {
+  		// otherwise we store as posix time 
+  		return SqliteTypes.real;
+  	}
   }
 
   @Override
@@ -58,9 +76,14 @@ public class DateMapping extends SingleColumnPropertyMapping {
   @Override
   public void writeColumnValues(JSONStringer writer, Object entity) throws JSONException {
     Date value = (Date)getValue(entity);
-    if(value == null)
+    if(value == null) {
       writer.value(null);
-    else
-      writer.value(value.getTime());
+    } else {
+    	if(type == TemporalType.DATE) {
+    		writer.value(ISO_8601_FORMAT.format(value));
+    	} else {
+    		writer.value(value.getTime());
+    	}
+    }
   }
 }

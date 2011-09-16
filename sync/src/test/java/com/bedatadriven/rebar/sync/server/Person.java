@@ -18,6 +18,9 @@ package com.bedatadriven.rebar.sync.server;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.util.Date;
 
 
@@ -27,8 +30,10 @@ public class Person {
   private int id;
   private String name;
   private Date birthDate;
+  private Date lastVisit;
   private double height;
   private boolean active;
+  
 
   public Person() {
   }
@@ -39,6 +44,7 @@ public class Person {
     this.birthDate = birthDate;
     this.height = height;
     this.active = active;
+    this.lastVisit = new Date();
   }
 
   @Id
@@ -58,6 +64,7 @@ public class Person {
     this.name = name;
   }
 
+  @Temporal(TemporalType.DATE)
   public Date getBirthDate() {
     return birthDate;
   }
@@ -66,7 +73,16 @@ public class Person {
     this.birthDate = birthDate;
   }
 
-  public double getHeight() {
+  @Temporal(TemporalType.TIME)
+  public Date getLastVisit() {
+  	return lastVisit;
+  }
+
+	public void setLastVisit(Date lastVisit) {
+  	this.lastVisit = lastVisit;
+  }
+
+	public double getHeight() {
     return height;
   }
 
