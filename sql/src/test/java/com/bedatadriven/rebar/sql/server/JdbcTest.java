@@ -1,7 +1,9 @@
 package com.bedatadriven.rebar.sql.server;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.*;
 import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
+import com.google.gwt.core.client.GWT;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
@@ -101,19 +103,17 @@ public class JdbcTest  {
   public void dateTest() throws ClassNotFoundException, SQLException {
 
     SqlDatabase db = TestUtil.openUniqueDb();
-    
-    final Date startOfTest = new Date();
-    
+      
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
-        tx.executeSql("create table timestamps (time INT)");
-        tx.executeSql("insert into timestamps (time) values (?) ", new Object[] { startOfTest });
-        tx.executeSql("select time, strftime('%Y', time) as year from timestamps", new SqlResultCallback() {
+        tx.executeSql("create table dates (x TEXT)");
+        tx.executeSql("insert into dates (x) values (?) ", new Object[] { "2011-01-01" });
+        tx.executeSql("select x, strftime('%Y', x) as year from dates", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             assertThat("rows", results.getRows().size(), equalTo(1));
-            assertThat("time", results.getRow(0).getDate("time"), equalTo(startOfTest));
+            assertThat("x", results.getRow(0).getDate("x"), equalTo(new Date(2011-1900,0,1)));
             assertThat("year", results.getRow(0).getInt("year"), equalTo(2011));
             callbackCount ++;
           }
@@ -135,8 +135,40 @@ public class JdbcTest  {
         throw new AssertionError(e);
       }
     });
+  }
+  
 
+  private static long TIME1 = 1316179555000l;
+  private static long TIME2 = 380035555000l;
+  
+  @Test
+  public void testTimes() {
+  	
+    SqlDatabase db = TestUtil.openUniqueDb();
 
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table if not exists times (x REAL)");
+        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME1 });
+        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME2 });
+        tx.executeSql("select x, strftime('%Y', x/1000, 'unixepoch') as year from times",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertThat(results.getRow(0).getDate("x").getTime(), equalTo(TIME1));
+            assertThat(results.getRow(1).getDate("x").getTime(), equalTo(TIME2));
+            
+            assertThat(results.getRow(0).getInt("year"), equalTo(2011));
+            assertThat(results.getRow(1).getInt("year"), equalTo(1982));  
+          }
+        });
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        throw new AssertionError(e);
+      }
+    });
   }
   
 }

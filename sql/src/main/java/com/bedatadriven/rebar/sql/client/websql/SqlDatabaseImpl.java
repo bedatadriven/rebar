@@ -6,7 +6,6 @@ import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.bedatadriven.rebar.sql.client.bulk.PreparedStatementBatch;
 import com.bedatadriven.rebar.sql.client.query.SqlDialect;
 import com.bedatadriven.rebar.sql.client.query.SqliteDialect;
-import com.bedatadriven.rebar.sql.server.jdbc.SqliteDates;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.rpc.AsyncCallback;

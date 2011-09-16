@@ -72,13 +72,30 @@ public final class WebSqlResultSetRow extends JavaScriptObject implements SqlRes
 
 	@Override
   public Date getDate(String columnName) {
-	  return new Date((long)getDouble(columnName));
+		if(isNull(columnName)) {
+			return null;
+		} else {
+		  return new Date((long)getDateAsMillis(columnName));			
+		}
   }
 
 	@Override
   public Boolean getSingleBoolean() {
 		return getBoolean(firstColumnName());
   }
-
+	
+	private native double getDateAsMillis(String columnName) /*-{
+		var x = this[columnName];
+		if(!isNaN(x)) {
+			return x;
+		} else if(typeof x == "string" && x.charAt(4)=='-') {
+			var d = new Date(x.substring(0,4), 
+											 x.substring(5,7)-1,
+											 x.substring(8,10));
+			return d.getTime();
+		} else {
+			return -1;
+		}
+	}-*/;
   
 }

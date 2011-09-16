@@ -16,6 +16,8 @@
 
 package com.bedatadriven.rebar.sql.client;
 
+import java.util.Date;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
@@ -260,33 +262,88 @@ public class SqlTest extends GWTTestCase {
   }
   
   
-//  public void testDates() {
-//
-//    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
-//    SqlDatabase db = factory.open("dates");
-//    db.transaction(new SqlTransactionCallback() {
-//      @Override
-//      public void begin(SqlTransaction tx) {
-//        tx.executeSql("create table if not exists timestamps (t TEXT)");
-//        tx.executeSql("insert into timestamps (x) values (33) ");
-//        tx.executeSql("insert into numbers (x) values (41) ");
-//        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
-//          @Override
-//          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-//            assertEquals(74, (int)results.intResult());
-//            finishTest();
-//          }
-//        });
-//      }
-//
-//			@Override
-//      public void onError(SqlException e) {
-//        fail(e.getMessage());
-//      }
-//    });
-//
-//    delayTestFinish(2000);
-//  }
+  public void testDates() {
+
+  	Log.debug("================= testDates == dates ========");
+  	
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("dates");
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table if not exists dates (x TEXT)");
+        tx.executeSql("insert into dates (x) values ('2001-01-31') ");
+        tx.executeSql("insert into dates (x) values ('2011-01-01') ");
+        tx.executeSql("insert into dates (x) values ('1982-04-15') ");
+        tx.executeSql("insert into dates (x) values ( ? ) ", new Object[] { null });
+        tx.executeSql("select x, strftime('%Y', x) as year from dates",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertEquals(makeDate(2001,1,31), results.getRow(0).getDate("x"));
+            assertEquals(makeDate(2011,1,1), results.getRow(1).getDate("x"));
+            assertEquals(makeDate(1982,4,15), results.getRow(2).getDate("x"));
+            assertNull(results.getRow(3).getDate("x"));
+            
+            assertEquals(2001, results.getRow(0).getInt("year"));
+            assertEquals(2011, results.getRow(1).getInt("year"));
+            assertEquals(1982, results.getRow(2).getInt("year"));  
+            
+            finishTest();
+          }
+        });
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        fail(e.getMessage());
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+  
+  private static long TIME1 = 1316179555000l;
+  private static long TIME2 = 380035555000l;
+  
+  public void testTimes() {
+
+  	Log.debug("================= testTimes == times ========");
+  	
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("times");
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("create table if not exists times (x REAL)");
+        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME1 });
+        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME2 });
+        tx.executeSql("select x, strftime('%Y', x/1000, 'unixepoch') as year from times",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            assertEquals(TIME1, results.getRow(0).getDate("x").getTime());
+            assertEquals(TIME2, results.getRow(1).getDate("x").getTime());
+            
+            assertEquals(2011, results.getRow(0).getInt("year"));
+            assertEquals(1982, results.getRow(1).getInt("year"));  
+            
+            finishTest();
+          }
+        });
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        fail(e.getMessage());
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+  
+  @SuppressWarnings("deprecation")
+  private Date makeDate(int year, int month, int day) {
+  	return new Date(year-1900, month-1, day);
+  }
 
 
 }

@@ -3,6 +3,7 @@ package com.bedatadriven.rebar.sql.server.jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,8 +150,26 @@ class JdbcRow implements SqlResultSetRow {
 	      return new Date(((Number) value).longValue());
 	    } else  {
 	    	try {
-	        return SqliteDates.FORMAT.parse(value.toString());
-        } catch (ParseException e) {
+	    		String s = value.toString();
+	    		// parse ISO8601 dates used by sqlite
+	    		// see http://www.sqlite.org/lang_datefunc.html
+	    		// TODO: implement times
+	    		if(s.length() >= 10 && s.charAt(4) == '-') {
+	    			Calendar cal = Calendar.getInstance();
+	    			cal.set(Calendar.YEAR, Integer.parseInt(s.substring(0,4)));
+	    			cal.set(Calendar.MONTH, Integer.parseInt(s.substring(5,7))-1);
+	    			cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(s.substring(8,10)));
+	    			
+	    			cal.set(Calendar.HOUR_OF_DAY, 0);
+	    			cal.set(Calendar.MINUTE, 0);
+	    			cal.set(Calendar.SECOND, 0);
+	    			cal.set(Calendar.MILLISECOND, 0);
+	    			
+	    			return cal.getTime();
+	    		} else {
+	    			return new Date(Long.parseLong(s));
+	    		}
+        } catch (NumberFormatException e) {
 	        throw new SqlException("Could not parse '" + value + "' as date", e);
         }
 	    }  
