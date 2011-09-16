@@ -2,6 +2,7 @@ package com.bedatadriven.rebar.sql.server.jdbc;
 
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlException;
+import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
@@ -98,7 +99,23 @@ public class JdbcDatabase extends SqlDatabase {
 
   }
 
+	private static class Counter extends SqlResultCallback {
+		private int total = 0;
+
+		@Override
+    public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+	    total += results.getRowsAffected();
+    }
+		
+		public int getTotal() {
+			return total;
+		}
+		
+	}
+	
 	public void executeUpdates(final String json, final AsyncCallback<Integer> callback) {
+		final Counter counter = new Counter();
+		
 		transaction(new SqlTransactionCallback() {
 
 			@Override
@@ -108,16 +125,16 @@ public class JdbcDatabase extends SqlDatabase {
 				for (int i = 0; i != list.size(); ++i) {
 					JsonObject statement = list.get(i).getAsJsonObject();
 					if(statement.has("executions")) {
-						enqueueExecutions(statement, tx);
+						enqueueExecutions(statement, tx, counter);
 					} else {
-						tx.executeSql(statement.get("statement").getAsString());  	    			
+						tx.executeSql(statement.get("statement").getAsString(), counter);  	    			
 					}
 				}
 			}
 
 			@Override
       public void onSuccess() {
-	      callback.onSuccess(0);
+	      callback.onSuccess(counter.getTotal());
       }
 
 			@Override
@@ -127,12 +144,12 @@ public class JdbcDatabase extends SqlDatabase {
 		});
 	}
   
-  private void enqueueExecutions(JsonObject statement, SqlTransaction tx)  {
+  private void enqueueExecutions(JsonObject statement, SqlTransaction tx, Counter counter)  {
   	String sql = statement.get("statement").getAsString();
   	JsonArray parameterSets = statement.get("executions").getAsJsonArray();
   	
     for (int j = 0; j != parameterSets.size(); ++j) {
-    	tx.executeSql(sql, toParamArray(parameterSets.get(j).getAsJsonArray()));
+    	tx.executeSql(sql, toParamArray(parameterSets.get(j).getAsJsonArray()), counter);
     }
   }
 
