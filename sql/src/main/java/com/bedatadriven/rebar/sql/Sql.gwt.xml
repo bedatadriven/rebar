@@ -26,6 +26,7 @@
 
     <!-- These are the sources for the java.sql interfaces -->
     <inherits name="com.bedatadriven.rebar.sql.emul.Emulation"/>
+    <inherits name="com.bedatadriven.rebar.Time"/>
 
     <source path='client'/>
     <source path='shared'/>

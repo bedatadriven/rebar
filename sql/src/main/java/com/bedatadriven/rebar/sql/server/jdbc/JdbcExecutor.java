@@ -4,6 +4,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
+import com.bedatadriven.rebar.time.calendar.LocalDate;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -49,11 +50,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
   	try {
 	    if(params != null) {
 	      for(int i=0;i!=params.length;++i) {
-	      	if(params[i] instanceof java.util.Date) {
-	      		stmt.setString(i+1, SqliteDates.format((java.util.Date)params[i]));
-	      	} else {
-	      		stmt.setObject(i+1, params[i]);
-	      	}
+	      	setParam(stmt, params, i);
 	      }
 	    }
 	    if(stmt.execute()) {
@@ -67,6 +64,21 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
     } finally {
     	try { stmt.close(); } catch(Exception ignored) {}
     }
+  }
+
+	protected void setParam(PreparedStatement stmt, Object[] params, int i)
+      throws SQLException {
+		if(params[i] instanceof java.sql.Date) {
+			stmt.setDate(i+1, (java.sql.Date)params[i]);
+		} else if(params[i] instanceof java.util.Date) {
+	  	stmt.setDate(i+1, new java.sql.Date(((java.util.Date)params[i]).getTime()));
+	  } else if(params[i] instanceof LocalDate) {
+	  	// for the default implementation, we assume that the database will store
+	  	// the date without a timezone, so we pass the midnight time value in the current timezone
+	  	stmt.setDate(i+1, new java.sql.Date( ((LocalDate)params[i]).atMidnightInMyTimezone().getTime()));
+	  } else {
+	  	stmt.setObject(i+1, params[i]);
+	  }
   }
 
 	private PreparedStatement prepareStatement(String statement)

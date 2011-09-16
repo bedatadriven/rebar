@@ -18,7 +18,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-sql</artifactId>
     <packaging>jar</packaging>
 
@@ -86,9 +85,14 @@
 	    <dependency>
 	      <groupId>com.bedatadriven.rebar</groupId>
 	      <artifactId>rebar-worker</artifactId>
-	      <version>${version}</version>
+	      <version>${project.version}</version>
 	      <scope>provided</scope>
 	    </dependency>
+        <dependency>
+          <groupId>com.bedatadriven.rebar</groupId>
+          <artifactId>rebar-time</artifactId>
+          <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>net.sf.jsqlparser</groupId>

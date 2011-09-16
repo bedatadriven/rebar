@@ -42,7 +42,6 @@
     <module>jpa-mapping</module>
     <module>appcache</module>
     <module>appcache-test</module>
-    <module>time</module>
   </modules>
 
   <properties>
@@ -146,7 +145,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>

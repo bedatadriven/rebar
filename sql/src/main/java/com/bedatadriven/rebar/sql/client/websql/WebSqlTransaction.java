@@ -105,7 +105,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
       } else if(param instanceof Date) {
       	paramArray.push(Long.toString(((Date)param).getTime()));
       } else {
-        throw new IllegalArgumentException("Param argument of '" + param.getClass().getName() + "'");
+      	paramArray.push(param.toString());
       }
     }
     return paramArray;
