@@ -44,7 +44,8 @@ class SqlDatabaseImpl extends SqlDatabase {
       
       @Override
       public void onError(WebSqlException e) {
-        callback.onError(e);
+      	Log.debug("WebSql tx failed");
+      	callback.onError(e);
       }
       
       @Override
@@ -54,6 +55,7 @@ class SqlDatabaseImpl extends SqlDatabase {
 
 			@Override
       public void onSuccess() {
+				Log.trace("WebSql tx succeeded");
 				callback.onSuccess();
 	    }
     });

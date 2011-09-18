@@ -340,10 +340,75 @@ public class SqlTest extends GWTTestCase {
     delayTestFinish(2000);
   }
   
+  public void testTxFailsOnStatementError() {
+  
+  	Log.debug("================= testErrorhandling == errors ========");
+  	
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("errors");
+  	
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+        tx.executeSql("select x from non_existant_table",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            fail("query should not succeeed");
+          }
+        });
+      }
+      
+ 			@Override
+      public void onSuccess() {
+	      fail("tx should not succeed");
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        finishTest();
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+
+  public void testTxFailsOnExceptionInResultCallback() {
+    
+  	Log.debug("================= testErrorhandling == errors ========");
+  	
+    SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
+    SqlDatabase db = factory.open("errors");
+  	
+    db.transaction(new SqlTransactionCallback() {
+      @Override
+      public void begin(SqlTransaction tx) {
+      	tx.executeSql("create table my_table (x int)");
+        tx.executeSql("select count(*) from my_table",  new SqlResultCallback() {
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+            throw new RuntimeException("test exception");
+          }
+        });
+      }
+      
+ 			@Override
+      public void onSuccess() {
+	      fail("tx should not succeed");
+      }
+
+			@Override
+      public void onError(SqlException e) {
+        finishTest();
+      }
+    });
+
+    delayTestFinish(2000);
+  }
+  
   @SuppressWarnings("deprecation")
   private Date makeDate(int year, int month, int day) {
   	return new Date(year-1900, month-1, day);
   }
 
-
+  
 }
