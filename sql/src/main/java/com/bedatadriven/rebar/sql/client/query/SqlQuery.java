@@ -16,7 +16,6 @@ package com.bedatadriven.rebar.sql.client.query;
  * the License.
  */
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -29,15 +28,13 @@ import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-
 /**
  * Lightweight DSL for building SQL queries.
  */
 public class SqlQuery {
 
-
 	protected AsyncCallback<?> errorHandler;
-	
+
 	protected final StringBuilder columnList = new StringBuilder();
 	protected final StringBuilder tableList = new StringBuilder();
 	protected final StringBuilder whereClause = new StringBuilder();
@@ -51,35 +48,36 @@ public class SqlQuery {
 	}
 
 	public static SqlQuery select(String... columns) {
-		 SqlQuery builder = new SqlQuery();
-		 for(String column : columns) {
-			 builder.appendColumn(column);
-		 }
-		 return builder;
+		SqlQuery builder = new SqlQuery();
+		for (String column : columns) {
+			builder.appendColumn(column);
+		}
+		return builder;
 	}
-	
 
 	public static SqlQuery selectAll() {
-		 SqlQuery builder = new SqlQuery();	
-		 builder.columnList.append("*");
-		 return builder;
-  }
-	
-	public static SqlQuery selectSingle(String expr) {
-		 SqlQuery builder = new SqlQuery();	
-		 builder.columnList.append(expr);
-		 return builder;
+		SqlQuery builder = new SqlQuery();
+		builder.columnList.append("*");
+		return builder;
 	}
-	
+
+	public static SqlQuery selectSingle(String expr) {
+		SqlQuery builder = new SqlQuery();
+		builder.columnList.append(expr);
+		return builder;
+	}
+
 	/**
 	 * Appends a table list to the {@code FROM} clause
-	 * @param fromClause valid SQL table list, can include joins
+	 * 
+	 * @param fromClause
+	 *            valid SQL table list, can include joins
 	 */
 	public SqlQuery from(String fromClause) {
 		tableList.append(fromClause);
 		return this;
 	}
-	
+
 	public SqlQuery from(String fromClause, String alias) {
 		tableList.append(fromClause).append(" ").append(alias);
 		return this;
@@ -87,6 +85,7 @@ public class SqlQuery {
 
 	/**
 	 * Appends a left join to the {@code FROM} clause
+	 * 
 	 * @param tableName
 	 * @return
 	 */
@@ -94,19 +93,22 @@ public class SqlQuery {
 		tableList.append(" LEFT JOIN ").append(tableName);
 		return new JoinBuilder();
 	}
-	
+
 	/**
 	 * Appends a left join to the {@code FROM} clause
+	 * 
 	 * @param tableName
 	 * @return
 	 */
 	public JoinBuilder leftJoin(String tableName, String alias) {
-		tableList.append(" LEFT JOIN ").append(tableName).append(" ").append(alias);
+		tableList.append(" LEFT JOIN ").append(tableName).append(" ")
+				.append(alias);
 		return new JoinBuilder();
 	}
 
 	/**
 	 * Appends an inner join to the {@code FROM} clause
+	 * 
 	 * @param tableName
 	 * @return
 	 */
@@ -117,118 +119,117 @@ public class SqlQuery {
 
 	/**
 	 * Appends an inner join to the {@code FROM} clause
+	 * 
 	 * @param tableName
 	 * @return
 	 */
 	public JoinBuilder innerJoin(String tableName, String alias) {
-		tableList.append(" INNER JOIN ").append(tableName).append(" ").append(alias);
+		tableList.append(" INNER JOIN ").append(tableName).append(" ")
+				.append(alias);
 		return new JoinBuilder();
 	}
 
-	
 	/**
 	 * Appends a left join to derived table to the {@code FROM} clause
 	 */
 	public JoinBuilder leftJoin(SqlQuery derivedTable, String alias) {
 		parameters.addAll(derivedTable.parameters);
-		tableList.append(" LEFT JOIN (")
-		.append(derivedTable.sql())
-		.append(")")
-		.append(" AS ")
-		.append(alias);
+		tableList.append(" LEFT JOIN (").append(derivedTable.sql()).append(")")
+				.append(" AS ").append(alias);
 
 		return new JoinBuilder();
 	}
 
 	/**
 	 * Appends a column a comma-separated list of columns to the select list.
-	 *  
+	 * 
 	 */
 	public SqlQuery appendColumn(String expr) {
-		
-		if(expr.contains(",")) {
-			throw new IllegalArgumentException("Cannot accept a column name with a comma. Hint: " +
-						"You can no longer pass \"a,b,c\" as an argument you should be passing \"a\", \"b\", \"c\"");
+
+		if (expr.contains(",")) {
+			throw new IllegalArgumentException(
+					"Cannot accept a column name with a comma. Hint: "
+							+ "You can no longer pass \"a,b,c\" as an argument you should be passing \"a\", \"b\", \"c\"");
 		}
-		
-		if(expr.contains("*")) {
-			throw new IllegalArgumentException("Cannot accept a column name with a '*'. Hint: " +
-						"use SqlQuery.selectAll() instead");
+
+		if (expr.contains("*")) {
+			throw new IllegalArgumentException(
+					"Cannot accept a column name with a '*'. Hint: "
+							+ "use SqlQuery.selectAll() instead");
 		}
-		
-		if(expr.contains(")")) {
-			throw new IllegalArgumentException("You must provide an explicit alias for complicated expressions: " + expr);
+
+		if (expr.contains(")")) {
+			throw new IllegalArgumentException(
+					"You must provide an explicit alias for complicated expressions: "
+							+ expr);
 		}
-		
+
 		// unfortunately the API mandated by WebSQL uses case-sensitive
-		// names to lookup results. 
+		// names to lookup results.
 		// to smooth over differences between the way MySQL and Sqlite
 		// handle casing of implicit column aliases, we will always
 		// provide an explicit alias with the same casing as provided to expr
-		
+
 		int dot = expr.indexOf('.');
-		if(dot == -1) {
+		if (dot == -1) {
 			return appendColumn(expr, expr);
 		} else {
-			String alias = expr.substring(dot+1);
+			String alias = expr.substring(dot + 1);
 			return appendColumn(expr, alias);
 		}
 	}
-	
+
 	public SqlQuery appendColumn(String expr, String alias) {
-		if(columnList.length() != 0) {
+		if (columnList.length() != 0) {
 			columnList.append(", ");
 		}
-		columnList.append(expr)
-			.append(" ")
-			.append(alias);
-		
+		columnList.append(expr).append(" ").append(alias);
+
 		return this;
 	}
-	
+
 	public SqlQuery appendColumns(String... exprs) {
-		for(String expr : exprs) {
+		for (String expr : exprs) {
 			appendColumn(expr);
 		}
 		return this;
 	}
 
 	public SqlQuery orderBy(String expr) {
-		if(orderByClause.length() > 0) {
+		if (orderByClause.length() > 0) {
 			orderByClause.append(", ");
 		}
 		orderByClause.append(expr);
 		return this;
 	}
-	
+
 	public SqlQuery orderBy(String expr, boolean ascending) {
 		orderBy(expr);
-		if(!ascending) {
+		if (!ascending) {
 			orderByClause.append(" DESC");
 		}
 		return this;
 	}
-	
+
 	public SqlQuery groupBy(String expr) {
-		if(groupByClause.length() > 0) {
+		if (groupByClause.length() > 0) {
 			groupByClause.append(", ");
 		}
 		groupByClause.append(expr);
 		return this;
 	}
-	
 
 	public SqlQuery orderBy(SqlQuery subQuery, boolean ascending) {
 		assert subQuery.parameters.isEmpty();
-		
-	  return orderBy("(" + subQuery.sql() + ")", ascending);
-  }
+
+		return orderBy("(" + subQuery.sql() + ")", ascending);
+	}
 
 	public SqlQuery setLimitClause(String clause) {
 		this.limitClause = clause;
 		return this;
 	}
-	
+
 	public WhereClauseBuilder onlyWhere(String expr) {
 		whereClause.append(expr);
 		return new WhereClauseBuilder();
@@ -240,25 +241,25 @@ public class SqlQuery {
 	}
 
 	public WhereClauseBuilder where(String expr) {
-		if(whereClause.length() > 0) {
+		if (whereClause.length() > 0) {
 			whereClause.append(" AND ");
 		}
 		whereClause.append(expr);
 		return new WhereClauseBuilder();
 	}
-	
+
 	public SqlQuery appendParameter(Object param) {
 		parameters.add(param);
 		return this;
 	}
-	
+
 	private SqlQuery appendLikeParameter(String param) {
 		parameters.add("%" + param + "%");
 		return this;
 	}
 
 	public SqlQuery whereTrue(String expr) {
-		if(whereClause.length() > 0) {
+		if (whereClause.length() > 0) {
 			whereClause.append(" AND ");
 		}
 		whereClause.append(expr);
@@ -269,76 +270,70 @@ public class SqlQuery {
 		whereClause.append(" AND (").append(expr).append(") ");
 		return this;
 	}
-	
 	public SqlQuery or() {
 		whereClause.append(" OR ");
 		return this;
 	}
-	
+
 	public String sql() {
-		if(columnList.length() == 0) {
+		if (columnList.length() == 0) {
 			throw new IllegalStateException("No columns have been specified");
 		}
-		if(tableList.length() == 0) {
+		if (tableList.length() == 0) {
 			throw new IllegalStateException("No FROM clause has been provided");
 		}
-		
-		// append(StringBuilder) fails bizarely in hosted mode
-		// See: http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
-		StringBuilder sql = new StringBuilder("SELECT ")
-		.append((CharSequence)columnList)
-		.append(" FROM ")
-		.append((CharSequence)tableList);
 
-		if(whereClause.length() > 0) {
-			sql.append(" WHERE ")
-			.append((CharSequence)whereClause);
+		// append(StringBuilder) fails bizarely in hosted mode
+		// See:
+		// http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
+		StringBuilder sql = new StringBuilder("SELECT ")
+				.append((CharSequence) columnList).append(" FROM ")
+				.append((CharSequence) tableList);
+
+		if (whereClause.length() > 0) {
+			sql.append(" WHERE ").append((CharSequence) whereClause);
 		}
-		if(groupByClause.length() > 0) {
-			sql.append(" GROUP BY ")
-				.append((CharSequence)groupByClause);
+		if (groupByClause.length() > 0) {
+			sql.append(" GROUP BY ").append((CharSequence) groupByClause);
 		}
-		if(orderByClause.length() > 0) {
-			sql.append(" ORDER BY ")
-			.append((CharSequence)orderByClause);
+		if (orderByClause.length() > 0) {
+			sql.append(" ORDER BY ").append((CharSequence) orderByClause);
 		}
-		sql.append(" ")
-		.append(limitClause);
+		sql.append(" ").append(limitClause);
 
 		return sql.toString();
 	}
-	
+
 	public Object[] parameters() {
 		return parameters.toArray(new Object[parameters.size()]);
 	}
-	
+
 	public SqlQuery delegateErrorsTo(AsyncCallback<?> callback) {
-	  this.errorHandler = callback;
-	  return this;
-  }
-	
+		this.errorHandler = callback;
+		return this;
+	}
 
 	public void execute(SqlDatabase database, final SqlResultCallback callback) {
 		database.transaction(new SqlTransactionCallback() {
-			
+
 			@Override
 			public void begin(SqlTransaction tx) {
 				execute(tx, callback);
 			}
 
 			@Override
-      public void onError(SqlException e) {
-				if(errorHandler != null) {
+			public void onError(SqlException e) {
+				if (errorHandler != null) {
 					errorHandler.onFailure(e);
 				}
 			}
 		});
 	}
-	
+
 	public void execute(SqlTransaction tx, final SqlResultCallback callback) {
 		tx.executeSql(sql(), parameters(), callback);
 	}
-	
+
 	public class WhereClauseBuilder {
 		String column;
 
@@ -351,7 +346,8 @@ public class SqlQuery {
 
 		public SqlQuery in(Collection<?> ids) {
 			if (ids.isEmpty()) {
-				throw new IllegalArgumentException("Cannot match against empty list.");
+				throw new IllegalArgumentException(
+						"Cannot match against empty list.");
 			}
 			if (ids.size() == 1) {
 				whereClause.append(" = ?");
@@ -367,9 +363,7 @@ public class SqlQuery {
 		}
 
 		public SqlQuery in(SqlQuery subquery) {
-			whereClause.append(" IN (")
-			.append(subquery.sql())
-			.append(") ");
+			whereClause.append(" IN (").append(subquery.sql()).append(") ");
 
 			parameters.addAll(subquery.parameters);
 
@@ -382,53 +376,61 @@ public class SqlQuery {
 
 			return SqlQuery.this;
 		}
+		
+		public SqlQuery startsWith(String startingValue) {
+			whereClause.append(" LIKE ?");
+			parameters.add(startingValue + "%");
+			return SqlQuery.this;
+		}
 
 		public SqlQuery isNull() {
 			whereClause.append(" IS NULL ");
 			return SqlQuery.this;
 		}
-		
+
 		public SqlQuery like(String sqlParameter) {
 			whereClause.append(" like ?");
 			appendLikeParameter(sqlParameter);
 			return SqlQuery.this;
 		}
-		
+
 		public SqlQuery likeMany(List<String> sqlParameters) {
-			assert(column != null); // Ensure you call onlyWhere first where the column is set as a variable
-			for (int i=0; i<sqlParameters.size(); i++) {
+			assert (column != null); // Ensure you call onlyWhere first where
+										// the column is set as a variable
+			for (int i = 0; i < sqlParameters.size(); i++) {
 				String parameter = sqlParameters.get(i);
 				whereClause.append(" like ?");
 				appendLikeParameter(parameter);
-				if (i != sqlParameters.size() -1) { // Append OR only to non-last parameters
+				if (i != sqlParameters.size() - 1) { // Append OR only to
+														// non-last parameters
 					or();
 					onlyWhere(column);
 				}
 			}
 			return SqlQuery.this;
 		}
-		
+
 		public SqlQuery greaterThanOrEqualTo(Object value) {
 			return comparison(">=", value);
-    }
-	
+		}
+
 		public SqlQuery greaterThan(Object value) {
 			return comparison(">", value);
-    }
-	
+		}
+
 		public SqlQuery lessThan(Object value) {
 			return comparison("<", value);
-    }
-	
+		}
+
 		public SqlQuery lessThanOrEqualTo(Object value) {
 			return comparison("<=", value);
-    }
-		
+		}
+
 		private SqlQuery comparison(String operator, Object value) {
 			whereClause.append(" ").append(operator).append(" ?");
 			appendParameter(value);
 			return SqlQuery.this;
-    }
+		}
 	}
 
 	public class JoinBuilder {
@@ -437,6 +439,5 @@ public class SqlQuery {
 			return SqlQuery.this;
 		}
 	}
-
 
 }
