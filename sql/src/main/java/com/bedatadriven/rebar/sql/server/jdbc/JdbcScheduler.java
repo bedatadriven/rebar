@@ -78,7 +78,12 @@ public class JdbcScheduler extends Scheduler {
   		running = true;
 	  	
 	  	while(!queue.isEmpty()) {
+	  		try{
 	  		queue.poll().execute();
+	  		} catch (Exception ex) {
+	  			throw new RuntimeException("Unhandled exception while executing queue", ex);
+	  		}
+	  		
 	  	}
 	  	
 	  	running = false;
@@ -94,4 +99,10 @@ public class JdbcScheduler extends Scheduler {
   	running = false;
   	
   }
+
+public void assertAllFinished() {
+	if (!queue.isEmpty()) {
+		throw new AssertionError("Expected empty queue");
+	}
+}
 }
