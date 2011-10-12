@@ -17,7 +17,9 @@
 package com.bedatadriven.rebar.appcache.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.appcache.client.exceptions.GearsUpdateInstalledException;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.localserver.LocalServer;
 import com.google.gwt.gears.client.localserver.ManagedResourceStore;
@@ -37,7 +39,7 @@ public class GearsAppCache extends AbstractAppCache {
 	  		initStore();
 	  	}
   	} catch(Throwable t) {
-  		Log.debug("GearsAppCache: Factory.getInstance().hasPermission() threw exception", t);
+  		Log.debug("GearsAppCache: tried to initStore() in constructor, but exception was thrown", t);
   		store = null;
   	}
   }
@@ -101,39 +103,51 @@ public class GearsAppCache extends AbstractAppCache {
 
   @Override
   public Status getStatus() {
+  	
   	if(store == null) {
   		return Status.UNCACHED;
   	}
-  	
-  	Log.debug("GearsAppCache: status = " + getStore().getUpdateStatus() + ", currentVersion = " + getStore().getCurrentVersion());
-  	
-    switch(getStore().getUpdateStatus()) {
-      case ManagedResourceStore.UPDATE_CHECKING:
-        return Status.CHECKING;
-
-      case ManagedResourceStore.UPDATE_DOWNLOADING:
-        return Status.DOWNLOADING;
-
-      default:
-      case ManagedResourceStore.UPDATE_FAILED:
-      case ManagedResourceStore.UPDATE_OK:
-        if(currentVersionIsEmpty()) {
-          return Status.UNCACHED;
-          
-        } else if (!GWT.getPermutationStrongName().equals(getStore().getCurrentVersion())) {
-          return Status.UPDATE_READY;
-        
-        } else {
-          return Status.IDLE;
-        }
-    }
+  	try {
+	  	Log.debug("GearsAppCache: status = " + getStore().getUpdateStatus() + ", currentVersion = " + getStore().getCurrentVersion());
+	  	
+	    switch(getStore().getUpdateStatus()) {
+	      case ManagedResourceStore.UPDATE_CHECKING:
+	        return Status.CHECKING;
+	
+	      case ManagedResourceStore.UPDATE_DOWNLOADING:
+	        return Status.DOWNLOADING;
+	
+	      default:
+	      case ManagedResourceStore.UPDATE_FAILED:
+	      case ManagedResourceStore.UPDATE_OK:
+	        if(currentVersionIsEmpty()) {
+	          return Status.UNCACHED;
+	          
+	        } else if (!GWT.getPermutationStrongName().equals(getStore().getCurrentVersion())) {
+	          return Status.UPDATE_READY;
+	        
+	        } else {
+	          return Status.IDLE;
+	        }
+	    }
+  	} catch(JavaScriptException e) {
+  		if(restartRequired(e)) {
+  			throw new GearsUpdateInstalledException();
+  		} else {
+  			throw e;
+  		}
+  	}
   }
 
   private void download(final AsyncCallback<Void> callback) {
   	try {
   		getStore().checkForUpdate();
   	} catch(Throwable e) {
-  		callback.onFailure(e);
+  		if(restartRequired(e)) {
+  			callback.onFailure(new GearsUpdateInstalledException());
+  		} else {
+  			callback.onFailure(e);
+  		}
   	}
   	
   	new Timer() {
@@ -162,6 +176,10 @@ public class GearsAppCache extends AbstractAppCache {
       }
     }.scheduleRepeating(500);
 
+  }
+
+	private boolean restartRequired(Throwable e) {
+	  return e.getMessage().contains("complete the upgrade process");
   }
   
 	// the wrapper in the GWT gears library is just wrong.
