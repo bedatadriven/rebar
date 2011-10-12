@@ -45,6 +45,25 @@
     <module>time</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:git@github.com:akbertram/rebar.git</connection>
+    <url>scm:git:git@github.com:akbertram/rebar.git</url>
+    <developerConnection>scm:git:git@github.com:akbertram/rebar.git</developerConnection>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>bedatadriven-oss</id>
+      <name>bedatadriven Open-Source releases</name>
+      <url>http://nexus.bedatadriven.com/content/repositories/oss-releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>bedatadriven-oss</id>
+      <name>bedatadriven Open-Source snapshots</name>
+      <url>http://nexus.bedatadriven.com/content/repositories/oss-snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <!--  convenience to define GWT version in one place -->
     <gwtVersion>2.3.0</gwtVersion>
@@ -81,19 +100,6 @@
   
   
   </dependencyManagement>
-
-  <distributionManagement>
-    <repository>
-      <id>bedatadriven-oss</id>
-      <name>bedatadriven Open-Source releases</name>
-      <url>http://nexus.bedatadriven.com/content/repositories/oss-releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>bedatadriven-oss</id>
-      <name>bedatadriven Open-Source snapshots</name>
-      <url>http://nexus.bedatadriven.com/content/repositories/oss-snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 
   <repositories>
     <repository>
