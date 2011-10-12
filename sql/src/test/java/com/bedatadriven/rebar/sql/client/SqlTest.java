@@ -374,7 +374,7 @@ public class SqlTest extends GWTTestCase {
 
   public void testTxFailsOnExceptionInResultCallback() {
     
-  	Log.debug("================= testTxFailsOnExceptionInResultCallback == errors ========");
+  	Log.debug("================= testErrorhandling == errors ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("errors");

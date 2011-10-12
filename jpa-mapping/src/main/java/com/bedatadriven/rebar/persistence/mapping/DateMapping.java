@@ -16,14 +16,14 @@
 
 package com.bedatadriven.rebar.persistence.mapping;
 
+import org.json.JSONException;
+import org.json.JSONStringer;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.json.JSONException;
-import org.json.JSONStringer;
 
 /**
  * @author Alex Bertram
