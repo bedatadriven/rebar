@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 
 public class SqlUpdate {
@@ -69,8 +70,12 @@ public class SqlUpdate {
 	private Object[] params() {
 		return values.toArray(new Object[values.size()]);
 	}
-
+	
 	public void execute(SqlTransaction tx) {
+		execute(tx, null);
+	}
+
+	public void execute(SqlTransaction tx, SqlResultCallback callback) {
 
 		if(where.length() == 0) {
 			throw new RuntimeException("Where clause not specified");
@@ -109,6 +114,10 @@ public class SqlUpdate {
 			params[nextParamIndex++] = param;
 		}
 		
-		tx.executeSql(sql.toString(), params);
+		if(callback == null) {
+			tx.executeSql(sql.toString(), params);
+		} else {
+			tx.executeSql(sql.toString(), params, callback);
+		}
 	}
 }

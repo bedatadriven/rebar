@@ -69,6 +69,20 @@ public class SqlInsert {
 			tx.executeSql(sql(), params());
 		}
 	}
+	
+	public void execute(SqlTransaction tx, final AsyncCallback<Integer> callback) {
+		if(values.isEmpty()) {
+			callback.onSuccess(0);
+		} else {
+			tx.executeSql(sql(), params(), new SqlResultCallback() {
+				
+				@Override
+				public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+					callback.onSuccess(results.getRowsAffected());
+				}
+			});
+		}
+	}
 
 	public void execute(SqlDatabase database, final AsyncCallback<Integer> callback) {
 		if(values.isEmpty()) {
