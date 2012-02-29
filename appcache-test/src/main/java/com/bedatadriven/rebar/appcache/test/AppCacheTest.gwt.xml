@@ -22,6 +22,7 @@
 
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.bedatadriven.rebar.appcache.AppCache"/>
+    <inherits name="com.bedatadriven.rebar.appcache.AppCacheLinker"/>
 
     <entry-point class="com.bedatadriven.rebar.appcache.test.client.TestEntryPoint"/>
 
