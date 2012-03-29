@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 
 public class SqlUpdate {
@@ -66,13 +67,13 @@ public class SqlUpdate {
 	public SqlUpdate value(String columnName, Map<String, Object> properties) {
 		return value(columnName, properties, columnName);
 	}
-
-	private Object[] params() {
-		return values.toArray(new Object[values.size()]);
-	}
 	
 	public void execute(SqlTransaction tx) {
 		execute(tx, null);
+	}
+	
+	public boolean isEmpty() {
+		return values.isEmpty();
 	}
 
 	public void execute(SqlTransaction tx, SqlResultCallback callback) {
@@ -82,7 +83,10 @@ public class SqlUpdate {
 		}
 
 		if(UPDATE.equals(action) && values.isEmpty()) {
-			return; // nothing to do.
+			if(callback != null) {
+				throw new IllegalStateException("callback requested but there are no changes to make");
+			}
+			return;
 		}
 
 
