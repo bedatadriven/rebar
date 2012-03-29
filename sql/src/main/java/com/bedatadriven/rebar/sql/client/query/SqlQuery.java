@@ -270,6 +270,16 @@ public class SqlQuery {
 		whereClause.append(" AND (").append(expr).append(") ");
 		return this;
 	}
+	
+	public WhereClauseBuilder or(String expr) {
+		if(whereClause.length() > 0) {
+			whereClause.append(" OR ");
+		}
+		whereClause.append(expr);
+		return new WhereClauseBuilder();
+		
+	}
+	
 	public SqlQuery or() {
 		whereClause.append(" OR ");
 		return this;
