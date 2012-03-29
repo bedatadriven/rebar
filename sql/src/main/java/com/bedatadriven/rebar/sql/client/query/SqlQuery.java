@@ -194,6 +194,16 @@ public class SqlQuery {
 		}
 		return this;
 	}
+	
+	public SqlQuery appendColumn(SqlQuery subQuery, String alias) {
+		if (columnList.length() != 0) {
+			columnList.append(", ");
+		}
+		columnList.append("(").append(subQuery.sql())
+			.append(")").append(" ").append(alias);
+		parameters.addAll(subQuery.parameters);
+		return this;
+	}
 
 	public SqlQuery orderBy(String expr) {
 		if (orderByClause.length() > 0) {
