@@ -29,7 +29,7 @@
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
         <artifactId>parent</artifactId>
-        <version>2.2.4-SNAPSHOT</version>
+        <version>2.2.4</version>
     </parent>
 
 	<scm>
@@ -240,7 +240,7 @@
                                     <tasks>
                                         <property name="test_classpath" refid="maven.test.classpath" />
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -prod                                                   -style pretty                                                   -codeServerPort 50101                                                   -logdir target/test-logs                                                   -runStyle Manual                                                   -logLevel INFO" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -prod -style pretty                                                   -codeServerPort 50101                                                   -logdir target/test-logs                                                   -runStyle Manual                                                   -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.sql.client.SqlTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
@@ -281,7 +281,7 @@
                                     <tasks>
                                         <property name="test_classpath" refid="maven.test.classpath" />
                                         <java classname="junit.textui.TestRunner" fork="true" maxmemory="128m">
-                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -prod                                               -codeServerPort 50101                                               -logdir target/test-logs                                               -runStyle Manual                                               -logLevel INFO" />
+                                            <sysproperty key="gwt.args" value="-out target/test-out -gen target/test-gen -notHeadless -prod -codeServerPort 50101                                               -logdir target/test-logs                                               -runStyle Manual                                               -logLevel INFO" />
                                             <arg value="com.bedatadriven.rebar.sql.client.websql.WebSqlTest" />
                                             <classpath>
                                                 <pathelement path="${basedir}/src/main/java" />
