@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class GearsAppCache extends AbstractAppCache {
+	
 
   private ManagedResourceStore store = null;
   
@@ -93,6 +94,17 @@ public class GearsAppCache extends AbstractAppCache {
 				callback.onFailure(caught);
 			}
 		});
+  }
+  
+
+	@Override
+  public void removeCache(AsyncCallback<Void> callback) {
+		try {
+			getStore().setEnabled(true);
+			callback.onSuccess(null);
+		} catch(Throwable e) {
+			callback.onFailure(e);
+		}
   }
 
   private boolean currentVersionIsEmpty() {

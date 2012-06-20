@@ -42,8 +42,10 @@ class AppCacheStub extends AbstractAppCache {
   public boolean requiresPermission() {
 	  return true;
   }
-	
-	
 
+	@Override
+  public void removeCache(AsyncCallback<Void> callback) {
+		callback.onSuccess(null);
+  }
 
 }

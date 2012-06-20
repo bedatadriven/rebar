@@ -52,9 +52,11 @@ public class TestEntryPoint implements EntryPoint {
 		listenForUpdates();
 		addProgressHandler();
 		addRunAsyncUI();
-
+		addRemoveButton();
+		
 		RootPanel.get().add(panel);
 	}
+
 
 	private void addGreeting() {
 		Label label = new Label("Hello brave world, courtesy of " +
@@ -203,5 +205,28 @@ public class TestEntryPoint implements EntryPoint {
 				Window.Location.reload();
 			}
 		});
+  }
+	
+
+	private void addRemoveButton() {
+		panel.add(new HTML("<br>"));
+		panel.add(new Button("Remove cache", new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				appCache.removeCache(new AsyncCallback<Void>() {
+					
+					@Override
+					public void onSuccess(Void result) {
+						Window.alert("Cache successfully removed");
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to remove cache: " + caught.getMessage());
+					}
+				});
+			}
+		}));
   }
 }

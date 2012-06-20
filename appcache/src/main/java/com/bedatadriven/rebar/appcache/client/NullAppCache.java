@@ -55,4 +55,9 @@ class NullAppCache extends AbstractAppCache {
 	  
   }
 
+	@Override
+  public void removeCache(AsyncCallback<Void> callback) {
+		callback.onSuccess(null);
+  }
+
 }

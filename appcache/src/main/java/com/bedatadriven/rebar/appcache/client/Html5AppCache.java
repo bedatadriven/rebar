@@ -18,12 +18,20 @@ package com.bedatadriven.rebar.appcache.client;
 
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.appcache.client.AppCache.Status;
+import com.bedatadriven.rebar.appcache.client.events.ProgressEventHandler;
+import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEventHandler;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class Html5AppCache extends AbstractAppCache {
 
+	public static final String DISABLE_COOKIE_NAME = "HTML5_NO_APPCACHE";
+	public static final String DISABLE_COOKIE_VALUE = "DISABLE";
+	
   public static final int UNCACHED = 0;
   public static final int IDLE = 1;
   public static final int CHECKING = 2;
@@ -46,6 +54,8 @@ public class Html5AppCache extends AbstractAppCache {
   @Override
   public void ensureCached(final AsyncCallback<Void> callback) {
      	
+  	Cookies.removeCookie(DISABLE_COOKIE_NAME);
+  	
   	if (callbackIfCached(callback))
       return;
 
@@ -86,7 +96,9 @@ public class Html5AppCache extends AbstractAppCache {
 
   @Override
   public void ensureUpToDate(final AsyncCallback<Void> callback) {
-
+  	
+  	Cookies.removeCookie(DISABLE_COOKIE_NAME);
+  	
   	
   	// an error retrieving the cache does not neccessarily
   	// alter the status if it is just a network problem.
@@ -139,6 +151,47 @@ public class Html5AppCache extends AbstractAppCache {
     }.scheduleRepeating(500);
   }
  
+
+	@Override
+  public void removeCache(final AsyncCallback<Void> callback) {
+    int status = 0;
+    try {
+      status = getAppCacheStatus();
+
+	    if(status == UNCACHED || status == OBSOLETE) {
+	    	callback.onSuccess(null);
+	    } else {
+	    	Cookies.setCookie(DISABLE_COOKIE_NAME, DISABLE_COOKIE_VALUE);
+	    	update();
+	    
+	    	 new Timer() {
+	         @Override
+	         public void run() {
+	       	
+	           switch(getAppCacheStatus()) {
+	           case IDLE:
+	           case UPDATE_READY:
+	          	 callback.onFailure(new AppCacheException("Connection problem prevented cache from being marked as obsolete"));
+	          	 this.cancel();
+	          	 Cookies.removeCookie(DISABLE_COOKIE_NAME);
+	             break;
+	           case UNCACHED:
+	           case OBSOLETE:
+	             callback.onSuccess(null);
+	             this.cancel();
+	             Cookies.removeCookie(DISABLE_COOKIE_NAME);
+	             break;
+	           }
+	       	}
+	       }.scheduleRepeating(500);
+	    	
+	    }
+    } catch (Exception e) {
+      callback.onFailure(new AppCacheException(e.getMessage()));
+    }  
+  }
+	
+  
 	@Override
   public Status getStatus() {
     return STATUS_MAPPING[getAppCacheStatus()];
@@ -222,6 +275,6 @@ public class Html5AppCache extends AbstractAppCache {
   public void checkForUpdate() {
 		update();
   }
-	
+
 	
 }

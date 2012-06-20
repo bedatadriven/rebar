@@ -114,6 +114,12 @@ public interface AppCache {
   boolean isCachedOnStartup();
   
   /**
+   * Removes the current appcache (usually in preparation for page refres 
+   * @param callback
+   */
+  void removeCache(AsyncCallback<Void> callback);
+  
+  /**
    * 
    * @return true if the current user agent asks for permission from the user before
    * caching the app.
