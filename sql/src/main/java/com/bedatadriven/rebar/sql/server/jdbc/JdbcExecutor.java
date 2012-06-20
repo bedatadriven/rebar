@@ -1,15 +1,21 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
 import com.bedatadriven.rebar.time.calendar.LocalDate;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
   
@@ -71,7 +77,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
 		if(params[i] instanceof java.sql.Date) {
 			stmt.setDate(i+1, (java.sql.Date)params[i]);
 		} else if(params[i] instanceof java.util.Date) {
-	  	stmt.setDate(i+1, new java.sql.Date(((java.util.Date)params[i]).getTime()));
+			stmt.setTimestamp(i+1, new Timestamp(((java.util.Date) params[i]).getTime()));
 	  } else if(params[i] instanceof LocalDate) {
 	  	// for the default implementation, we assume that the database will store
 	  	// the date without a timezone, so we pass the midnight time value in the current timezone
