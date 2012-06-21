@@ -44,8 +44,33 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     this.executeSql(statement, parameters);
   }-*/;
 
+  public void executeSql(final String statement, JavaScriptObject parameters, final WebSqlResultCallback callback) {
+  	if(Log.isErrorEnabled()) {
+	  	doExecuteSql(statement, parameters, new WebSqlResultCallback() {
+				
+				@Override
+				public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
+					try {
+						callback.onSuccess(tx, results);
+					} catch(Exception e) {
+						Log.error("Execution of callback for statement '" + statement + "' threw exception: " + e.getMessage(), e);
+						throw new RuntimeException(e);
+					}
+				}
+				
+				@Override
+				public boolean onFailure(WebSqlException e) {
+					Log.error("Execution of statement '" + statement + "'");
+					return callback.onFailure(e);
+				}
+			});
+  	} else {
+  		doExecuteSql(statement, parameters, callback);
+  	}
+  }
 
-  public native void executeSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
+  
+  private native void doExecuteSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
     this.executeSql(statement, parameters, function(tx, results) {
       callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
     }, function(e) {
