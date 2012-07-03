@@ -37,4 +37,9 @@ public class MySqlDialect implements SqlDialect {
               .append(offset).append(',').append(limit == 0 ? Integer.MAX_VALUE : limit)
               .toString();
   }
+
+  @Override
+  public boolean isMySql() {
+    return true;
+  }
 }

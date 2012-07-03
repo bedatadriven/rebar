@@ -35,6 +35,11 @@ public class SqlQuery {
 
 	protected AsyncCallback<?> errorHandler;
 
+	/**
+	 * Set of keywords like "DISTINCT" or "SQL_CALC_FOUND_ROWS" that follow 
+	 * the SELECT keyword and precede the column list
+	 */
+	protected final StringBuilder keywords = new StringBuilder();
 	protected final StringBuilder columnList = new StringBuilder();
 	protected final StringBuilder tableList = new StringBuilder();
 	protected final StringBuilder whereClause = new StringBuilder();
@@ -55,6 +60,12 @@ public class SqlQuery {
 		return builder;
 	}
 
+	public static SqlQuery selectDistinct() {
+		SqlQuery builder = new SqlQuery();
+		builder.keywords.append(" DISTINCT ");
+		return builder;
+	}
+	
 	public static SqlQuery selectAll() {
 		SqlQuery builder = new SqlQuery();
 		builder.columnList.append("*");
@@ -67,6 +78,11 @@ public class SqlQuery {
 		return builder;
 	}
 
+	public SqlQuery appendKeyword(String keyword) {
+		keywords.append(" ").append(keyword);
+		return this;
+	}
+	
 	/**
 	 * Appends a table list to the {@code FROM} clause
 	 * 
@@ -178,7 +194,23 @@ public class SqlQuery {
 			return appendColumn(expr, alias);
 		}
 	}
+	
+	/**
+	 * Appends the "*" to the column list
+	 */
+	public SqlQuery appendAllColumns() {
+		if (columnList.length() != 0) {
+			columnList.append(", ");
+		}
+		columnList.append("*");
+		return this;
+	}
 
+	/**
+	 * Appends an expression with an explicit alias to the column list
+	 * @param expr an sql expression
+	 * @param alias the query alias
+	 */
 	public SqlQuery appendColumn(String expr, String alias) {
 		if (columnList.length() != 0) {
 			columnList.append(", ");
@@ -188,6 +220,10 @@ public class SqlQuery {
 		return this;
 	}
 
+	/**
+	 * Appends zero or more expressions to the column list
+	 * @param exprs a list of SQL expressions
+	 */
 	public SqlQuery appendColumns(String... exprs) {
 		for (String expr : exprs) {
 			appendColumn(expr);
@@ -195,6 +231,9 @@ public class SqlQuery {
 		return this;
 	}
 	
+	/**
+	 * Appends a subquery to the column list, with the given {@code alias}
+	 */
 	public SqlQuery appendColumn(SqlQuery subQuery, String alias) {
 		if (columnList.length() != 0) {
 			columnList.append(", ");
@@ -205,6 +244,9 @@ public class SqlQuery {
 		return this;
 	}
 
+	/**
+	 * Adds an expression to the {@code ORDER BY} clause
+	 */
 	public SqlQuery orderBy(String expr) {
 		if (orderByClause.length() > 0) {
 			orderByClause.append(", ");
@@ -213,6 +255,10 @@ public class SqlQuery {
 		return this;
 	}
 
+	/**
+	 * Adds an expression to the {@code ORDER BY} clause
+	 * @param ascending {@code true} for ascending, {@code false} for descending
+	 */
 	public SqlQuery orderBy(String expr, boolean ascending) {
 		orderBy(expr);
 		if (!ascending) {
@@ -221,6 +267,9 @@ public class SqlQuery {
 		return this;
 	}
 
+	/**
+	 * Adds an expression to the {@code GROUP BY} clause
+	 */
 	public SqlQuery groupBy(String expr) {
 		if (groupByClause.length() > 0) {
 			groupByClause.append(", ");
@@ -303,10 +352,12 @@ public class SqlQuery {
 			throw new IllegalStateException("No FROM clause has been provided");
 		}
 
-		// append(StringBuilder) fails bizarely in hosted mode
+		// append(StringBuilder) fails bizarrely in hosted mode
 		// See:
 		// http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
 		StringBuilder sql = new StringBuilder("SELECT ")
+				.append(keywords)
+				.append(" ")
 				.append((CharSequence) columnList).append(" FROM ")
 				.append((CharSequence) tableList);
 
@@ -323,7 +374,7 @@ public class SqlQuery {
 
 		return sql.toString();
 	}
-
+	
 	public Object[] parameters() {
 		return parameters.toArray(new Object[parameters.size()]);
 	}

@@ -48,4 +48,6 @@ public interface SqlDialect {
 	 * @return
 	 */
 	String limitClause(int offset, int limit);
+	
+	boolean isMySql();
 }
