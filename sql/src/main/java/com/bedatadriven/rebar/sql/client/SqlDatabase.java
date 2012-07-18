@@ -1,11 +1,10 @@
 package com.bedatadriven.rebar.sql.client;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.bedatadriven.rebar.async.AsyncFunction;
 import com.bedatadriven.rebar.sql.client.query.SqlDialect;
 import com.bedatadriven.rebar.sql.client.util.SqlKeyValueTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
-
 
 
 /**
@@ -22,6 +21,32 @@ public abstract class SqlDatabase {
 	 * @param callback 
 	 */
   public abstract void transaction(SqlTransactionCallback callback);
+  
+  /**
+   * 
+   * @return an AsyncFunction, which when applied returns a new 
+   * transaction
+   */
+  public AsyncFunction<Void, SqlTransaction> transaction() {
+  	return new AsyncFunction<Void, SqlTransaction>() {
+			
+			@Override
+			protected void doApply(Void argument, final AsyncCallback<SqlTransaction> callback) {
+				transaction(new SqlTransactionCallback() {
+					
+					@Override
+					public void begin(SqlTransaction tx) {
+						callback.onSuccess(tx);
+					}
+
+					@Override
+          public void onError(SqlException e) {
+	          callback.onFailure(e);
+          }
+				});
+			}
+		};
+  }
   
   public abstract SqlDialect getDialect();
 

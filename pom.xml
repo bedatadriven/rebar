@@ -42,6 +42,7 @@
     <module>appcache</module>
     <module>appcache-test</module>
     <module>time</module>
+    <module>asyncfun</module>
   </modules>
 
   <scm>

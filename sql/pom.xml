@@ -93,7 +93,11 @@
           <artifactId>rebar-time</artifactId>
           <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+          <groupId>com.bedatadriven.rebar</groupId>
+          <artifactId>rebar-asyncfun</artifactId>
+          <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>net.sf.jsqlparser</groupId>
             <artifactId>jsqlparser</artifactId>

@@ -21,17 +21,23 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.bedatadriven.rebar.async.AsyncFunction;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
+import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
+import com.bedatadriven.rebar.sql.client.SqlResultSetRowList;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.google.common.base.Function;
+import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Lightweight DSL for building SQL queries.
  */
-public class SqlQuery {
+public class SqlQuery extends AsyncFunction<SqlTransaction, SqlResultSetRowList> {
 
 	protected AsyncCallback<?> errorHandler;
 
@@ -356,7 +362,7 @@ public class SqlQuery {
 		// See:
 		// http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
 		StringBuilder sql = new StringBuilder("SELECT ")
-				.append(keywords)
+				.append((CharSequence) keywords)
 				.append(" ")
 				.append((CharSequence) columnList).append(" FROM ")
 				.append((CharSequence) tableList);
@@ -510,5 +516,17 @@ public class SqlQuery {
 			return SqlQuery.this;
 		}
 	}
+
+	@Override
+  protected void doApply(SqlTransaction argument,
+      final AsyncCallback<SqlResultSetRowList> callback) {
+		execute(argument, new SqlResultCallback() {
+			
+			@Override
+			public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+				callback.onSuccess(results.getRows());
+			}
+		});
+  }
 
 }
