@@ -24,8 +24,6 @@
 
     <inherits name="com.allen_sauer.gwt.log.gwt-log-impl"/>
 
-    <!-- These are the sources for the java.sql interfaces -->
-    <inherits name="com.bedatadriven.rebar.sql.emul.Emulation"/>
     <inherits name="com.bedatadriven.rebar.Time"/>
     <inherits name="com.bedatadriven.rebar.AsyncFun"/>
 
