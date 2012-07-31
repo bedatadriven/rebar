@@ -10,6 +10,9 @@ import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.fn.AsyncSql;
+import com.bedatadriven.rebar.sql.client.fn.QueryFunction;
+import com.bedatadriven.rebar.sql.client.fn.TxAsyncFunction;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SqlKeyValueTable {
@@ -26,11 +29,10 @@ public class SqlKeyValueTable {
 		this.valueName = valueName;
 	}
 	
-	public void createTableIfNotExists(SqlTransaction tx) {
-		tx.executeSql("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " TEXT PRIMARY KEY, " + valueName + " TEXT) ");
+	public TxAsyncFunction<Void, Void> createTableIfNotExists() {
+		return AsyncSql.ddl("CREATE TABLE IF NOT EXISTS " + tableName + " (" + keyName + " TEXT PRIMARY KEY, " + valueName + " TEXT) ");
 	}
 	
-
 	public void get(String key, final AsyncCallback<String> callback) {
 		get(key, null, callback);
 	}

@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.bedatadriven.rebar.async.NullCallback;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
@@ -24,13 +25,7 @@ public class SqlKeyValueTableTest {
     SqlDatabase db = TestUtil.openUniqueDb();
     final SqlKeyValueTable table = new SqlKeyValueTable(db, "sync_regions", "id", "lastUpdate");
         
-    db.transaction(new SqlTransactionCallback() {
-			
-			@Override
-			public void begin(SqlTransaction tx) {
-				table.createTableIfNotExists(tx);
-			}
-		});
+    db.execute(table.createTableIfNotExists(), NullCallback.forVoid());
     
     table.put("foo", "bar");
     table.get("foo", new AsyncCallback<String>() {

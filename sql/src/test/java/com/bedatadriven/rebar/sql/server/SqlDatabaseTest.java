@@ -7,9 +7,11 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
+import com.bedatadriven.rebar.async.NullCallback;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.fn.AsyncSql;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SqlDatabaseTest {
@@ -20,13 +22,7 @@ public class SqlDatabaseTest {
 
     final SqlDatabase db = TestUtil.openUniqueDb();
     db.executeSql("CREATE TABLE table1 (id INT PRIMARY KEY, name TEXT)");
-    db.transaction(new SqlTransactionCallback() {
-			
-			@Override
-			public void begin(SqlTransaction tx) {
-		    db.dropAllTables(tx);				
-			}
-		});
+    db.execute(AsyncSql.dropAllTables(), NullCallback.forVoid());
 
     db.selectSingleInt("select count(*) from sqlite_master", new AsyncCallback<Integer>() {
 			

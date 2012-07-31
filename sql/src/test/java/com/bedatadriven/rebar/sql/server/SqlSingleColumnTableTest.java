@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import com.bedatadriven.rebar.async.NullCallback;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
@@ -18,13 +19,7 @@ public class SqlSingleColumnTableTest {
 		SqlDatabase db = TestUtil.openUniqueDb();
 		final SqlSingleColumnTable<String> table = new SqlSingleColumnTable<String>(db, "sync_history", "lastUpdated");
 		
-		db.transaction(new SqlTransactionCallback() {
-			
-			@Override
-			public void begin(SqlTransaction tx) {
-				table.createTableIfNotExists(tx);
-			}
-		});
+		db.execute(table.createTableIfNotExists(), NullCallback.forVoid());
 		
 		
 		table.put("foobar", new AsyncCallback<Void>() {
