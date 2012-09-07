@@ -1,21 +1,20 @@
 package com.bedatadriven.rebar.sql.client.query;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bedatadriven.rebar.async.ChainedCallback;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.fn.TxAsyncFunction;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
-public class SqlInsert {
+public class SqlInsert extends TxAsyncFunction<Void, Void> {
 	
 	private String tableName;
 	private List<Object> values = new ArrayList<Object>();
@@ -108,5 +107,19 @@ public class SqlInsert {
 			});
 		}
 	}
+
+	@Override
+  protected void doApply(SqlTransaction tx, Void argument,
+      final AsyncCallback<Void> callback) {
+
+		this.execute(tx, new ChainedCallback<Integer>(callback) {
+			
+			@Override
+			public void onSuccess(Integer result) {
+				callback.onSuccess(null);
+			}
+		});
+		
+  }
 	
 }

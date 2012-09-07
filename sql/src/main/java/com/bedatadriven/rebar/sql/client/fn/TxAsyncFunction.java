@@ -1,7 +1,10 @@
 package com.bedatadriven.rebar.sql.client.fn;
 
 import com.bedatadriven.rebar.async.ChainedCallback;
+import com.bedatadriven.rebar.async.NullCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSetRowList;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.query.SqlQuery;
 import com.google.common.base.Function;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -20,6 +23,10 @@ public abstract class TxAsyncFunction<F,T> {
 		}
 	}
 	
+	public final void apply(SqlTransaction tx, F argument) {
+		apply(tx, argument, new NullCallback<T>());
+	}
+	
 	protected abstract void doApply(SqlTransaction tx, F argument, AsyncCallback<T> callback);
 
 	public <T2> TxAsyncFunction<F,T2> compose(final TxAsyncFunction<T, T2> g) {
@@ -36,7 +43,6 @@ public abstract class TxAsyncFunction<F,T> {
 			}
 		};
 	}	
-	
 	
 	public <T2> TxAsyncFunction<F, T2> compose(final Function<T, T2> g) {
 		return new TxAsyncFunction<F, T2>() {

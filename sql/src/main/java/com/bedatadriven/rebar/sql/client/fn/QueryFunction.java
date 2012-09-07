@@ -9,7 +9,7 @@ import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRowList;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
-import com.bedatadriven.rebar.sql.client.query.SqlQuery;
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -30,6 +30,23 @@ public abstract class QueryFunction<T> extends TxAsyncFunction<T, SqlResultSetRo
 	}
 
 	protected abstract void query(SqlTransaction tx, T argument, SqlResultCallback callback);
+	
+	public TxAsyncFunction<T, SqlResultSetRow> first() {
+		return new TxAsyncFunction<T, SqlResultSetRow>() {
+
+			@Override
+      protected void doApply(SqlTransaction tx, T argument,
+          final AsyncCallback<SqlResultSetRow> callback) {
+				QueryFunction.this.apply(tx, argument, new ChainedCallback<SqlResultSetRowList>(callback) {
+
+					@Override
+          public void onSuccess(SqlResultSetRowList result) {
+						callback.onSuccess(result.get(0));
+          }
+				});
+      }
+		};
+	}
 	
 	/**
 	 * Applies the given function to all the resulting rows, in sequence.
@@ -70,6 +87,13 @@ public abstract class QueryFunction<T> extends TxAsyncFunction<T, SqlResultSetRo
 			}
 		};
 	}
+	
+
+	public <S> TxAsyncFunction<T, List<S>> mapSequentially(
+      Function<SqlResultSetRow, S> g) {
+	 
+		return mapSequentially(AsyncSql.valueOf(g));
+  }
 	
 	public <S> TxAsyncFunction<T, List<S>> parallelMap(final TxAsyncFunction<SqlResultSetRow, S> g) {
 		return new TxAsyncFunction<T, List<S>>() {
@@ -133,4 +157,5 @@ public abstract class QueryFunction<T> extends TxAsyncFunction<T, SqlResultSetRo
 			}
 		};
 	}
+
 }

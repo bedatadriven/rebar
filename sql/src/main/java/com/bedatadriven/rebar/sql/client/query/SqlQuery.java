@@ -30,6 +30,8 @@ import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRowList;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.fn.QueryFunction;
+import com.bedatadriven.rebar.sql.client.fn.TxAsyncFunction;
 import com.google.common.base.Function;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -528,5 +530,16 @@ public class SqlQuery extends AsyncFunction<SqlTransaction, SqlResultSetRowList>
 			}
 		});
   }
+	
+	public QueryFunction<Void> asFunction() {
+		return new QueryFunction<Void>() {
+
+			@Override
+      protected void query(SqlTransaction tx, Void argument,
+          SqlResultCallback callback) {
+	      execute(tx, callback);
+      }
+		};
+	}
 
 }

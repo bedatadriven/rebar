@@ -5,6 +5,7 @@ import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.google.common.base.Function;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class AsyncSql {
@@ -18,6 +19,17 @@ public class AsyncSql {
 				.parallelMap(new DropUserTableFunction())
 				.discardResult();
 				
+	}
+	
+	public static <F,T> TxAsyncFunction<F, T> valueOf(final Function<F,T> f) {
+		return new TxAsyncFunction<F, T>() {
+
+			@Override
+      protected void doApply(SqlTransaction tx, F argument,
+          AsyncCallback<T> callback) {
+				callback.onSuccess(f.apply(argument));
+      }
+		};
 	}
 	
 	private static class DropUserTableFunction extends TxAsyncFunction<SqlResultSetRow, Void> {

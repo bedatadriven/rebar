@@ -133,12 +133,18 @@ public abstract class SqlDatabase {
 		});
 	}
 	
-	public <T> AsyncFunction<Void, T> asFunction(final TxAsyncFunction<Void, T> f) {
-		return new AsyncFunction<Void, T>() {
+	public <F, T> AsyncFunction<F, T> asFunction(final TxAsyncFunction<F, T> f) {
+		return new AsyncFunction<F, T>() {
 
 			@Override
-			protected void doApply(Void argument, AsyncCallback<T> callback) {
-				execute(f, callback);
+			protected void doApply(final F argument, final AsyncCallback<T> callback) {
+				transaction(new SqlTransactionCallback() {
+					
+					@Override
+					public void begin(SqlTransaction tx) {
+						f.apply(tx, argument, callback);
+					}
+				});
 			}
 		};
 	}
