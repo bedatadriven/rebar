@@ -19,40 +19,10 @@ import com.bedatadriven.rebar.time.calendar.LocalDate;
 
 public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
   
-  protected Connection conn;
-
-  @Override
-  public final boolean begin() throws Exception {
-    conn = openConnection();
-    
-    try {
-	    boolean available = doBeginTransaction();
-	    if(!available) {
-	    	closeConnectionIgnoringAnyExceptions();
-	    }
-	    return available;
-    
-    } catch(SQLException e) {
-    	closeConnectionIgnoringAnyExceptions();
-    	throw e;
-    }
-  }
-
-	protected abstract Connection openConnection() throws Exception;
- 
-
-  private void closeConnectionIgnoringAnyExceptions() {
-  	try {
-  		conn.close();
-  	} catch(SQLException ignored) {
-  		// ignore
-  	}
-  }
   
-  
-  @Override
-  public final SqlResultSet execute(String statement, Object[] params) throws Exception {
-  	PreparedStatement stmt = prepareStatement(statement);
+	protected final SqlResultSet doExecute(Connection conn, String statement, Object[] params)
+      throws SQLException, Exception {
+	  PreparedStatement stmt = prepareStatement(conn, statement);
   	try {
 	    if(params != null) {
 	      for(int i=0;i!=params.length;++i) {
@@ -87,7 +57,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	  }
   }
 
-	private PreparedStatement prepareStatement(String statement)
+	private PreparedStatement prepareStatement(Connection conn, String statement)
       throws SQLException {
 		// workaround for incomplete SQL implementation
 		// TODO: move to sqlite-specific subclass
@@ -135,31 +105,5 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
       try { rs.close(); } catch(Exception ignored) {}
     }
   }
-
-	@Override
-  public final void commit() throws Exception {
-    try {
-    	doCommit();
-    } finally {
-    	conn.close();
-    }
-  }
-
-	protected boolean doBeginTransaction() throws SQLException {
-		conn.setAutoCommit(false);
-		return true;
-  }
 	
-	protected void doCommit() throws SQLException {
-		conn.commit();
-  }
-
-	@Override
-  public void rollback() throws Exception {
-    try {
-    	conn.rollback();
-    } finally {
-    	conn.close();
-    }
-	}
 }

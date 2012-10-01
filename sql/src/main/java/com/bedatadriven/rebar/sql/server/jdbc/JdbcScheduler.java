@@ -20,7 +20,7 @@ public class JdbcScheduler extends Scheduler {
 	private Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
 	private boolean running = false;
 	
-	private JdbcScheduler() {
+	public JdbcScheduler() {
 		
 	}
 	
@@ -78,10 +78,13 @@ public class JdbcScheduler extends Scheduler {
   		running = true;
 	  	
 	  	while(!queue.isEmpty()) {
+	  		ScheduledCommand command = null;
 	  		try{
-	  		queue.poll().execute();
+	  			command = queue.poll();
+				command.execute();
 	  		} catch (Exception ex) {
-	  			throw new RuntimeException("Unhandled exception while executing queue", ex);
+	  			throw new RuntimeException("Unhandled exception while executing queue (item = " + 
+	  					(command == null ? "null" : command.getClass()), ex);
 	  		}
 	  		
 	  	}

@@ -6,24 +6,57 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.time.calendar.LocalDate;
 
 public class SqliteExecutor extends JdbcExecutor {
 
 	private String connectionUrl;
 
+	private Connection conn;
+	
 	public SqliteExecutor(String connectionUrl) {
 	  this.connectionUrl = connectionUrl;
   }
 	
 	@Override
-  protected Connection openConnection() throws ClassNotFoundException, SQLException {
+  public SqlResultSet execute(String statement, Object[] params)
+      throws Exception {
+		return doExecute(conn, statement, params);
+  }
+
+	@Override
+  public final boolean begin() throws Exception {
+    conn = openConnection();
+    
+    try {
+	    boolean available = doBeginTransaction();
+	    if(!available) {
+	    	closeConnectionIgnoringAnyExceptions();
+	    }
+	    return available;
+    
+    } catch(SQLException e) {
+    	closeConnectionIgnoringAnyExceptions();
+    	throw e;
+    }
+  }
+
+
+  private void closeConnectionIgnoringAnyExceptions() {
+  	try {
+  		conn.close();
+  	} catch(SQLException ignored) {
+  		// ignore
+  	}
+  }
+  
+  private Connection openConnection() throws ClassNotFoundException, SQLException {
 	  Class.forName("org.sqlite.JDBC");
     return DriverManager.getConnection(connectionUrl);
   }
 
-	@Override
-  protected boolean doBeginTransaction() throws SQLException {
+  private boolean doBeginTransaction() throws SQLException {
 		try {
 			Statement stmt = conn.createStatement();
 		  stmt.execute("BEGIN EXCLUSIVE TRANSACTION");
@@ -40,8 +73,7 @@ public class SqliteExecutor extends JdbcExecutor {
     }
   }
 
-	@Override
-  protected void doCommit() throws SQLException {
+  private void doCommit() throws SQLException {
 		 Statement stmt = conn.createStatement();
 		 stmt.execute("END TRANSACTION");
 		 stmt.close();
@@ -65,6 +97,13 @@ public class SqliteExecutor extends JdbcExecutor {
 		 stmt.execute("ROLLBACK TRANSACTION");
 		 stmt.close();
   }
-	
-	
+
+	@Override
+  public final void commit() throws Exception {
+    try {
+    	doCommit();
+    } finally {
+    	conn.close();
+    }
+  }
 }

@@ -104,15 +104,19 @@ public class SyncTransactionAdapter implements SqlTransaction {
     if(nextStatementIndex >= queue.size()) {
       commitTransaction();
     } else {
+    	final Statement statement = queue.get(nextStatementIndex++);
       scheduler.scheduleFinally(new Scheduler.ScheduledCommand() {
         @Override
         public void execute() {
-          queue.get(nextStatementIndex++).execute();
+          statement.execute();
         }
       });
     }
   }
 
+  public void process() {
+  	processNextStatement();
+  }
 
   private void commitTransaction() {
     Log.debug("SyncTx[" + id + "]: All queued statements have been executed, committing");
