@@ -17,12 +17,10 @@
 package com.bedatadriven.rebar.appcache.client;
 
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.bedatadriven.rebar.appcache.client.AppCache.Status;
-import com.bedatadriven.rebar.appcache.client.events.ProgressEventHandler;
-import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEventHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,6 +36,8 @@ public class Html5AppCache extends AbstractAppCache {
   public static final int DOWNLOADING = 3;
   public static final int UPDATE_READY = 4;
   public static final int OBSOLETE = 5;
+  
+  private static final Logger LOGGER = Logger.getLogger(Html5AppCache.class.getName());
   
   public static final Status[] STATUS_MAPPING = new Status[] {
       Status.UNCACHED, Status.IDLE, Status.CHECKING, Status.DOWNLOADING, Status.UPDATE_READY, Status.OBSOLETE
@@ -113,7 +113,7 @@ public class Html5AppCache extends AbstractAppCache {
   		try {
     		update();
   		} catch(Exception e) {
-  			Log.error("Html5AppCache: call to update() threw exception. Current state = " + 
+  			LOGGER.log(Level.SEVERE, "Html5AppCache: call to update() threw exception. Current state = " + 
   						getAppCacheStatus(), e);
     		callback.onFailure(e);
     		return;

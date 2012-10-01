@@ -109,12 +109,7 @@
             <artifactId>persistence-api</artifactId>
             <version>1.0</version>
         </dependency>
-    	    
-        <!-- Support for Logging -->
-        <dependency>
-            <groupId>com.google.code.gwt-log</groupId>
-            <artifactId>gwt-log</artifactId>
-        </dependency>
+
     </dependencies>
 
 	<build>

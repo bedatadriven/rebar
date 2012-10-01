@@ -17,8 +17,9 @@
 package com.bedatadriven.rebar.sql.client;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
 import com.google.gwt.core.client.GWT;
@@ -33,6 +34,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class SqlTest extends GWTTestCase {
 
+	private static Logger LOGGER = Logger.getLogger(SqlTest.class.getName());
+	
   private static final String JSON_UPDATES  =
       "[ { statement: \"create table mytest (number int)\" }, "  +
         "{ statement: \"delete from mytest where number = 99\" }, " +
@@ -52,10 +55,10 @@ public class SqlTest extends GWTTestCase {
 
   public void testGearsExecutor() throws Exception {
   
-  	Log.debug("================= testGearsExecutor == gears_test ========");
+  	LOGGER.info("================= testGearsExecutor == gears_test ========");
 
   	if(Factory.getInstance() == null) {
-  		Log.debug("Not a gears platform, skipping.");
+  		LOGGER.info("Not a gears platform, skipping.");
   		return;
   	}
   	
@@ -65,19 +68,19 @@ public class SqlTest extends GWTTestCase {
 			
 			@Override
 			public void log(String message, Exception e) {
-				Log.debug(message, e);
+				LOGGER.log(Level.SEVERE, message, e);
 			}
 			
 			@Override
 			public void log(String message) {
-				Log.debug(message);
+				LOGGER.info(message);
 			}
 		}; 
 		
-		Log.debug("json = " + json);
+		LOGGER.info("json = " + json);
   	
   	WorkerCommand cmd = WorkerCommand.fromJson(json);
-  	Log.debug("json parsed");
+  	LOGGER.fine("json parsed");
   	
 		int rowsAffected = GearsUpdateExecutor.execute(cmd, logger);
   	
@@ -87,7 +90,7 @@ public class SqlTest extends GWTTestCase {
   
   
   public void testBasic() {
-  	Log.debug("================= testBasic == db1 ========");
+  	LOGGER.fine("================= testBasic == db1 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db1");
@@ -136,7 +139,7 @@ public class SqlTest extends GWTTestCase {
   
 
   public void testSingle() {
-  	Log.debug("================= testSingle == db2 ========");
+  	LOGGER.fine("================= testSingle == db2 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db2");
@@ -179,7 +182,7 @@ public class SqlTest extends GWTTestCase {
   
   public void testExecutorWithJson() throws Exception {
 
-  	Log.debug("================= testExecutorWithJson == db4 ========");
+  	LOGGER.fine("================= testExecutorWithJson == db4 ========");
 
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
@@ -203,7 +206,7 @@ public class SqlTest extends GWTTestCase {
 
   public void testExecutorWithJsonAndLocking() throws Exception {
 
-  	Log.debug("================= testExecutorWithJsonAndLocking == db5 ========");
+  	LOGGER.fine("================= testExecutorWithJsonAndLocking == db5 ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     final SqlDatabase db = factory.open("db5"); 
@@ -240,7 +243,7 @@ public class SqlTest extends GWTTestCase {
 				// spend more time in the main event loop, keeping the transaction alive
 				// and the lock active. we want to assure that even if the worker thread times out 
 				// waiting for a lock, the 
-				Log.debug("starting busy work");
+				LOGGER.fine("starting busy work");
 				for(int i=0;i!=5000;++i) {
 					tx.executeSql("insert into nonsense (id) values (?)", new Object[] { i });
 				}
@@ -248,7 +251,7 @@ public class SqlTest extends GWTTestCase {
 			
 			@Override
       public void onSuccess() {
-				Log.debug("transaction commited on the main event loop");
+				LOGGER.fine("transaction commited on the main event loop");
       }
 
 
@@ -264,7 +267,7 @@ public class SqlTest extends GWTTestCase {
   
   public void testDates() {
 
-  	Log.debug("================= testDates == dates ========");
+  	LOGGER.fine("================= testDates == dates ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("dates");
@@ -307,7 +310,7 @@ public class SqlTest extends GWTTestCase {
   
   public void testTimes() {
 
-  	Log.debug("================= testTimes == times ========");
+  	LOGGER.fine("================= testTimes == times ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("times");
@@ -342,7 +345,7 @@ public class SqlTest extends GWTTestCase {
   
   public void testTxFailsOnStatementError() {
   
-  	Log.debug("================= testErrorhandling == errors ========");
+  	LOGGER.fine("================= testErrorhandling == errors ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("errors");
@@ -374,7 +377,7 @@ public class SqlTest extends GWTTestCase {
 
   public void testTxFailsOnExceptionInResultCallback() {
     
-  	Log.debug("================= testErrorhandling == errors ========");
+  	LOGGER.fine("================= testErrorhandling == errors ========");
   	
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("errors");

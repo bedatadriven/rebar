@@ -1,7 +1,8 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.allen_sauer.gwt.log.client.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
 import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.bedatadriven.rebar.sql.client.bulk.PreparedStatementBatch;
@@ -10,11 +11,12 @@ import com.bedatadriven.rebar.sql.client.query.SqliteDialect;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.dev.shell.HostedModeException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 class SqlDatabaseImpl extends SqlDatabase {
 
+	private static Logger LOGGER = java.util.logging.Logger.getLogger(SqlDatabaseImpl.class.getName());
+	
 	private final String name;
 	private final WebSqlDatabase db;
 
@@ -47,7 +49,7 @@ class SqlDatabaseImpl extends SqlDatabase {
 
 			@Override
 			public void onError(WebSqlException e) {
-				Log.debug("WebSql tx failed");
+				LOGGER.severe("WebSql tx failed");
 				callback.onError(e);
 			}
 
@@ -58,7 +60,7 @@ class SqlDatabaseImpl extends SqlDatabase {
 
 			@Override
 			public void onSuccess() {
-				Log.trace("WebSql tx succeeded");
+				LOGGER.finest("WebSql tx succeeded");
 				callback.onSuccess();
 			}
 		});
@@ -78,14 +80,14 @@ class SqlDatabaseImpl extends SqlDatabase {
 
 				@Override
 				public void begin(WebSqlTransaction tx) {
-					Log.debug("WebSqlBulkUpdater about to call eval on '" + shortenJson(bulkOperationJsonArray) + "'");
+					LOGGER.fine("WebSqlBulkUpdater about to call eval on '" + shortenJson(bulkOperationJsonArray) + "'");
 					JsArray<PreparedStatementBatch> statements = PreparedStatementBatch.fromJson(bulkOperationJsonArray);
 
-					Log.debug("WebSqlBulkUpdater queuing " + statements.length() + " statements");
+					LOGGER.fine("WebSqlBulkUpdater queuing " + statements.length() + " statements");
 
 					for(int i=0;i!=statements.length();++i) {
 						PreparedStatementBatch batch = statements.get(i);
-						Log.debug("WebSqlBulkUpdater queuing statement [" + batch.getStatement() + "]");
+						LOGGER.fine("WebSqlBulkUpdater queuing statement [" + batch.getStatement() + "]");
 
 						if(GWT.isScript()) {
 							doBatch(counter, tx, batch);
@@ -93,7 +95,7 @@ class SqlDatabaseImpl extends SqlDatabase {
 							try {
 								doBatch(counter, tx, batch);
 							} catch(Exception e) {
-								Log.error("Hosted mode exception, retrying...", e);
+								LOGGER.log(Level.SEVERE, "Hosted mode exception, retrying...", e);
 								doBatch(counter, tx, batch);
 							}
 						}

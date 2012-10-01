@@ -10,8 +10,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultSet;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
 import com.bedatadriven.rebar.sql.shared.adapter.SyncTransactionAdapter;
@@ -19,6 +20,7 @@ import com.bedatadriven.rebar.time.calendar.LocalDate;
 
 public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
   
+	private static final Logger LOGGER = Logger.getLogger(JdbcExecutor.class.getName());
   
 	protected final SqlResultSet doExecute(Connection conn, String statement, Object[] params)
       throws SQLException, Exception {
@@ -35,7 +37,7 @@ public abstract class JdbcExecutor implements SyncTransactionAdapter.Executor {
 	        return toUpdateResultSet(stmt);
 	    }
   	} catch(Exception e) {
-  		Log.debug("Exception thrown while executing statement: " + statement, e);
+  		LOGGER.log(Level.SEVERE, "Exception thrown while executing statement: " + statement, e);
   		throw e;
     } finally {
     	try { stmt.close(); } catch(Exception ignored) {}

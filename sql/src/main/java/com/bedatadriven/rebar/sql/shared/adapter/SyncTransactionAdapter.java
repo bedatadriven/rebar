@@ -1,15 +1,19 @@
 package com.bedatadriven.rebar.sql.shared.adapter;
 
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.bedatadriven.rebar.sql.client.*;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.bedatadriven.rebar.sql.client.SqlException;
+import com.bedatadriven.rebar.sql.client.SqlResultCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 /**
  * Adapts a synchronous database API to the WebSql-style asynchronous
@@ -19,6 +23,8 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
   private static int nextTxId = 1;
 
+  private static final Logger LOGGER = Logger.getLogger(SyncTransactionAdapter.class.getName());
+  
   public static interface Executor {
     SqlResultSet execute(String statement, Object[] params) throws Exception;
     boolean begin() throws Exception;
@@ -41,7 +47,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
     this.scheduler = scheduler;
     this.id = nextTxId++;
 
-    Log.debug("SyncTx[" + id + "]: Starting Async Transaction...");
+    LOGGER.fine("SyncTx[" + id + "]: Starting Async Transaction...");
 
     scheduleBeginTransaction();
   }
@@ -50,13 +56,13 @@ public class SyncTransactionAdapter implements SqlTransaction {
 	  try {
       if(!executor.begin()) {
 
-      	Log.warn("SyncTx[" + id + "]: Unable to acquire tx lock, rescheduling");
+      	LOGGER.warning("SyncTx[" + id + "]: Unable to acquire tx lock, rescheduling");
 
       	scheduleBeginTransaction();
       	return;
       }
     } catch(Exception e) {
-      Log.error("SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
+    	LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
 
       callback.onError(new SqlException(e));
       return;
@@ -70,7 +76,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
     try {
       callback.begin(this);
     } catch(Throwable e) {
-      Log.error("SyncTx[" + id + "]: Exception thrown in transaction callback", e);
+      LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown in transaction callback", e);
 
       errorInCallback(e);
       return;
@@ -92,10 +98,10 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
 	private void errorInCallback(Throwable e) {
   	try {
-  		Log.error("SyncTx[" + id + "]: Rolling back transaction");
+  		LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Rolling back transaction");
   		executor.rollback();
   	} catch(Exception rollbackException) {
-  		Log.error("SyncTx[" + id + "]: Exception while rolling back transaction", rollbackException);
+  		LOGGER.log(Level.WARNING, "SyncTx[" + id + "]: Exception while rolling back transaction", rollbackException);
   	}
     callback.onError(new SqlException(e));
   }
@@ -119,18 +125,18 @@ public class SyncTransactionAdapter implements SqlTransaction {
   }
 
   private void commitTransaction() {
-    Log.debug("SyncTx[" + id + "]: All queued statements have been executed, committing");
+    LOGGER.fine("SyncTx[" + id + "]: All queued statements have been executed, committing");
 
     try {
       executor.commit();
     } catch(Exception e) {
-      Log.error("SyncTx[" + id + "]: Exception thrown while committing", e);
+      LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown while committing", e);
 
       errorInCallback(e);
       return;
     }
     
-    Log.debug("SyncTx[" + id + "]: Commit succeeded.");
+    LOGGER.fine("SyncTx[" + id + "]: Commit succeeded.");
     
     // everything worked! let the caller know
     callback.onSuccess();
@@ -172,7 +178,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     public void execute() {
 
-      Log.debug("SyncTx[" + id + "]: Executing statement '" + statement + "' with parameters " +
+      LOGGER.fine("SyncTx[" + id + "]: Executing statement '" + statement + "' with parameters " +
           Arrays.toString(params));
 
       try {

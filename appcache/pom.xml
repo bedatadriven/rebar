@@ -68,10 +68,6 @@
             <version>3.0</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>com.google.code.gwt-log</groupId>
-			<artifactId>gwt-log</artifactId>
-		</dependency>
     </dependencies>
 
     <build>

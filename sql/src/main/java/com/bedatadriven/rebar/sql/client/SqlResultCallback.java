@@ -1,6 +1,7 @@
 package com.bedatadriven.rebar.sql.client;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Common callback interface for asynchronous SQL results
@@ -10,6 +11,8 @@ public abstract class SqlResultCallback {
 		public static final boolean CONTINUE = false;
 		public static final boolean ABORT = true;
 	
+		private static final Logger LOGGER = Logger.getLogger(SqlResultCallback.class.getName());
+		
     public abstract void onSuccess(SqlTransaction tx, SqlResultSet results);
 
     /**
@@ -23,7 +26,7 @@ public abstract class SqlResultCallback {
      * error handler called. 
      */
     public boolean onFailure(SqlException e) {
-    	Log.error("Sql statement failed, ABORTING (returning " + ABORT + ")", e);
+    	LOGGER.log(Level.SEVERE, "Sql statement failed, ABORTING (returning " + ABORT + ")", e);
     	return ABORT;
     }
 

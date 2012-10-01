@@ -1,12 +1,8 @@
 package com.bedatadriven.rebar.sql.server;
 
-import com.allen_sauer.gwt.log.client.Log;
-import com.bedatadriven.rebar.sql.client.*;
-import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
-import com.google.gwt.core.client.GWT;
-
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,9 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
+import com.bedatadriven.rebar.sql.client.SqlDatabase;
+import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
+import com.bedatadriven.rebar.sql.client.SqlException;
+import com.bedatadriven.rebar.sql.client.SqlResultCallback;
+import com.bedatadriven.rebar.sql.client.SqlResultSet;
+import com.bedatadriven.rebar.sql.client.SqlTransaction;
+import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.server.jdbc.JdbcDatabaseFactory;
 
 public class JdbcTest  {
 

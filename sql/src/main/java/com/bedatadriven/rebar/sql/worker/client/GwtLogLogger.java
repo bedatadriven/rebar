@@ -16,17 +16,22 @@
 
 package com.bedatadriven.rebar.sql.worker.client;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
 
 class GwtLogLogger implements GearsUpdateExecutor.Logger {
-  @Override
+  
+	private static Logger LOGGER = Logger.getLogger(GwtLogLogger.class.getName());
+	
+	@Override
   public void log(String message) {
-    Log.info(message);
+    LOGGER.info(message);
   }
 
   @Override
   public void log(String message, Exception e) {
-    Log.error(message,e);
+  	LOGGER.log(Level.SEVERE, message,e);
   }
 }

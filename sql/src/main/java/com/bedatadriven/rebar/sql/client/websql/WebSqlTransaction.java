@@ -18,8 +18,9 @@ package com.bedatadriven.rebar.sql.client.websql;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -31,7 +32,9 @@ import com.google.gwt.core.client.JsArray;
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqltransaction">W3 Standard</a>
  */
 public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
-
+ 
+	private static final Logger LOGGER = Logger.getLogger(WebSqlTransaction.class.getName());
+	
   protected WebSqlTransaction() {
   }
 
@@ -45,7 +48,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   }-*/;
 
   public void executeSql(final String statement, JavaScriptObject parameters, final WebSqlResultCallback callback) {
-  	if(Log.isErrorEnabled()) {
+  	if(LOGGER.isLoggable(Level.SEVERE)) {
 	  	doExecuteSql(statement, parameters, new WebSqlResultCallback() {
 				
 				@Override
@@ -53,14 +56,14 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
 					try {
 						callback.onSuccess(tx, results);
 					} catch(Exception e) {
-						Log.error("Execution of callback for statement '" + statement + "' threw exception: " + e.getMessage(), e);
+						LOGGER.log(Level.SEVERE, "Execution of callback for statement '" + statement + "' threw exception: " + e.getMessage(), e);
 						throw new RuntimeException(e);
 					}
 				}
 				
 				@Override
 				public boolean onFailure(WebSqlException e) {
-					Log.error("Execution of statement '" + statement + "'");
+					LOGGER.severe("Execution of statement '" + statement + "'");
 					return callback.onFailure(e);
 				}
 			});
@@ -80,18 +83,18 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   }-*/;
 
   public void executeSql(String statement, Object[] parameters) {
-    Log.debug("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+  	LOGGER.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
     executeSql(statement, toParamArray(parameters));
   }
 
   
   public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
-    Log.debug("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+  	LOGGER.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
   	executeSql(statement, toParamArray(parameters), callback);
   }
 
   public void executeSql(String statement, WebSqlResultCallback resultCallback) {
-    Log.debug("WebSql: Queuing statement '" + statement + "' with no parameters");
+  	LOGGER.fine("WebSql: Queuing statement '" + statement + "' with no parameters");
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
 

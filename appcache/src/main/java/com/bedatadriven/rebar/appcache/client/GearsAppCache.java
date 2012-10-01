@@ -16,7 +16,9 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-import com.allen_sauer.gwt.log.client.Log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.gears.client.Factory;
 import com.google.gwt.gears.client.localserver.LocalServer;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class GearsAppCache extends AbstractAppCache {
 	
+	private static final Logger LOGGER = Logger.getLogger(GearsAppCache.class.getName());
 
   private ManagedResourceStore store = null;
   
@@ -38,7 +41,7 @@ public class GearsAppCache extends AbstractAppCache {
 	  		initStore();
 	  	}
   	} catch(Throwable t) {
-  		Log.debug("GearsAppCache: Factory.getInstance().hasPermission() threw exception", t);
+  		LOGGER.log(Level.WARNING, "GearsAppCache: Factory.getInstance().hasPermission() threw exception", t);
   		store = null;
   	}
   }
@@ -58,7 +61,7 @@ public class GearsAppCache extends AbstractAppCache {
 	  sinkProgressEvent(store, this);
 	  sinkCompleteEevent(store, this);
 	  
-	  Log.info("GearsAppCache initializing, current version = " + store.getCurrentVersion());
+	  LOGGER.info("GearsAppCache initializing, current version = " + store.getCurrentVersion());
   }
 
   @Override
@@ -117,7 +120,7 @@ public class GearsAppCache extends AbstractAppCache {
   		return Status.UNCACHED;
   	}
   	
-  	Log.debug("GearsAppCache: status = " + getStore().getUpdateStatus() + ", currentVersion = " + getStore().getCurrentVersion());
+  	LOGGER.fine("GearsAppCache: status = " + getStore().getUpdateStatus() + ", currentVersion = " + getStore().getCurrentVersion());
   	
     switch(getStore().getUpdateStatus()) {
       case ManagedResourceStore.UPDATE_CHECKING:

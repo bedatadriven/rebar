@@ -17,7 +17,7 @@
 
 <module rename-to="GearsSqlWorker">
     <inherits name="com.bedatadriven.rebar.worker.Worker"/>
-    <inherits name="com.allen_sauer.gwt.log.gwt-log-OFF"/>
+ 	<inherits name="com.google.gwt.logging.Logging"/>
 
     <inherits name="com.bedatadriven.rebar.sql.Sql"/>
     

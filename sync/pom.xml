@@ -59,14 +59,6 @@
       <artifactId>json</artifactId>
       <version>20090211</version>
     </dependency>
-
-    <!-- Support for Logging -->
-    <dependency>
-      <groupId>com.google.code.gwt-log</groupId>
-      <artifactId>gwt-log</artifactId>
-    </dependency>
-
-
     <!-- Testing libraries -->
     <dependency>
       <groupId>org.xerial</groupId>
