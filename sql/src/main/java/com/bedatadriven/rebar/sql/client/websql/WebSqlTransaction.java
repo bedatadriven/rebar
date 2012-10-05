@@ -33,7 +33,9 @@ import com.google.gwt.core.client.JsArray;
  */
 public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
  
-	private static final Logger LOGGER = Logger.getLogger(WebSqlTransaction.class.getName());
+	// when called with class.getName(), it was throwing a javascript
+	// exception. 
+	private static final Logger LOGGER = Logger.getLogger("com.bedatadriven.rebar.sql.client.websql.WebSqlTransaction"); 
 	
   protected WebSqlTransaction() {
   }
