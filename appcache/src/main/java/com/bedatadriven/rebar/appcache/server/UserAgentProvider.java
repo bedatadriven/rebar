@@ -17,10 +17,14 @@
 package com.bedatadriven.rebar.appcache.server;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserAgentProvider implements PropertyProvider {
+	
+	private static final Logger LOGGER = Logger.getLogger(UserAgentProvider.class.getName());
 	
   private final Pattern geckoRevision;
 
@@ -48,6 +52,9 @@ public class UserAgentProvider implements PropertyProvider {
       }
       return "gecko";
     }
+    
+    LOGGER.severe("Cannot match user agent header to supported browser: '" + ua + "'");
+    
     throw new UnknownUserAgentException();
   }
 
