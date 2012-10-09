@@ -45,9 +45,9 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git@github.com:akbertram/rebar.git</connection>
-    <url>scm:git:git@github.com:akbertram/rebar.git</url>
-    <developerConnection>scm:git:git@github.com:akbertram/rebar.git</developerConnection>
+    <connection>scm:git:git@github.com:bedatadriven/rebar.git</connection>
+    <url>scm:git:git@github.com:bedatadriven/rebar.git</url>
+    <developerConnection>scm:git:git@github.com:bedatadriven/rebar.git</developerConnection>
   </scm>
 
   <distributionManagement>
