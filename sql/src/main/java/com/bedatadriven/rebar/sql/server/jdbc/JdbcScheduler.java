@@ -19,9 +19,15 @@ public class JdbcScheduler extends Scheduler {
 	
 	private Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
 	private boolean running = false;
+	private boolean allowNestedProcessing = false;
 	
 	public JdbcScheduler() {
 		
+	}
+	
+	
+	public void allowNestedProcessing() {
+		this.allowNestedProcessing = true;
 	}
 	
 	public static JdbcScheduler get() {
@@ -74,7 +80,7 @@ public class JdbcScheduler extends Scheduler {
   }
   
   public void process() {
-  	if(!running) {
+  	if(!running || allowNestedProcessing) {
   		running = true;
 	  	
 	  	while(!queue.isEmpty()) {

@@ -44,8 +44,9 @@ public class BuilderTest {
   @Before
   public void setUp() throws ClassNotFoundException, SQLException {
 
-		String databaseName = "buildertest" + new java.util.Date().getTime();
-		
+	String databaseName = "buildertest" + new java.util.Date().getTime();
+	System.out.println("db = " + databaseName);
+	
   	Class.forName("org.sqlite.JDBC");
     connectionUrl = "jdbc:sqlite:" + databaseName;
 
@@ -82,7 +83,7 @@ public class BuilderTest {
       }
       assertEquals(list.get(i).getHeight(), rs.getDouble(4));
       assertEquals(list.get(i).isActive(), rs.getBoolean(5));
-      assertTrue(rs.getLong(6) > 1316171856l );
+      assertTrue(rs.getDouble(6) > 1316171856l );
     }
     rs.close();
     conn.close();
