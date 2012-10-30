@@ -3,6 +3,7 @@ package com.bedatadriven.rebar.sql.shared.adapter;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +36,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
   }
 
 
-  private Queue<ScheduledCommand> queue = new ArrayDeque<ScheduledCommand>();
+  private LinkedList<ScheduledCommand> queue = new LinkedList<ScheduledCommand>();
 
   private SqlTransactionCallback callback;
   private Executor executor;
