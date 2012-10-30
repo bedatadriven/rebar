@@ -20,7 +20,7 @@
   <groupId>com.bedatadriven.rebar</groupId>
   <artifactId>parent</artifactId>
   <packaging>pom</packaging>
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.3.3</version>
   <name>Rebar Parent POM</name>
   <description>Set of tools to facilitate the development of desktop-strength webapps with
     GWT and Gears, including a jdbc facade, java persistence, a worker-thread linker, and
