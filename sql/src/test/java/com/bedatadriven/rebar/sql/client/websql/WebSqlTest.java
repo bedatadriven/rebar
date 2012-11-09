@@ -16,6 +16,8 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class WebSqlTest extends GWTTestCase {
@@ -31,7 +33,7 @@ public class WebSqlTest extends GWTTestCase {
 
     WebSqlDatabase db = WebSqlDatabase.openDatabase("testInsert", "1", "My test database", 1024 * 50);
     assertNotNull(db);
-    db.transaction(new WebSqlTransactionCallback() {
+    db.transaction(new WebSqlTransactionCallback() { 
       @Override
       public void begin(WebSqlTransaction tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
@@ -48,6 +50,7 @@ public class WebSqlTest extends GWTTestCase {
 
 			@Override
       public void onError(WebSqlException e) {
+		Logger.getLogger("").severe("error: " + e.getMessage());
         fail(e.getMessage());
       }
     });
