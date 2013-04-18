@@ -39,7 +39,7 @@ public class UserAgentProvider implements PropertyProvider {
       return "safari";
     } else if (ua.contains("msie 8")) {
       return "ie8";
-    } else if (ua.contains("msie 9")) {
+    } else if (ua.contains("msie 9") || ua.contains("msie 10")) {
       return "ie9";
     } else if (ua.contains("msie 7") || ua.contains("msie 6")) {
       return "ie6";
