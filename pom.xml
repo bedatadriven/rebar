@@ -66,11 +66,10 @@
 
   <properties>
     <!--  convenience to define GWT version in one place -->
-    <gwtVersion>2.3.0</gwtVersion>
+    <gwtVersion>2.5.1</gwtVersion>
 
-    <!--  tell the compiler we can use 1.6 -->
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
  
@@ -111,7 +110,7 @@
   			<plugin>
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>gwt-maven-plugin</artifactId>
-		        <version>2.3.0-1</version>
+		        <version>2.5.1</version>
   			</plugin>
   			
   		</plugins>
@@ -125,8 +124,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.0.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <encoding>UTF-8</encoding>
 
           <!-- Don't compile our emulation sources -->

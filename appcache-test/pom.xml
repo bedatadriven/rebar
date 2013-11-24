@@ -66,6 +66,10 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                        	<draftCompile>true</draftCompile>
+                      		<localWorkers>2</localWorkers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

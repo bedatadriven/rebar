@@ -62,24 +62,25 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       return super.link(logger, linkerContext, artifacts);
     
     } else {
-      
+    	
+      ArtifactSet writableArtifacts = new ArtifactSet(artifacts);     
       ArtifactSet toReturn = new ArtifactSet(artifacts);
   
       for (CompilationResult compilation : compilationResults) {
-        PermutationContext context = new PermutationContext(linkerContext, artifacts, compilation);
+        PermutationContext context = new PermutationContext(linkerContext, writableArtifacts, compilation);
   
-        Collection<Artifact<?>> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation, artifacts);
+        Collection<Artifact<?>> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation, writableArtifacts);
   
-        context.addToCache(artifacts.find(EmittedArtifact.class));
+        context.addToCache(writableArtifacts.find(EmittedArtifact.class));
         context.addToCache(emittedArtifacts(compilationArtifacts));
   
         toReturn.addAll(compilationArtifacts);
-        toReturn.add(doEmitBootstrapScript(logger, context, artifacts));
+        toReturn.add(doEmitBootstrapScript(logger, context, writableArtifacts));
         toReturn.add(doEmitManifest(logger, context, new GearsManifestWriter()));
         toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
       }
   
-      toReturn.add(emitPermutationMap(logger, linkerContext, artifacts));
+      toReturn.add(emitPermutationMap(logger, linkerContext, writableArtifacts));
      
       return toReturn;
     }
