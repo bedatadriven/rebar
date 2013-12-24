@@ -41,6 +41,7 @@
     <module>appcache-test</module>
     <module>time</module>
     <module>asyncfun</module>
+    <module>less</module>
   </modules>
 
   <scm>
@@ -65,7 +66,7 @@
 
   <properties>
     <!--  convenience to define GWT version in one place -->
-    <gwtVersion>2.5.1</gwtVersion>
+    <gwtVersion>2.6.0-rc3</gwtVersion>
   </properties>
 
  
