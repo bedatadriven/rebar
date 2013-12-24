@@ -34,7 +34,6 @@
 
   <modules>
     <module>sql</module>
-    <module>dao-gen</module>
     <module>sync</module>
     <module>worker</module>
     <module>jpa-mapping</module>
