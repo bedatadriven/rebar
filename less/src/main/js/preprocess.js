@@ -46,46 +46,24 @@ function visitTree(tree, visitor) {
 		}
 	}
 }
-function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
 
-// \9 is a "CSS hack" specific to Internet Explorer 7, 8, & 9.
-// This simply means that the one specific line of CSS ending with a \9; in place of the ; is only valid in IE 7, 8, & 9.
-// http://stackoverflow.com/questions/8004765/css-9-in-width-property
-function includeIE7_9(node) {
+function preprocessingVisitor(node) {
+	
+	
+	// \9 is a "CSS hack" specific to Internet Explorer 7, 8, & 9.
+	// This simply means that the one specific line of CSS ending with a \9; in place of the ; is only valid in IE 7, 8, & 9.
+	// http://stackoverflow.com/questions/8004765/css-9-in-width-property
 	if(typeof(node.value) === 'string' && endsWith(node.value, "\\9")) {
 		node.value = node.value.substring(0, node.value.length-2).trim();
 	}
 }
 
-// Clsoure chokes on color-stop(a b), expects color-stop(a, b)
-// Example: -webkit-linear-gradient(left, color-stop(rgba(0, 0, 0, 0.5) 0%), color-stop(rgba(0, 0, 0, 0.0001) 100%));
-// (TODO)
-function fixColorStop(node) {
-	if(typeof(node.value) === 'string' && node.value.contains('color-stop(')) {
-		// tokenize
-		
-	}
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
 
-function compile(input, userAgent) { 
-	var result; 
-	var parser = new less.Parser(); 
-	parser.parse(input, function(e, tree) { 
-		if (e instanceof Object) { 
-			throw e; 
-		}; 
-		
-		// we need to clean up some of the browser hacks common
-		// in less to get clean input for GSS
-		
-		//java.lang.System.out.println(dump(tree));
-		
-		visitTree(tree, includeIE7_9)
-		
-		
-		result = tree.toCSS({compress: false}); 
-	});
-	return result;
+
+
+function preprocess(tree) { 
+	visitTree(tree, preprocessingVisitor)
 }

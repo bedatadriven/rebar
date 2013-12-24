@@ -1,0 +1,28 @@
+<project name="LessCompiler" default="compile" basedir=".">
+  <description>
+    Compiles the Less compiler to a java class file for perforamnce
+  </description>
+  <target name="compile">
+    <concat destfile="target/less-merged.js" force="no">
+      <filelist dir="src/main/js" files="preprocess.js,less-rhino-1.4.0.js" />
+    </concat>
+    <path id="classpath">
+      <pathelement path="${compile_classpath}" />
+    </path>
+    <java classname="org.mozilla.javascript.tools.jsc.Main">
+      <arg value="-implements" />
+      <arg value="com.google.common.base.Function" />
+      <arg value="-opt" />
+      <arg value="9" />
+      <arg value="-package" />
+      <arg value="com.bedatadriven.rebar.less.rebind" />
+      <arg value="-d" />
+      <arg value="target/classes" />
+      <arg value="-o" />
+      <arg
+        value="LessImpl.class" />
+      <arg value="target/less-merged.js" />
+      <classpath refid="maven.compile.classpath" />
+    </java>
+  </target>
+</project>

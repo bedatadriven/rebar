@@ -1,41 +1,47 @@
 package com.bedatadriven.rebar.less;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Test;
-import org.lesscss.LessSource;
 
 import com.bedatadriven.rebar.less.rebind.GssCompiler;
 import com.bedatadriven.rebar.less.rebind.GssTree;
-import com.bedatadriven.rebar.less.rebind.LessCompiler;
-import com.bedatadriven.rebar.less.rebind.LessException;
+import com.bedatadriven.rebar.less.rebind.LessCompilerFactory;
+import com.bedatadriven.rebar.less.rebind.LessInput;
 import com.google.common.base.Charsets;
+import com.google.common.base.Function;
+import com.google.common.base.Stopwatch;
 import com.google.common.io.Files;
-import com.google.gwt.core.ext.UnableToCompleteException;
 
 
 public class BootstrapTest {
 
 	@Test
-	public void testCompile() throws IOException, LessException, UnableToCompleteException {
-		
+	public void testClassCompile() throws Exception {
+
 		ConsoleTreeLogger logger = new ConsoleTreeLogger();
 		
-		LessSource source = new LessSource(new File("src/test/less/bootstrap-3.0.3/bootstrap.less"));
+		Function<LessInput, String> compiler = LessCompilerFactory.create();
 		
-		LessCompiler lessCompiler = new LessCompiler();
-		lessCompiler.init(logger);
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		System.out.println("Less parser loaded in "  + stopwatch);
 		
-		String lessOutput = lessCompiler.compile(logger, source.getNormalizedContent());
+		stopwatch.reset().start();
+		
+		LessInput input = new LessInput();
+		input.setFile("src/test/less/bootstrap-3.0.3/bootstrap.less");
+		input.setUserAgent("safari");
+		String lessOutput = compiler.apply(input);
+	
+		System.out.println("Less compiled in "  + stopwatch);
+		
 		Files.write(lessOutput, new File("target/bootstrap.css"), Charsets.UTF_8);
 		
 		GssCompiler gssCompiler = new GssCompiler();
 		GssTree tree = gssCompiler.compile(logger, lessOutput);
 		tree.finalizeTree(logger);
 		tree.optimize(logger, "safari");
-		
-		
+
 	}
 	
 }
