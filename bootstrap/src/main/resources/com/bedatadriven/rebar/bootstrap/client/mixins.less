@@ -28,11 +28,14 @@
 }
 
 // WebKit-style focus
-.tab-focus() {
-  // Default
-  outline: thin dotted;
-  // WebKit
+.tab-focus() when (@gwt-user-agent = 'safari') {
   outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+ // Default
+.tab-focus() {
+  outline: thin dotted;
   outline-offset: -2px;
 }
 

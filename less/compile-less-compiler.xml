@@ -21,7 +21,7 @@
       <arg value="-o" />
       <arg
         value="LessImpl.class" />
-      <arg value="target/less-merged.js" />
+      <arg value="src/main/js/less-rhino-1.4.0.js" />
       <classpath refid="maven.compile.classpath" />
     </java>
   </target>

@@ -4148,72 +4148,50 @@ tree.jsify = function (obj) {
 };
 
 })(require('./tree'));
-var name;
+//var name;
+//
+//function loadStyleSheet(sheet, callback, reload, remaining) {
+//    var endOfPath = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\')),
+//        sheetName = name.slice(0, endOfPath + 1) + sheet.href,
+//        contents = sheet.contents || {},
+//        input = readFile(sheetName);
+//        
+//    contents[sheetName] = input;
+//        
+//    var parser = new less.Parser({
+//        paths: [sheet.href.replace(/[\w\.-]+$/, '')],
+//        contents: contents
+//    });
+//    parser.parse(input, function (e, root) {
+//        if (e) {
+//            return error(e, sheetName);
+//        }
+//        try {
+//            callback(e, root, input, sheet, { local: false, lastModified: 0, remaining: remaining }, sheetName);
+//        } catch(e) {
+//            error(e, sheetName);
+//        }
+//    });
+//}
 
-function loadStyleSheet(sheet, callback, reload, remaining) {
-    var endOfPath = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\')),
-        sheetName = name.slice(0, endOfPath + 1) + sheet.href,
-        contents = sheet.contents || {},
-        input = readFile(sheetName);
-        
-    contents[sheetName] = input;
-        
-    var parser = new less.Parser({
-        paths: [sheet.href.replace(/[\w\.-]+$/, '')],
-        contents: contents
-    });
-    parser.parse(input, function (e, root) {
-        if (e) {
-            return error(e, sheetName);
-        }
-        try {
-            callback(e, root, input, sheet, { local: false, lastModified: 0, remaining: remaining }, sheetName);
-        } catch(e) {
-            error(e, sheetName);
-        }
-    });
-}
-
-function writeFile(filename, content) {
-    var fstream = new java.io.FileWriter(filename);
-    var out = new java.io.BufferedWriter(fstream);
-    out.write(content);
-    out.close();
-}
 
 // Implementation of our Function interface
 function apply(input) {
     var compress = false;
-	
-	name = input.file;
-	if (!name) {
-        throw 'No files present in the fileset; Check your pattern match in build.xml';
-    }
-    path = name.split("/");path.pop();path=path.join("/")
-
-    var input = readFile(name);
-
-    if (!input) {
-        print('lesscss: couldn\'t open file ' + name);
-        quit(1);
-    }
-
+    var name = 'input.less';
     var result;
     try {
         var parser = new less.Parser();
-        parser.parse(input, function (e, root) {
+        parser.parse(''+input, function (e, root) {
             if (e) {
                 error(e, name);
-                quit(1);
             } else {
-            	preprocess(root);
                 result = root.toCSS({compress: compress || false});
             }
         });
     }
     catch(e) {
         error(e, name);
-        quit(1);
     }
     return result;
 };
@@ -4240,9 +4218,9 @@ function error(e, filename) {
         content += e.stack;
     } else if (e.extract) {
         content += 'on line ' + e.line + ', column ' + (e.column + 1) + ':\n';
-        errorline(e, 0);
-        errorline(e, 1);
-        errorline(e, 2);
+//        errorline(e, 0);
+//        errorline(e, 1);
+//        errorline(e, 2);
     }
-   print(content);
+   throw content;
 }

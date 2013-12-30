@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name='com.google.gwt.user.User' />
+  <inherits name="com.google.gwt.activity.Activity" />
+  <inherits name="com.bedatadriven.rebar.less.Less"/>
+  
+  <source path='client' />
+
+  <extend-configuration-property name="less.global.import" 
+    value="com/bedatadriven/rebar/bootstrap/client/variables.less" />
+  <extend-configuration-property name="less.global.import" 
+    value="com/bedatadriven/rebar/bootstrap/client/mixins.less" />
+
+</module>

@@ -49,27 +49,21 @@
       <artifactId>guava</artifactId>
       <version>15.0</version>
     </dependency>
-    <dependency>
+ <!--   <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gssresource</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.lesscss</groupId>
-      <artifactId>lesscss</artifactId>
-      <version>1.3.3</version>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>org.mozilla</groupId>
       <artifactId>rhino</artifactId>
       <version>1.7R4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.closure-stylesheets</groupId>
+      <artifactId>closure-stylesheets</artifactId>
+      <version>v20131127</version>
     </dependency>
   </dependencies>
 

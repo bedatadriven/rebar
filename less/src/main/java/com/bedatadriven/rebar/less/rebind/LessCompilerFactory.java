@@ -24,10 +24,10 @@ public class LessCompilerFactory {
 	/**
 	 * Constructs a new <code>LessCompiler</code>.
 	 */
-	public static Function<LessInput, String> create() {
+	public static Function<String, String> create() {
 		try { 
 			Class compiledClass = Class.forName("com.bedatadriven.rebar.less.rebind.LessImpl");
-			return (Function<LessInput, String>) compiledClass.newInstance();
+			return (Function<String, String>) compiledClass.newInstance();
 		} catch(Exception e) {
 			throw new RuntimeException("Exception loading LESS compiler", e); 
 		}

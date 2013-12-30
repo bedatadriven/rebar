@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name="com.google.gwt.resources.Resources" />
+
+  <generate-with
+    class="com.bedatadriven.rebar.less.rebind.LessResourceGenerator">
+    <when-type-assignable class="com.bedatadriven.rebar.less.client.LessResource" />
+  </generate-with>
+
+  <define-configuration-property name="less.global.import" is-multi-valued="true" />
+        
+  <source path="client" />
+
+</module>
