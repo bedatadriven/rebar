@@ -111,7 +111,7 @@
                 <argument>-package</argument>
                 <argument>com.bedatadriven.rebar.less.rebind</argument>
                 <argument>-d</argument>
-                <argument>target/classes</argument>
+                <argument>${project.build.outputDirectory}</argument>
                 <argument>-o</argument>
                 <argument>LessImpl.class</argument>
                 <argument>src/main/js/less-rhino-1.4.0.js</argument>
