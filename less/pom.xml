@@ -49,12 +49,6 @@
       <artifactId>guava</artifactId>
       <version>15.0</version>
     </dependency>
- <!--   <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-dev</artifactId>
-      <version>${gwtVersion}</version>
-      <scope>provided</scope>
-    </dependency> -->
     <dependency>
       <groupId>org.mozilla</groupId>
       <artifactId>rhino</artifactId>
@@ -98,39 +92,33 @@
 
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
         <executions>
           <execution>
-            <id>compile-less-compiler</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
             <phase>compile</phase>
             <configuration>
-              <target>
-                <ant antfile="${basedir}/compile-less-compiler.xml"
-                  target="compile">
-                  <reference torefid="maven.compile.classpath"
-                    refid="maven.compile.classpath" />
-                </ant>
-              </target>
+              <mainClass>org.mozilla.javascript.tools.jsc.Main</mainClass>
+              <arguments>
+                <argument>-implements</argument>
+                <argument>com.google.common.base.Function</argument>
+                <argument>-opt</argument>
+                <argument>9</argument>
+                <argument>-package</argument>
+                <argument>com.bedatadriven.rebar.less.rebind</argument>
+                <argument>-d</argument>
+                <argument>target/classes</argument>
+                <argument>-o</argument>
+                <argument>LessImpl.class</argument>
+                <argument>src/main/js/less-rhino-1.4.0.js</argument>
+              </arguments>
             </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>1.4.1</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-commons-net</artifactId>
-            <version>1.8.1</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
     <pluginManagement>
