@@ -3,6 +3,7 @@ package com.bedatadriven.rebar.less.rebind;
 import java.util.Map;
 import java.util.Set;
 
+import com.bedatadriven.rebar.less.rebind.passes.EmitFontResources;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;
 import com.google.common.css.IdentitySubstitutionMap;
@@ -39,6 +40,9 @@ import com.google.common.css.compiler.passes.RemoveVendorSpecificProperties;
 import com.google.common.css.compiler.passes.ReplaceConstantReferences;
 import com.google.common.css.compiler.passes.ReplaceMixins;
 import com.google.common.css.compiler.passes.SplitRulesetNodes;
+import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.SelectionProperty;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -61,8 +65,9 @@ public class GssTree {
 		//TODO
 		// new CheckDependencyNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
 
-		LoggerErrorManager errorManager = new LoggerErrorManager(
+		LoggingErrorManager errorManager = new LoggingErrorManager(
 				logger.branch(Type.INFO, "Finalizing Closure Stylesheet"));
+
 
 		new CreateStandardAtRuleNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
 		new CreateMixins(cssTree.getMutatingVisitController(), errorManager).runPass();
@@ -77,43 +82,15 @@ public class GssTree {
 		new ProcessRefiners(cssTree.getMutatingVisitController(), errorManager, true).runPass();
 	}
 
-	public void optimize(TreeLogger logger, String userAgent) {
+	public void optimize(TreeLogger logger, GeneratorContext context) throws UnableToCompleteException {
 
-		LoggerErrorManager errorManager = new LoggerErrorManager(
+		LoggingErrorManager errorManager = new LoggingErrorManager(
 				logger.branch(Type.INFO, "Optimizing CSS Tree"));
 
 
-		if("safari".equals(userAgent)) {
-			removeVendor(Vendor.WEBKIT);
-		} else if("gecko1_8".equals(userAgent)) {
-			removeVendor(Vendor.MOZILLA);
-		} else if(userAgent.startsWith("ie")) {
-			removeVendor(Vendor.MICROSOFT);
-		}
-
-		// Collect mixin definitions and replace mixins
-		CollectMixinDefinitions collectMixinDefinitions = new CollectMixinDefinitions(
-				cssTree.getMutatingVisitController(), errorManager);
-		collectMixinDefinitions.runPass();
-		new ReplaceMixins(cssTree.getMutatingVisitController(), errorManager,
-				collectMixinDefinitions.getDefinitions()).runPass();
+		stripVendorPrefixed(context, logger);
 
 		new ProcessComponents<Object>(cssTree.getMutatingVisitController(), errorManager).runPass();
-
-		// TODO pass true conditions
-		new EliminateConditionalNodes(cssTree.getMutatingVisitController(),
-				Sets.<String>newHashSet()).runPass();
-
-		CollectConstantDefinitions collectConstantDefinitionsPass = new CollectConstantDefinitions(
-				cssTree);
-		collectConstantDefinitionsPass.runPass();
-
-		ReplaceConstantReferences replaceConstantReferences = new ReplaceConstantReferences(cssTree,
-				collectConstantDefinitionsPass.getConstantDefinitions(), true, errorManager, false);
-		replaceConstantReferences.runPass();
-
-		// will be done at LESS level if at all
-		//new ImageSpriteCreator(cssTree.getMutatingVisitController(), context, errorManager).runPass();
 
 		if (simplifyCss) {
 			// Eliminate empty rules.
@@ -141,7 +118,29 @@ public class GssTree {
 			new MergeAdjacentRulesetNodesWithSameDeclarations(cssTree).runPass();
 			new EliminateUselessRulesetNodes(cssTree).runPass();
 		}
+	}
+	
+	
+	
 
+	private void stripVendorPrefixed(GeneratorContext context, TreeLogger logger) throws UnableToCompleteException {
+		
+		String userAgent;
+		try {
+			userAgent = context.getPropertyOracle().getSelectionProperty(logger, "user.agent")
+					.getCurrentValue();
+		} catch (BadPropertyValueException e) {
+			logger.log(Type.ERROR, "Exception getting user.agent property", e);
+			throw new UnableToCompleteException();
+		}
+		
+		if("safari".equals(userAgent)) {
+			removeVendor(Vendor.WEBKIT);
+		} else if("gecko1_8".equals(userAgent)) {
+			removeVendor(Vendor.MOZILLA);
+		} else if(userAgent.startsWith("ie")) {
+			removeVendor(Vendor.MICROSOFT);
+		}
 	}
 
 	private void removeVendor(Vendor vendor) {
@@ -174,6 +173,14 @@ public class GssTree {
 		.runPass();
 
 		this.mappings = recordingSubstitutionMap.getMappings();
+	}
+
+	public void emitResources(TreeLogger logger, GeneratorContext context) throws UnableToCompleteException {
+		EmitFontResources emitter = new EmitFontResources(cssTree.getMutatingVisitController(), context, logger);
+		emitter.runPass();
+		if(emitter.hasErrors()) {
+			throw new UnableToCompleteException();
+		}
 	}
 	
 	public Map<String, String> getMappings() {

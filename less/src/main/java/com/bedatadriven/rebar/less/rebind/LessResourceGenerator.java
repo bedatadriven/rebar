@@ -70,12 +70,21 @@ public class LessResourceGenerator extends IncrementalGenerator {
 
 	private String compileCSS(TreeLogger logger, GeneratorContext context, JClassType type) throws UnableToCompleteException {
 
+		// Gather less sources together
 		Preprocessor preprocessor = new Preprocessor();
 		preprocessor.preprocess(logger, context, type);
 
+		// Compile LESS -> CSS
 		String css = compileLess(logger, preprocessor.asString());
 
-		return css;
+		// Optimize with Closure Stylesheets Compiler
+		GssCompiler gssCompiler = new GssCompiler();
+		GssTree tree = gssCompiler.compile(logger, css);
+		tree.finalizeTree(logger);
+		tree.optimize(logger, context);
+		tree.emitResources(logger, context);
+		
+		return tree.toCompactCSS();
 	}
 
 	private String compileLess(TreeLogger parentLogger, String input) throws UnableToCompleteException {

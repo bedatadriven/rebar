@@ -8,7 +8,6 @@ import static org.junit.Assert.*;
 import com.bedatadriven.rebar.less.rebind.GssCompiler;
 import com.bedatadriven.rebar.less.rebind.GssTree;
 import com.bedatadriven.rebar.less.rebind.LessCompilerFactory;
-import com.bedatadriven.rebar.less.rebind.LessInput;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Stopwatch;
@@ -43,7 +42,7 @@ public class CompileTest {
 		GssCompiler gssCompiler = new GssCompiler();
 		GssTree tree = gssCompiler.compile(logger, lessOutput);
 		tree.finalizeTree(logger);
-		tree.optimize(logger, "safari");
+		//tree.optimize(logger, "safari");
 	}
 	
 	@Test(expected = Exception.class)
@@ -64,7 +63,7 @@ public class CompileTest {
 		GssCompiler gssCompiler = new GssCompiler();
 		GssTree tree = gssCompiler.compile(logger, css);
 		tree.finalizeTree(logger);
-		tree.optimize(logger, "safari");
+	//	tree.optimize(logger, "safari");
 		tree.renameClasses();
 		
 		assertTrue(tree.getMappings().containsKey("foobar"));

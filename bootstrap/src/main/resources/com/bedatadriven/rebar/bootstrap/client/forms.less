@@ -39,11 +39,18 @@ input[type="search"] {
   .box-sizing(border-box);
 }
 
+.checkbox-margin() when (@ie7), (@ie8), (@ie9) {
+  margin: 1px 0 0;
+}
+
+.checkbox-margin() {
+  margin: 4px 0 0;
+}
+
 // Position radios and checkboxes better
 input[type="radio"],
 input[type="checkbox"] {
-  margin: 4px 0 0;
-  margin-top: 1px \9; /* IE8-9 */
+  .checkbox-margin();
   line-height: normal;
 }
 

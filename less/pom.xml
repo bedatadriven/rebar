@@ -16,7 +16,7 @@
   <packaging>jar</packaging>
 
   <name>Rebar Less</name>
-  <description>Provides a LessResource to enable use of Less stylesheets in GWT Client Bundles
+  <description>Provides a LessResource to enable use of Less stylesheets in GWT
     </description>
 
   <parent>
@@ -59,6 +59,11 @@
       <artifactId>closure-stylesheets</artifactId>
       <version>v20131127</version>
     </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.2</version>
+    </dependency>
   </dependencies>
 
   <repositories>
@@ -67,7 +72,6 @@
       <url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
     </repository>
   </repositories>
-
 
   <build>
 

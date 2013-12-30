@@ -6,12 +6,12 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
 
-class LoggerErrorManager implements ErrorManager {
+public class LoggingErrorManager implements ErrorManager {
 
 	private final TreeLogger logger;
 	private boolean hasErrors;
 
-	LoggerErrorManager(TreeLogger logger) {
+	public LoggingErrorManager(TreeLogger logger) {
 		this.logger = logger;
 	}
 

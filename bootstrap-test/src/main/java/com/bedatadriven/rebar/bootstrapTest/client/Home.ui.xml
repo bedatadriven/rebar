@@ -6,6 +6,7 @@
   </ui:style>
   
   <ui:with type="com.bedatadriven.rebar.bootstrap.client.Bootstrap" field="b"/>
+  <ui:with type="com.bedatadriven.rebar.bootstrap.client.Glyphicons" field="glyphicons"/>
   
   <g:HTMLPanel>
 
@@ -61,7 +62,8 @@
             nibh, ut fermentum massa justo sit amet risus. Etiam porta
             sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p>
-            <a class="{b.btn} {b.btnDefault}" href="#" role="button">View
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button">
+            <span class="{glyphicons.glyphicon} {glyphicons.record}"></span> View
               details &raquo;
             </a>
           </p>
@@ -73,8 +75,8 @@
             nibh, ut fermentum massa justo sit amet risus. Etiam porta
             sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p>
-            <a class="{b.btn} {b.btnDefault}" href="#" role="button">View
-              details &raquo;
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button">
+            <span class="{glyphicons.glyphicon} {glyphicons.star}"></span> View details &raquo;
             </a>
           </p>
         </div>
@@ -86,7 +88,7 @@
             tortor mauris condimentum nibh, ut fermentum massa justo sit
             amet risus.</p>
           <p>
-            <a class="{b.btn} {b.btnDefault}" href="#" role="button">View
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button"><span class="{glyphicons.glyphicon} {glyphicons.search}"></span> View
               details &raquo;
             </a>
           </p>

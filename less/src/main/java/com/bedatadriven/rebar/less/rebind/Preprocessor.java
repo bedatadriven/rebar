@@ -1,10 +1,6 @@
 package com.bedatadriven.rebar.less.rebind;
 
-import java.io.IOException;
-import java.net.URL;
-
 import com.bedatadriven.rebar.less.client.Source;
-import com.google.common.base.Charsets;
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
 import com.google.gwt.core.ext.Generator;
@@ -14,8 +10,6 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.thirdparty.guava.common.io.Resources;
 
 /**
  * Assembles referenced source files, global imports,
@@ -67,7 +61,7 @@ public class Preprocessor {
 		}
 		for(String globalImport : globalImports.getValues()) {
 			logger.log(Type.DEBUG, "Reading " + globalImport);
-			less.append(resourceToString(logger, globalImport));
+			less.append(ResourceResolver.resourceToString(logger, globalImport));
 		}
 	}
 	
@@ -89,25 +83,7 @@ public class Preprocessor {
 
 	private String resolveSource(JClassType type, TreeLogger parentLogger, String sourceFile) throws UnableToCompleteException {
 		TreeLogger logger = parentLogger.branch(Type.DEBUG, "Appending resource '" + sourceFile + "'");
-		String path = getPathRelativeToPackage(type.getPackage(), sourceFile);
-		return resourceToString(logger, path);
-	}
-
-	private String resourceToString(TreeLogger logger, String path) throws UnableToCompleteException {
-		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
-		if(url == null) {
-			logger.log(Type.ERROR, "Could not find resource");
-			throw new UnableToCompleteException();
-		}
-		try {
-			return Resources.toString(url, Charsets.UTF_8);
-		} catch (IOException e) {
-			logger.log(Type.ERROR, "Exception reading resource", e);
-			throw new UnableToCompleteException();
-		}
-	}
-	
-	private static String getPathRelativeToPackage(JPackage pkg, String path) {
-		return pkg.getName().replace('.', '/') + '/' + path;
+		String path = ResourceResolver.getPathRelativeToPackage(type.getPackage(), sourceFile);
+		return ResourceResolver.resourceToString(logger, path);
 	}
 }
