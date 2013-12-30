@@ -38,7 +38,7 @@
     </dependency>
     <dependency>
       <groupId>com.bedatadriven.rebar</groupId>
-      <artifactId>rebar-less</artifactId>
+      <artifactId>rebar-style</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

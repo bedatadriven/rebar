@@ -1,10 +1,11 @@
 package com.bedatadriven.rebar.bootstrap.client;
 
-import com.bedatadriven.rebar.less.client.LessResource;
-import com.bedatadriven.rebar.less.client.Source;
+import com.bedatadriven.rebar.style.client.Source;
+import com.bedatadriven.rebar.style.client.Stylesheet;
+
 
 @Source("glyphicons.less")
-public interface Glyphicons extends LessResource {
+public interface Glyphicons extends Stylesheet {
 
 	String glyphicon();
 	

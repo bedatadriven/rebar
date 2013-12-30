@@ -2,10 +2,13 @@
 <module>
   <inherits name='com.google.gwt.user.User' />
   <inherits name="com.google.gwt.activity.Activity" />
-  <inherits name="com.bedatadriven.rebar.less.Less"/>
+  <inherits name="com.bedatadriven.rebar.style.Style"/>
   
   <source path='client' />
 
+  <!-- The files with their definitions are available to all Stylesheets -->
+  <!-- You can override individual variable values by including a less.global.import -->
+  <!-- Configuration directive in your own module -->
   <extend-configuration-property name="less.global.import" 
     value="com/bedatadriven/rebar/bootstrap/client/variables.less" />
   <extend-configuration-property name="less.global.import" 

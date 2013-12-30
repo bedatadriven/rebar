@@ -1,7 +1,7 @@
 package com.bedatadriven.rebar.bootstrap.client;
 
-import com.bedatadriven.rebar.less.client.LessResource;
-import com.bedatadriven.rebar.less.client.Source;
+import com.bedatadriven.rebar.style.client.Source;
+import com.bedatadriven.rebar.style.client.Stylesheet;
 import com.google.gwt.core.shared.GWT;
 
 @Source({
@@ -44,7 +44,7 @@ import com.google.gwt.core.shared.GWT;
 	"responsive-utilities.less"
 
 })
-public interface Bootstrap extends LessResource {
+public interface Bootstrap extends Stylesheet {
 
 	public static final Bootstrap INSTANCE = GWT.create(Bootstrap.class);
 	

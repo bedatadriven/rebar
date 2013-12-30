@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ~ Copyright 2009-2010 BeDataDriven (alex@bedatadriven.com) ~ ~ Licensed 
+  under the Apache License, Version 2.0 (the "License"); you may not ~ use 
+  this file except in compliance with the License. You may obtain a copy of 
+  ~ the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 ~ ~ Unless 
+  required by applicable law or agreed to in writing, software ~ distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT ~ WARRANTIES 
+  OR CONDITIONS OF ANY KIND, either express or implied. See the ~ License for 
+  the specific language governing permissions and limitations under ~ the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>rebar-style</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Rebar Style</name>
+  <description>CSS/LESS Stylesheet compilation and optimization for GWT</description>
+
+  <parent>
+    <groupId>com.bedatadriven.rebar</groupId>
+    <artifactId>parent</artifactId>
+    <version>2.4.1-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+      <version>1.7R4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.closure-stylesheets</groupId>
+      <artifactId>closure-stylesheets</artifactId>
+      <version>v20131127</version>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.2</version>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>gss.temp</id>
+      <url>http://gwtquery-plugins.googlecode.com/svn/mavenrepo</url>
+    </repository>
+  </repositories>
+
+  <build>
+
+    <!-- Include everything in the jar -->
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/emul/**/*.java</include>
+          <include>**/client/**/*.java</include>
+          <include>**/public/**/*.*</include>
+
+          <include>**/shared/**/*.java</include>
+          <include>**/*.gwt.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>compile</phase>
+            <configuration>
+              <mainClass>org.mozilla.javascript.tools.jsc.Main</mainClass>
+              <arguments>
+                <argument>-implements</argument>
+                <argument>com.google.common.base.Function</argument>
+                <argument>-opt</argument>
+                <argument>9</argument>
+                <argument>-package</argument>
+                <argument>com.bedatadriven.rebar.less.rebind</argument>
+                <argument>-d</argument>
+                <argument>${project.build.outputDirectory}</argument>
+                <argument>-o</argument>
+                <argument>LessImpl.class</argument>
+                <argument>${basedir}/src/main/js/less-rhino-1.4.0.js</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
+          only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[1.2.1,)</versionRange>
+                    <goals>
+                      <goal>java</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+
