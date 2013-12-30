@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Test;
 
 import com.bedatadriven.rebar.less.ConsoleTreeLogger;
+import com.bedatadriven.rebar.less.rebind.EmitResources;
 import com.bedatadriven.rebar.less.rebind.LoggingErrorManager;
 import com.google.common.css.SourceCode;
 import com.google.common.css.compiler.ast.CssTree;
@@ -45,7 +46,7 @@ public class EmitFontResourcesTest {
 		CssTree tree = new GssParser(new SourceCode("test.css", css)).parse();
 		
 		new CreateStandardAtRuleNodes(tree.getMutatingVisitController(), new LoggingErrorManager(logger)).runPass();
-		new EmitFontResources(tree.getMutatingVisitController(), context, logger).runPass();
+		new EmitResources(tree.getMutatingVisitController(), context, logger).runPass();
 		
 		verify(context);
 		

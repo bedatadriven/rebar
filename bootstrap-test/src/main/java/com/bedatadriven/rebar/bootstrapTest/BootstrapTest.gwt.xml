@@ -5,9 +5,9 @@
   <inherits name="com.bedatadriven.rebar.bootstrap.Bootstrap"/>
   
   <entry-point class='com.bedatadriven.rebar.bootstrapTest.client.BootstrapTest' />
-  
+    
   <source path='client' />
   
-  <set-property name="user.agent" value="safari" />
+  <set-property name="user.agent" value="safari,ie9" />
   
 </module>

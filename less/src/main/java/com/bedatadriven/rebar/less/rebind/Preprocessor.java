@@ -12,15 +12,13 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 
 /**
- * Assembles referenced source files, global imports,
- * and selection properties into a single less import
+ * Assembles referenced LESS source files, global imports,
+ * and selection properties into a single LESS source file
  */
 public class Preprocessor {
 
-	
 	private StringBuilder less = new StringBuilder();
-
-
+	
 	public void preprocess(TreeLogger parentLogger, GeneratorContext context,  JClassType type) throws UnableToCompleteException {
 		TreeLogger logger = parentLogger.branch(Type.DEBUG, "Reading less sources...");
 		
@@ -32,7 +30,7 @@ public class Preprocessor {
 	public String asString() {
 		return less.toString();
 	}
-
+	
 	/**
 	 * Append LESS sources referenced in the @Source annotation of the LessResource class
 	 */

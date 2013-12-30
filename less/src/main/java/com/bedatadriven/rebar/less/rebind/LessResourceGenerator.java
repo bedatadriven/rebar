@@ -1,71 +1,97 @@
 package com.bedatadriven.rebar.less.rebind;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.List;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import com.google.gwt.core.ext.BadPropertyValueException;
+import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.IncrementalGenerator;
-import com.google.gwt.core.ext.RebindMode;
-import com.google.gwt.core.ext.RebindResult;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
+import com.google.gwt.core.ext.linker.GeneratedResource;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.resources.client.CssResource.ClassName;
-import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 
-public class LessResourceGenerator extends IncrementalGenerator {
+public class LessResourceGenerator extends Generator {
 
-	private String className(JMethod method) {
-		ClassName className = method.getAnnotation(ClassName.class);
-		if(className != null) {
-			return className.value();
-		} else {
-			return method.getName();
-		}
-	}
 
 	@Override
-	public RebindResult generateIncrementally(TreeLogger logger,
-			GeneratorContext context, String typeName)
-					throws UnableToCompleteException {
+	public String generate(TreeLogger logger, GeneratorContext context,
+			String typeName) throws UnableToCompleteException {
 
 		JClassType type = context.getTypeOracle().findType(typeName);
+		String generatedSimpleSourceName = generatedSourceName(logger, context, type);
+		String qualifiedSourceName = type.getPackage().getName() + "." + generatedSimpleSourceName;
+
+		logger.log(Type.INFO, "Generating " + qualifiedSourceName);
+		
+		PrintWriter pw = context.tryCreate(logger, type.getPackage().getName(), generatedSimpleSourceName);
+
+		// if an implementation already exists, we're done.
+		if(pw != null) {
+
+			// compile the LESS to CSS and write it out to an intermediate artifact
+			// this will be combined in the end by the LessLinker
+			writeIntermediateCssArtifact(logger, context, type, cssArtifactName(type, generatedSimpleSourceName));
+
+			// write the Java class implementation of the LessResource Interface
+			ImplementationWriter writer = new ImplementationWriter(context, type, generatedSimpleSourceName, pw);
+			writer.write(logger);
+		}
+
+		return qualifiedSourceName;
+	}
+
+	private void writeIntermediateCssArtifact(TreeLogger logger,
+			GeneratorContext context, JClassType type, String partialArtifactPath) throws UnableToCompleteException {
+
 		String css = compileCSS(logger, context, type);
 
-		String generatedSimpleSourceName = type.getSimpleSourceName() + "Impl";
+		OutputStream out = context.tryCreateResource(logger, partialArtifactPath);
+		if(out != null) {
+			try {
+				out.write(css.getBytes(Charsets.UTF_8));
+				out.close();
+			} catch (IOException e) {
+				logger.log(Type.ERROR, "Failed to write intermediate css output");
+			}
 
-		PrintWriter pw = context.tryCreate(logger, type.getPackage().getName(), type.getSimpleSourceName() + "Impl");
-
-		ClassSourceFileComposerFactory f = new ClassSourceFileComposerFactory(
-				type.getPackage().getName(), generatedSimpleSourceName);
-
-		f.addImplementedInterface(type.getQualifiedSourceName());
-		SourceWriter sw = f.createSourceWriter(context, pw);
-
-		writeEnsureInjected(sw);
-		writeGetText(logger, sw, css);
-		writeClassNameMethods(sw, type);
-		
-		sw.commit(logger);
-		
-		return new RebindResult(RebindMode.USE_ALL_NEW, f.getCreatedClassName());
-	}
- 
-	private void writeClassNameMethods(SourceWriter sw, JClassType type) {
-		for(JMethod method : getClassNameMethods(type)) {
-			String className = className(method);
-			writeSimpleGetter(method, quote(className), sw);
+			GeneratedResource resource = context.commitResource(logger, out);
+			resource.setVisibility(Visibility.Private);	
 		}
 	}
 
-	private String quote(String className) {
-		return "\"" + escape(className) + "\"";
+	private String cssArtifactName(JClassType type, String generatedSourceName) {
+		return type.getPackage().getName().replace('/',  '.') + generatedSourceName + ".css";
+	}
+
+
+	/**
+	 * This must be distinct for different user agents.
+	 * @param logger
+	 * @param context
+	 * @param type
+	 * @return
+	 * @throws UnableToCompleteException
+	 */
+	private String generatedSourceName(TreeLogger logger,
+			GeneratorContext context, JClassType type)
+					throws UnableToCompleteException {
+		return type.getSimpleSourceName() + "Impl_" + getUserAgent(logger, context);
+	}
+
+	private String getUserAgent(TreeLogger logger, GeneratorContext context)
+			throws UnableToCompleteException {
+		try {
+			return context.getPropertyOracle().getSelectionProperty(logger, "user.agent").getCurrentValue();
+		} catch (BadPropertyValueException e) {
+			logger.log(Type.ERROR, "Could not get user.agent property", e);
+			throw new UnableToCompleteException();
+		}
 	}
 
 	private String compileCSS(TreeLogger logger, GeneratorContext context, JClassType type) throws UnableToCompleteException {
@@ -83,7 +109,7 @@ public class LessResourceGenerator extends IncrementalGenerator {
 		tree.finalizeTree(logger);
 		tree.optimize(logger, context);
 		tree.emitResources(logger, context);
-		
+
 		return tree.toCompactCSS();
 	}
 
@@ -97,60 +123,5 @@ public class LessResourceGenerator extends IncrementalGenerator {
 			logger.log(Type.ERROR, "Error compiling LESS: " + e.getMessage(), e);
 			throw new UnableToCompleteException();
 		}
-	}
-
-
-	@Override
-	public long getVersionId() {
-		return 1;
-	}
-
-	private List<JMethod> getClassNameMethods(JClassType type) {
-		List<JMethod> methods = Lists.newArrayList();
-		for(JMethod method : type.getOverridableMethods()) {
-			if(isReturnTypeString(method.getReturnType().isClass()) && method.getParameters().length == 0 &&
-					!method.getEnclosingType().getName().equals("CssResource")) {
-				methods.add(method);
-			}
-		}
-		return methods;
-	}
-
-	protected boolean isReturnTypeString(JClassType classReturnType) {
-		return (classReturnType != null
-				&& String.class.getName().equals(classReturnType.getQualifiedSourceName()));
-	}
-
-	protected void writeEnsureInjected(SourceWriter sw) {
-		sw.println("private boolean injected;");
-		sw.println("public boolean ensureInjected() {");
-		sw.indent();
-		sw.println("if (!injected) {");
-		sw.indentln("injected = true;");
-		sw.indentln(StyleInjector.class.getName() + ".inject(getText());");
-		sw.indentln("return true;");
-		sw.println("}");
-		sw.println("return false;");
-		sw.outdent();
-		sw.println("}");
-	}
-
-	protected void writeGetName(JMethod method, SourceWriter sw) {
-		sw.println("public String getName() {");
-		sw.indentln("return \"" + method.getName() + "\";");
-		sw.println("}");
-	}
-
-	protected void writeGetText(TreeLogger logger, SourceWriter sw, String css) throws UnableToCompleteException {
-		sw.println("public String getText() {");
-		sw.indentln("return " + quote(css) + ";");
-		sw.println("}");
-	}
-
-	protected void writeSimpleGetter(JMethod methodToImplement, String toReturn, SourceWriter sw) {
-		sw.print(methodToImplement.getReadableDeclaration(false, true, true, true, true));
-		sw.println(" {");
-		sw.indentln("return " + toReturn + ";");
-		sw.println("}");
 	}
 }

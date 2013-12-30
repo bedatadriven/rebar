@@ -4,11 +4,17 @@
 
   <generate-with
     class="com.bedatadriven.rebar.less.rebind.LessResourceGenerator">
-    <when-type-assignable class="com.bedatadriven.rebar.less.client.LessResource" />
+    <when-type-assignable
+      class="com.bedatadriven.rebar.less.client.LessResource" />
   </generate-with>
 
-  <define-configuration-property name="less.global.import" is-multi-valued="true" />
-        
+  <define-configuration-property name="less.global.import"
+    is-multi-valued="true" />
+
+  <define-linker name="less"
+    class="com.bedatadriven.rebar.less.link.LessLinker" />
+  <add-linker name="less" />
+
   <source path="client" />
 
 </module>

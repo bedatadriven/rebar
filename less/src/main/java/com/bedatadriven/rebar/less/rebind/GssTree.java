@@ -3,7 +3,6 @@ package com.bedatadriven.rebar.less.rebind;
 import java.util.Map;
 import java.util.Set;
 
-import com.bedatadriven.rebar.less.rebind.passes.EmitFontResources;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;
 import com.google.common.css.IdentitySubstitutionMap;
@@ -176,7 +175,7 @@ public class GssTree {
 	}
 
 	public void emitResources(TreeLogger logger, GeneratorContext context) throws UnableToCompleteException {
-		EmitFontResources emitter = new EmitFontResources(cssTree.getMutatingVisitController(), context, logger);
+		EmitResources emitter = new EmitResources(cssTree.getMutatingVisitController(), context, logger);
 		emitter.runPass();
 		if(emitter.hasErrors()) {
 			throw new UnableToCompleteException();
@@ -191,6 +190,11 @@ public class GssTree {
 		CompactPrinter printer = new CompactPrinter(cssTree);
 		printer.runPass();
 		return printer.getCompactPrintedString();
+	}
+
+	public void prune(Set<String> classesToKeep) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
