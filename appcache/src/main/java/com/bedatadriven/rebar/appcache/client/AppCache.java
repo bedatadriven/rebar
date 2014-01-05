@@ -17,7 +17,6 @@
 package com.bedatadriven.rebar.appcache.client;
 
 import com.bedatadriven.rebar.appcache.client.events.ProgressEventHandler;
-import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEvent;
 import com.bedatadriven.rebar.appcache.client.events.UpdateReadyEventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -114,7 +113,7 @@ public interface AppCache {
   boolean isCachedOnStartup();
   
   /**
-   * Removes the current appcache (usually in preparation for page refres 
+   * Removes the current AppCache (usually in preparation for page refresh)
    * @param callback
    */
   void removeCache(AsyncCallback<Void> callback);

@@ -27,12 +27,12 @@ class NullAppCache extends AbstractAppCache {
 
   @Override
   public void ensureCached(AsyncCallback<Void> callback) {
-    callback.onFailure(new AppCacheException("Your browser does not support AppCache"));
+    callback.onFailure(new AppCacheException(AppCacheErrorType.UNSUPPORTED));
   }
   
   @Override
   public void ensureUpToDate(AsyncCallback<Void> callback) {
-  	callback.onFailure(new AppCacheException("Your browser does not support AppCache"));
+  	callback.onFailure(new AppCacheException(AppCacheErrorType.UNSUPPORTED));
   }
 
 	@Override

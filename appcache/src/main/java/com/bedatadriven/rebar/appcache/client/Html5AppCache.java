@@ -17,6 +17,7 @@
 package com.bedatadriven.rebar.appcache.client;
 
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +39,8 @@ public class Html5AppCache extends AbstractAppCache {
   public static final int OBSOLETE = 5;
   
   private static final Logger LOGGER = Logger.getLogger(Html5AppCache.class.getName());
+  
+  private static final int TIMEOUT_MILLISECONDS = 60 * 1000;
   
   public static final Status[] STATUS_MAPPING = new Status[] {
       Status.UNCACHED, Status.IDLE, Status.CHECKING, Status.DOWNLOADING, Status.UPDATE_READY, Status.OBSOLETE
@@ -69,7 +72,7 @@ public class Html5AppCache extends AbstractAppCache {
           this.cancel();
         }
       }
-    }.scheduleRepeating(500);
+    }.scheduleRepeating(1000);
   } 
 
 	private boolean callbackIfCached(AsyncCallback<Void> callback) {
@@ -77,7 +80,7 @@ public class Html5AppCache extends AbstractAppCache {
     try {
       status = getAppCacheStatus();
     } catch (Exception e) {
-      callback.onFailure(new AppCacheException(e.getMessage()));
+      callback.onFailure(new AppCacheException(e));
     }
     switch(status) {
       case IDLE:
@@ -85,10 +88,10 @@ public class Html5AppCache extends AbstractAppCache {
         callback.onSuccess(null);
         return true;
       case UNCACHED:
-        callback.onFailure(new AppCacheException("There is no manifest attached to this application (Status = UNCACHED)"));
+        callback.onFailure(new AppCacheException(AppCacheErrorType.MISSING_MANIFEST));
         return true;
       case OBSOLETE:
-        callback.onFailure(new AppCacheException("The attached manifest no longer exists on the server (Status = OBSOLETE"));
+        callback.onFailure(new AppCacheException(AppCacheErrorType.OBSOLETE));
         return true;
     }
     return false;
@@ -96,6 +99,8 @@ public class Html5AppCache extends AbstractAppCache {
 
   @Override
   public void ensureUpToDate(final AsyncCallback<Void> callback) {
+  	
+  	LOGGER.fine("ensureUpToDate starting...");
   	
   	Cookies.removeCookie(DISABLE_COOKIE_NAME);
   	
@@ -107,10 +112,13 @@ public class Html5AppCache extends AbstractAppCache {
   	sinkErrorEvent(this);
   	final ErrorListener errors = new ErrorListener();
   
+  	LOGGER.fine("Status: " + statusDebugString());
+  	
   	if(getAppCacheStatus() == IDLE || 
   		 getAppCacheStatus() == UPDATE_READY) {
   
   		try {
+  			LOGGER.fine("Calling update()");
     		update();
   		} catch(Exception e) {
   			LOGGER.log(Level.SEVERE, "Html5AppCache: call to update() threw exception. Current state = " + 
@@ -120,14 +128,18 @@ public class Html5AppCache extends AbstractAppCache {
     	}
   	}
   	
+  	final long startTime = new Date().getTime();
+  	
 	  new Timer() {
       @Override
       public void run() {
+      	
+      	LOGGER.fine("Status: " + statusDebugString());
     	
         switch(getAppCacheStatus()) {
         case IDLE:
         	if(errors.haveOccurred()) {
-        		callback.onFailure(new AppCacheException("AppCache connection failure"));
+        		callback.onFailure(new AppCacheException(AppCacheErrorType.CONNECTION));
         	} else {
         		callback.onSuccess(null);
         	}
@@ -139,18 +151,50 @@ public class Html5AppCache extends AbstractAppCache {
           this.cancel();
           break;
         case UNCACHED:
-          callback.onFailure(new AppCacheException("There is no manifest attached to this application (Status = UNCACHED)"));
+          callback.onFailure(new AppCacheException(AppCacheErrorType.MISSING_MANIFEST));
           this.cancel();
           break;
         case OBSOLETE:
-          callback.onFailure(new AppCacheException("The attached manifest no longer exists on the server (Status = OBSOLETE"));
+          callback.onFailure(new AppCacheException(AppCacheErrorType.OBSOLETE));
           this.cancel();
           break;
+          
+        default:
+        case CHECKING:
+        case DOWNLOADING:
+        	long runningTime = new Date().getTime() - startTime;
+        	if(runningTime > TIMEOUT_MILLISECONDS) {
+        		callback.onFailure(new AppCacheException(AppCacheErrorType.TIMEOUT));
+          	this.cancel();
+        	}
         }
     	}
     }.scheduleRepeating(500);
   }
  
+
+	private String statusDebugString() {
+		int code ;
+		try {
+			code = getAppCacheStatus();
+		} catch(Exception e) {
+			LOGGER.log(Level.SEVERE, "getAppCacheStatus() threw exception", e);
+			return "EXCEPTION";
+		}
+		switch(code) {
+	  case IDLE:
+	  	return "IDLE";
+	  case CHECKING:
+	  	return "CHECKING";
+    case UPDATE_READY:
+    	return "UPDATE_READY";
+    case UNCACHED:
+    	return "UNCACHED";
+    case OBSOLETE:
+    	return "OBSOLETE";
+	  }
+		return "CODE:"+code;
+  }
 
 	@Override
   public void removeCache(final AsyncCallback<Void> callback) {
@@ -171,7 +215,8 @@ public class Html5AppCache extends AbstractAppCache {
 	           switch(getAppCacheStatus()) {
 	           case IDLE:
 	           case UPDATE_READY:
-	          	 callback.onFailure(new AppCacheException("Connection problem prevented cache from being marked as obsolete"));
+	          	 // connection problems preventing the app cache as being marked as obsolete
+	          	 callback.onFailure(new AppCacheException(AppCacheErrorType.CONNECTION));
 	          	 this.cancel();
 	          	 Cookies.removeCookie(DISABLE_COOKIE_NAME);
 	             break;
@@ -187,7 +232,7 @@ public class Html5AppCache extends AbstractAppCache {
 	    	
 	    }
     } catch (Exception e) {
-      callback.onFailure(new AppCacheException(e.getMessage()));
+      callback.onFailure(new AppCacheException(e));
     }  
   }
 	
@@ -275,6 +320,4 @@ public class Html5AppCache extends AbstractAppCache {
   public void checkForUpdate() {
 		update();
   }
-
-	
 }
