@@ -42,11 +42,17 @@ public class StylesheetGenerator extends Generator {
 		if(pw != null) {
 
 			// compile the LESS to CSS and write it out to an intermediate artifact
+			String css = compileCSS(logger, context, type);
+			
 			// this will be combined in the end by the LessLinker
-			writeIntermediateCssArtifact(logger, context, type, cssArtifactName(type, generatedSimpleSourceName));
-
+			if(context.isProdMode()) {
+				writeIntermediateCssArtifact(logger, context, type, 
+						cssArtifactName(type, generatedSimpleSourceName),
+						css);
+			}
+			
 			// write the Java class implementation of the LessResource Interface
-			StylesheetImplWriter writer = new StylesheetImplWriter(context, type, generatedSimpleSourceName, pw);
+			StylesheetImplWriter writer = new StylesheetImplWriter(context, type, generatedSimpleSourceName, pw, css);
 			writer.write(logger);
 		}
 
@@ -54,9 +60,7 @@ public class StylesheetGenerator extends Generator {
 	}
 
 	private void writeIntermediateCssArtifact(TreeLogger logger,
-			GeneratorContext context, JClassType type, String partialArtifactPath) throws UnableToCompleteException {
-
-		String css = compileCSS(logger, context, type);
+			GeneratorContext context, JClassType type, String partialArtifactPath, String css) throws UnableToCompleteException {
 
 		OutputStream out = context.tryCreateResource(logger, partialArtifactPath);
 		if(out != null) {

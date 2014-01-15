@@ -10,6 +10,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.ClassName;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -22,10 +23,12 @@ public class StylesheetImplWriter {
 
 	private SourceWriter sw;
 	private JClassType interfaceType;
+	private GeneratorContext context;
+	private String css;
 	
 	
 	public StylesheetImplWriter(GeneratorContext context, JClassType interfaceType, String generatedSimpleSourceName,
-			PrintWriter pw) {
+			PrintWriter pw, String css) {
 		this.interfaceType = interfaceType;
 		
 		ClassSourceFileComposerFactory f = new ClassSourceFileComposerFactory(
@@ -33,6 +36,8 @@ public class StylesheetImplWriter {
 
 		f.addImplementedInterface(interfaceType.getQualifiedSourceName());
 		this.sw = f.createSourceWriter(context, pw);
+		this.context = context;
+		this.css = css;
 	}
 	
 	public void write(TreeLogger logger) throws UnableToCompleteException {
@@ -46,11 +51,25 @@ public class StylesheetImplWriter {
 	
 
 	private void writeEnsureInjected() {
-		sw.println("public boolean ensureInjected() {");
-		sw.indent();
-		sw.println("return com.bedatadriven.rebar.style.client.StylesheetInjector.ensureInjected();");
-		sw.outdent();
-		sw.println("}");
+		if(context.isProdMode()) {
+			sw.println("public boolean ensureInjected() {");
+			sw.indent();
+			sw.println("return com.bedatadriven.rebar.style.client.StylesheetInjector.ensureInjected();");
+			sw.outdent();
+			sw.println("}");
+		} else {
+		    sw.println("private boolean injected;");
+		    sw.println("public boolean ensureInjected() {");
+		    sw.indent();
+		    sw.println("if (!injected) {");
+		    sw.indentln("injected = true;");
+		    sw.indentln(StyleInjector.class.getName() + ".inject(\"" + Generator.escape(css) + "\");");
+		    sw.indentln("return true;");
+		    sw.println("}");
+		    sw.println("return false;");
+		    sw.outdent();
+		    sw.println("}");
+		}
 	}
 
 	private void writeGetText() throws UnableToCompleteException {
