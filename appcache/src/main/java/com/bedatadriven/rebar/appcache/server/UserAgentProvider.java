@@ -37,18 +37,16 @@ public class UserAgentProvider implements PropertyProvider {
       return "opera";
     } else if (ua.contains("webkit")) {
       return "safari";
+    } else if (ua.contains("msie 6") || ua.contains("msie 7")) {
+        return "ie6";
     } else if (ua.contains("msie 8")) {
       return "ie8";
-    } else if (ua.contains("msie 9") || ua.contains("msie 10")) {
+    } else if (ua.contains("msie 9")) {
       return "ie9";
-    } else if (ua.contains("msie 7") || ua.contains("msie 6")) {
-      return "ie6";
+    } else if (ua.contains("msie 10") || ua.contains("msie 11")) {
+      return "ie10";
     } else if (ua.contains("gecko")) {
-      int version = parseGeckoVersion(ua);
-      if(version >= 1008) {
-          return "gecko1_8";
-      }
-      return "gecko";
+      return "gecko1_8";
     }
     throw new UnknownUserAgentException();
   }
@@ -88,10 +86,6 @@ public class UserAgentProvider implements PropertyProvider {
   		// updates happen automatically so we can't really count on gears
   		// be available on chrome for long.
   		return false;
-  		
-  	} else if(ua.contains("gecko") && ua.contains("rv:")) {
-  		// Gears is supported on FireFox versions up to 3.6x
-  		return parseGeckoVersion(ua) < 2000;
   		
   	} else if(ua.contains("msie 6") || ua.contains("msie 7") || ua.contains("msie 8")) {
   		// Gears is supported on IE 6-8
