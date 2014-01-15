@@ -12,7 +12,7 @@ public class StylesheetInjector {
 
 	public static boolean ensureInjected() {
 		if(!injected) {
-			String url = GWT.getModuleBaseForStaticFiles() + "/" + GWT.getPermutationStrongName() + ".cache.css";
+			String url = GWT.getModuleBaseForStaticFiles() + GWT.getPermutationStrongName() + ".cache.css";
 			getHead().appendChild(createElement(url));
 			injected = true;
 			return true;
