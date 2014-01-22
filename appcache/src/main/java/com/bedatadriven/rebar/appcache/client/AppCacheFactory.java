@@ -18,7 +18,7 @@ package com.bedatadriven.rebar.appcache.client;
 
 import java.util.logging.Logger;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.shared.GWT;
 
 public class AppCacheFactory {
 
