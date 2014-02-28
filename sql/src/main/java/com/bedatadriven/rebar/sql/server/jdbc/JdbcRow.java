@@ -1,14 +1,14 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.mortbay.log.Log;
 
 import com.bedatadriven.rebar.sql.client.SqlException;
 import com.bedatadriven.rebar.sql.client.SqlResultSetRow;
@@ -32,10 +32,35 @@ class JdbcRow implements SqlResultSetRow {
   @Override
   public String getString(String columnName) {
     Object value = values.get(columnName);
-    return value == null ? null : value.toString();
+    if(value == null) {
+    	return null;
+    } else if(value instanceof String) {
+    	return (String)value;
+    } else if(value instanceof Number || value instanceof Boolean) {
+    	return value.toString();
+    } else if(value instanceof Clob) {
+    	try {
+    		return readString( ((Clob) value).getCharacterStream() );
+    	} catch(Exception e) {
+    		throw new RuntimeException("Exception reading string from column '" + columnName + "'", e);
+    	}
+    } else {
+    	throw new RuntimeException("Error get string value of '" + columnName + "', value is of class " + value.getClass().getName());
+    }
   }
 
-  @Override
+  private String readString(Reader in) throws IOException {
+	
+  	StringBuilder sb = new StringBuilder();
+  	char[] buf = new char[1024];
+  	int charsRead;
+  	while( (charsRead = in.read(buf)) != -1) {
+  		sb.append(buf, 0, charsRead);
+  	}
+  	return sb.toString();
+  }
+
+	@Override
   public int getInt(String columnName) {
     Object value = values.get(columnName);
     if(value == null) {

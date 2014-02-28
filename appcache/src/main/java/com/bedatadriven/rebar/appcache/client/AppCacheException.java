@@ -17,7 +17,20 @@
 package com.bedatadriven.rebar.appcache.client;
 
 public class AppCacheException extends Exception {
-  public AppCacheException(String message) {
-    super(message);
+
+	private AppCacheErrorType errorType;
+
+	public AppCacheException(AppCacheErrorType errorType) {
+	  super(errorType.toString());
+	  this.errorType = errorType;
   }
+	
+	public AppCacheException(Exception e) {
+		super("Exception while updating AppCache: " + e.getMessage());
+		this.errorType = AppCacheErrorType.EXCEPTION;
+	}
+	
+	public AppCacheErrorType getErrorType() {
+		return errorType;
+	}
 }

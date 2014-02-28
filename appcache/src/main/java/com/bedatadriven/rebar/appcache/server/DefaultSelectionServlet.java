@@ -132,8 +132,6 @@ public class DefaultSelectionServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} else {
 
-			resp.setHeader("Cache-Control", "no-cache");
-			resp.setHeader("Pragma", "no-cache");
 			resp.setDateHeader("Expires", new Date().getTime());
 
 			if(path.file.endsWith(".appcache")) {

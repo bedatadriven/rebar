@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <inherits name="com.google.gwt.resources.Resources" />
+
+  <generate-with class="com.bedatadriven.rebar.style.rebind.StylesheetGenerator">
+    <when-type-assignable class="com.bedatadriven.rebar.style.client.Stylesheet" />
+  </generate-with>
+
+  <define-configuration-property name="less.global.import" is-multi-valued="true" />
+
+  <define-linker name="less" class="com.bedatadriven.rebar.style.link.StylesheetLinker" />
+  <add-linker name="less" />
+
+  <source path="client" />
+
+</module>

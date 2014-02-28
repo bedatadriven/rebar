@@ -39,7 +39,11 @@ public final class PreparedStatementBatch extends JavaScriptObject {
   }-*/;
 
   public static native JsArray<PreparedStatementBatch> fromJson(String json) /*-{
-    return eval(json);
+  	if($wnd.JSON) {
+  		return $wnd.JSON.parse(json);
+  	} else {
+    	return eval('(' + json + ')');
+   	}
   }-*/;
 
   /**

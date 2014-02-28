@@ -55,7 +55,7 @@ class Html5ManifestWriter implements ManifestWriter {
   }
 
   private static boolean isAlphaNum(char c) {
-    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c < 'z');
+    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   }
 
   @Override

@@ -1,0 +1,108 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+    
+  </ui:style>
+  
+  <ui:with type="com.bedatadriven.rebar.bootstrap.client.Bootstrap" field="b"/>
+  <ui:with type="com.bedatadriven.rebar.bootstrap.client.Glyphicons" field="glyphicons"/>
+  
+  <g:HTMLPanel>
+
+    <div class="{b.navbar} {b.navbarInverse} {b.navbarFixedTop}" role="navigation">
+      <div class="{b.container}">
+        <div class="{b.navbarHeader}">
+          <button type="button" class="{b.navbarToggle}"
+            data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="{b.srOnly}">Toggle navigation</span>
+            <span class="{b.iconBar}"></span>
+            <span class="{b.iconBar}"></span>
+            <span class="{b.iconBar}"></span>
+          </button>
+          <a class="{b.navbarBrand}" href="#">Project name</a>
+        </div>
+        <div class="{b.navbarCollapse} {b.collapse}">
+          <form class="{b.navbarForm} {b.navbar}" role="form">
+            <div class="{b.formGroup}">
+              <input type="text" placeholder="Email" class="{b.formControl}"/>
+            </div>
+            <div class="{b.formGroup}">
+              <input type="password" placeholder="Password" class="{b.formControl}"/>
+            </div>
+            <button type="submit" class="{b.btn} {b.btnSuccess}">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="{b.jumbotron}">
+      <div class="{b.container}">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational
+          website. It includes a large callout called a jumbotron and
+          three supporting pieces of content. Use it as a starting point
+          to create something more unique.</p>
+        <p>
+          <a class="{b.btn} {b.btnPrimary} {b.btnLg}" role="button">Learn
+            more &raquo;
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="{b.container}">
+      <!-- Example row of columns -->
+      <div class="{b.row}">
+        <div class="{b.colMd4}">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce
+            dapibus, tellus ac cursus commodo, tortor mauris condimentum
+            nibh, ut fermentum massa justo sit amet risus. Etiam porta
+            sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button">
+            <span class="{glyphicons.glyphicon} {glyphicons.record}"></span> View
+              details &raquo;
+            </a>
+          </p>
+        </div>
+        <div class="{b.colMd4}">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce
+            dapibus, tellus ac cursus commodo, tortor mauris condimentum
+            nibh, ut fermentum massa justo sit amet risus. Etiam porta
+            sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button">
+            <span class="{glyphicons.glyphicon} {glyphicons.star}"></span> View details &raquo;
+            </a>
+          </p>
+        </div>
+        <div class="{b.colMd4}">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis
+            in, egestas eget quam. Vestibulum id ligula porta felis
+            euismod semper. Fusce dapibus, tellus ac cursus commodo,
+            tortor mauris condimentum nibh, ut fermentum massa justo sit
+            amet risus.</p>
+          <p>
+            <a class="{b.btn} {b.btnDefault}" href="#" role="button"><span class="{glyphicons.glyphicon} {glyphicons.search}"></span> View
+              details &raquo;
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <hr/>
+
+        <footer>
+          <p>&copy;
+            Company 2013
+          </p>
+        </footer>
+    </div> <!-- /container -->
+
+  </g:HTMLPanel>
+</ui:UiBinder> 

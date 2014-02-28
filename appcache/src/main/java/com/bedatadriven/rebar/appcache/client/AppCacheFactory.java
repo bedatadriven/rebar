@@ -16,24 +16,36 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-import com.google.gwt.core.client.GWT;
+import java.util.logging.Logger;
+
+import com.google.gwt.core.shared.GWT;
 
 public class AppCacheFactory {
 
+	private static final Logger LOGGER = Logger.getLogger(AppCacheFactory.class.getName());
+	
   private static AppCache instance = null;
 
   public static AppCache get() {
     if(instance == null) {
     	if(!GWT.isScript()) {
+    		
+    		LOGGER.fine("Creating AppCacheStub for Dev Mode");
     		instance = new AppCacheStub();
 
     	} else if(Html5AppCache.isSupported() && Html5AppCache.hasManifest()) {
-        instance = new Html5AppCache();
+    		LOGGER.fine("Creating Html5AppCache");
+
+    		instance = new Html5AppCache();
     		
     	} else if(GearsAppCache.isSupported()) {
+    		LOGGER.fine("Creating Gears AppCache");
+
         instance = new GearsAppCache();
 
       } else {
+    		LOGGER.fine("Creating Null AppCache");
+
         instance = new NullAppCache();
       }
     }
