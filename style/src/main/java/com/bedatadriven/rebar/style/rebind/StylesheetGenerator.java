@@ -3,7 +3,10 @@ package com.bedatadriven.rebar.style.rebind;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 
+import com.bedatadriven.rebar.style.client.Source;
+import com.bedatadriven.rebar.style.rebind.css.*;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.gwt.core.ext.BadPropertyValueException;
@@ -15,6 +18,9 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
 import com.google.gwt.core.ext.linker.GeneratedResource;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.ScriptableObject;
 
 /**
  * Generates the implementation of a {@code Stylesheet} interface and compiles
@@ -44,39 +50,12 @@ public class StylesheetGenerator extends Generator {
 			// compile the LESS to CSS and write it out to an intermediate artifact
 			String css = compileCSS(logger, context, type);
 			
-			// this will be combined in the end by the LessLinker
-			if(context.isProdMode()) {
-				writeIntermediateCssArtifact(logger, context, type, 
-						cssArtifactName(type, generatedSimpleSourceName),
-						css);
-			}
-			
 			// write the Java class implementation of the LessResource Interface
 			StylesheetImplWriter writer = new StylesheetImplWriter(context, type, generatedSimpleSourceName, pw, css);
-			writer.write(logger);
+            writer.write(logger);
 		}
 
 		return qualifiedSourceName;
-	}
-
-	private void writeIntermediateCssArtifact(TreeLogger logger,
-			GeneratorContext context, JClassType type, String partialArtifactPath, String css) throws UnableToCompleteException {
-
-		OutputStream out = context.tryCreateResource(logger, partialArtifactPath);
-		if(out != null) {
-			try {
-				out.write(css.getBytes(Charsets.UTF_8));
-				out.close();
-			} catch (IOException e) {
-				logger.log(Type.ERROR, "Failed to write intermediate css output");
-			}
-			GeneratedResource resource = context.commitResource(logger, out);
-			resource.setVisibility(Visibility.Private);	
-		}
-	}
-
-	private String cssArtifactName(JClassType type, String generatedSourceName) {
-		return type.getPackage().getName().replace('/',  '.') + generatedSourceName + ".css";
 	}
 
 	/**
@@ -105,12 +84,15 @@ public class StylesheetGenerator extends Generator {
 
 	private String compileCSS(TreeLogger logger, GeneratorContext context, JClassType type) throws UnableToCompleteException {
 
-		// Gather less sources together
-		Preprocessor preprocessor = new Preprocessor();
-		preprocessor.preprocess(logger, context, type);
+        Source source = type.getAnnotation(Source.class);
+        String absolutePath = ResourceResolver.getPathRelativeToPackage(type.getPackage(), source.value());
+        URL resourceUrl = ResourceResolver.getResourceUrl(logger, absolutePath);
 
-		// Compile LESS -> CSS
-		String css = compileLess(logger, preprocessor.asString());
+        // TODO: this won't work if the .less file is in a jar...
+        LessCompilerContext lessContext = new LessCompilerContext(logger, resourceUrl.getFile());
+
+        // Compile LESS -> CSS
+		String css = compileLess(logger, lessContext);
 
 		// Optimize with Closure Stylesheets Compiler
 		GssCompiler gssCompiler = new GssCompiler();
@@ -122,13 +104,12 @@ public class StylesheetGenerator extends Generator {
 		return tree.toCompactCSS();
 	}
 
-	private String compileLess(TreeLogger parentLogger, String input) throws UnableToCompleteException {
+	private String compileLess(TreeLogger parentLogger, LessCompilerContext lessContext) throws UnableToCompleteException {
 		TreeLogger logger = parentLogger.branch(Type.INFO, "Compiling LESS...");
 		try {
-			Function<String, String> lessCompiler = LessCompilerFactory.create();
-			String css = lessCompiler.apply(input);
-			return css;
-		} catch(Exception e) {
+			Function<LessCompilerContext, String> lessCompiler = LessCompilerFactory.create();
+            return lessCompiler.apply(lessContext);
+        } catch(Exception e) {
 			logger.log(Type.ERROR, "Error compiling LESS: " + e.getMessage(), e);
 			throw new UnableToCompleteException();
 		}

@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind;
+package com.bedatadriven.rebar.style.rebind.css;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

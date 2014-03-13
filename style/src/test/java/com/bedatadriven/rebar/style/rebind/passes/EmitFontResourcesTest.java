@@ -12,8 +12,8 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Test;
 
 import com.bedatadriven.rebar.style.ConsoleTreeLogger;
-import com.bedatadriven.rebar.style.rebind.EmitResources;
-import com.bedatadriven.rebar.style.rebind.LoggingErrorManager;
+import com.bedatadriven.rebar.style.rebind.css.EmitResources;
+import com.bedatadriven.rebar.style.rebind.css.LoggingErrorManager;
 import com.google.common.css.SourceCode;
 import com.google.common.css.compiler.ast.CssTree;
 import com.google.common.css.compiler.ast.GssParser;

@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind;
+package com.bedatadriven.rebar.style.rebind.css;
 
 import com.google.common.css.compiler.ast.ErrorManager;
 import com.google.common.css.compiler.ast.GssError;

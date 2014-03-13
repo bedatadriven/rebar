@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind;
+package com.bedatadriven.rebar.style.rebind.css;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +30,7 @@ public class ResourceResolver {
 			throws UnableToCompleteException {
 		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
 		if(url == null) {
-			logger.log(Type.ERROR, "Could not find resource");
+			logger.log(Type.ERROR, "Could not find resource at path " + path);
 			throw new UnableToCompleteException();
 		}
 		return url;

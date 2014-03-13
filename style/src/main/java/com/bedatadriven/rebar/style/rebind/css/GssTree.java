@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind;
+package com.bedatadriven.rebar.style.rebind.css;
 
 import java.util.Map;
 import java.util.Set;

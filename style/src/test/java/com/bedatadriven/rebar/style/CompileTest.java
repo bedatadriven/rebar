@@ -1,14 +1,19 @@
 package com.bedatadriven.rebar.style;
 
 import java.io.File;
+import java.net.URL;
 
+import com.bedatadriven.rebar.style.rebind.css.LessCompilerContext;
+import com.google.common.io.Resources;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
-import com.bedatadriven.rebar.style.rebind.GssCompiler;
-import com.bedatadriven.rebar.style.rebind.GssTree;
-import com.bedatadriven.rebar.style.rebind.LessCompilerFactory;
+import com.bedatadriven.rebar.style.rebind.css.GssCompiler;
+import com.bedatadriven.rebar.style.rebind.css.GssTree;
+import com.bedatadriven.rebar.style.rebind.css.LessCompilerFactory;
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Stopwatch;
@@ -23,19 +28,18 @@ public class CompileTest {
 	@Test
 	public void testClassCompile() throws Exception {
 
-		String source = "@color: #4D926F;\n" +
-				"#header {  color: @color;  }\n" +
-				"h2 {  color: @color; }\n";
+
+        LessCompilerContext lessContext = contextForSource("test.less");
 		
-		Function<String, String> compiler = LessCompilerFactory.create();
+		Function<LessCompilerContext, String> compiler = LessCompilerFactory.create();
 		
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		System.out.println("Less parser loaded in "  + stopwatch);
 		
 		stopwatch.reset().start();
 		
-		String lessOutput = compiler.apply(source);
-	
+		String lessOutput = compiler.apply(lessContext);
+	    System.out.println(lessOutput);
 		System.out.println("Less compiled in "  + stopwatch);
 		
 		Files.write(lessOutput, new File("target/test.css"), Charsets.UTF_8);
@@ -45,13 +49,19 @@ public class CompileTest {
 		tree.finalizeTree(logger);
 		//tree.optimize(logger, "safari");
 	}
-	
-	@Test(expected = Exception.class)
+
+    @Test
+    public void withImports() {
+        Function<LessCompilerContext, String> compiler = LessCompilerFactory.create();
+        String css = compiler.apply(contextForSource("nested-imports.less"));
+        System.out.println(css);
+        assertThat(css, not(equalTo("undefined")));
+    }
+
+    @Test(expected = Exception.class)
 	public void compileError() {
-		String source = "#header {  color: @color;  }\n";
-		
-		Function<String, String> compiler = LessCompilerFactory.create();
-		compiler.apply(source);
+		Function<LessCompilerContext, String> compiler = LessCompilerFactory.create();
+		compiler.apply(contextForSource("invalid.less"));
 	}
 	
 	@Test
@@ -71,4 +81,10 @@ public class CompileTest {
 		assertTrue(tree.getMappings().containsKey("bazinga"));
 		
 	}
+
+    private LessCompilerContext contextForSource(String resourceName) {
+        URL resource = Resources.getResource(resourceName);
+
+        return new LessCompilerContext(new ConsoleTreeLogger(), resource.getFile());
+    }
 }

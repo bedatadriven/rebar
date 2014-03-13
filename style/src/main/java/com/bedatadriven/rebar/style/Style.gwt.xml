@@ -6,10 +6,11 @@
     <when-type-assignable class="com.bedatadriven.rebar.style.client.Stylesheet" />
   </generate-with>
 
-  <define-configuration-property name="less.global.import" is-multi-valued="true" />
+  <generate-with class="com.bedatadriven.rebar.style.rebind.IconSetGenerator">
+    <when-type-assignable class="com.bedatadriven.rebar.style.client.IconSet" />
+  </generate-with>
 
-  <define-linker name="less" class="com.bedatadriven.rebar.style.link.StylesheetLinker" />
-  <add-linker name="less" />
+  <define-configuration-property name="less.global.import" is-multi-valued="true" />
 
   <source path="client" />
 
