@@ -42,8 +42,6 @@
     <module>time</module>
     <module>asyncfun</module>
     <module>style</module>
-    <module>bootstrap</module>
-    <module>bootstrap-test</module>
   </modules>
 
   <scm>
