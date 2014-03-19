@@ -1,0 +1,17 @@
+  
+tokens:
+//  match_regex = 'm\/'    [plus]
+//  replace_regex = 's\/'  [plus]
+//  end_regex = '\/'
+//  regex_anycharacter = '([!#$%&*+,:;<=>?@_`~]|\u0022|\u0027|\(|\)|-|\.|\[|\]|\^|\{|\}|\\\/|[0-9]|[A-Z]|[a-z])+'
+
+types:
+  'regex_anycharacter': String
+
+productions:
+  expr +=  expr 'match_regex' 'regex_anycharacter' 'end_regex' 'id'?                                    [plus]  { expr_regex_match }
+        |  expr 'replace_regex' 'regex_anycharacter' 'end_regex' 'regex_anycharacter' 'end_regex' 'id'? [plus]  { expr_regex_replace }
+        ;
+         
+
+  

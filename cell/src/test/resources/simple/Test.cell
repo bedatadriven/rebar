@@ -1,0 +1,65 @@
+
+
+PageHeader = {
+
+
+    name: "Not Set",
+
+    render: function() {
+        return (
+            <div class="page-header">
+                <h1>$(name)</h1>
+            </div>
+        )
+    }
+}
+
+StarIcon = {
+
+    starred: "false",
+
+    toggleStar: function() {
+       update starred = !starred
+    },
+
+    render: function() {
+        let icon = starred  ? "glyphicon-star" : "glyphicon-star-empty";
+        return (
+            <span className=$( "glyphicon " + icon )
+                  />
+        )
+    }
+}
+
+LocationPage = {
+
+    render: function() {
+        return (
+            <div>
+                <PageHeader name="Locations"/>
+                <p><StarIcon/> You are at the location page. Go <a href="#home">home</a> perhaps? </p>
+            </div>
+        )
+    }
+}
+
+HomePage = {
+
+    render: function() {
+        return (
+            <div>
+                <PageHeader name="Home"/>
+                <p>You're home!</p>
+            </div>
+        )
+    }
+}
+
+PageContainer = {
+
+    place: "#home",
+    render: function() {
+        return ( place == "#home" ) ?  <HomePage/> :  <LocationPage/>
+    }
+}
+

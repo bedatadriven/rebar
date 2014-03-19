@@ -10,7 +10,8 @@
     <when-type-assignable class="com.bedatadriven.rebar.style.client.IconSet" />
   </generate-with>
 
-  <define-configuration-property name="less.global.import" is-multi-valued="true" />
+  <!-- Fail if camel case is used as CSS class names -->
+  <define-configuration-property name="rebar.style.convention.enforcement.level" is-multi-valued="false" />
 
   <source path="client" />
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>rebar-type</groupId>
+  <artifactId>rebar-type</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.bedatadriven.fr.univ-mlv.tatoo</groupId>
+      <artifactId>tatoo</artifactId>
+      <version>2014-03-18</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bedatadriven.fr.univ-mlv.tatoo</groupId>
+      <artifactId>tatoo-motocity</artifactId>
+      <version>2014-03-18</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>bedatadriven-public</id>
+      <name>Bedatadriven Public Repo</name>
+      <url>http://nexus.bedatadriven.com/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <taskdef name="ebnf" classname="fr.umlv.tatoo.cc.ebnf.main.EBNFTask"/>
+              <target>
+
+                <!--
+                  Place any Ant task here. You can add anything
+                  you can add between <target> and </target> in a
+                  build.xml.
+                -->
+
+                <taskdef name="ebnf" classname="fr.umlv.tatoo.cc.ebnf.main.EBNFTask"
+                         classpathref="maven.compile.classpath"/>
+
+                <ebnf destination="${build.directory}/generated-sources/ebnf" parserType="lalr"
+                      generateast="true"
+                      logfile="${build.directory}/log.html" loglevel="ALL">
+
+                  <inputfiles>
+                    <inputfile unit="ebnf" file="${basedir}/src/main/ebnf/cell.ebnf"/>
+                  </inputfiles>
+
+                  <package lexer="com.bedatadriven.rebar.cell.compiler.lexer"/>
+                  <package parser="com.bedatadriven.rebar.cell.compiler.parser"/>
+                  <package tools="com.bedatadriven.rebar.cell.compiler.tools"/>
+                  <package ast="com.bedatadriven.rebar.cell.compiler.ast"/>
+                </ebnf>
+
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${build.directory}/generated-sources/ebnf</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+</project>

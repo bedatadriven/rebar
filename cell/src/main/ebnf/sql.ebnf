@@ -1,0 +1,146 @@
+  
+tokens:
+//  select = 'select'
+//  distinct = 'distinct'
+//  all = 'all'
+//  from = 'from'
+//  where = 'where'
+//  is = 'is'
+//  not = 'not'
+//  group = 'group'
+//  order = 'order'
+//  by = 'by'
+//  like = 'like'
+//  ordering = 'asc|desc|ascent|descent'
+//  spaceship = '<>'
+
+//  create = 'create'
+//  _table = 'table'
+//  unique = 'unique'
+//  _primary = 'primary'
+//  key = 'key'
+//  _char = 'char'
+//  varchar = 'varchar'
+//  number = 'number'
+//  smallint = 'smallint'
+//  integer = 'integer'
+//  _float = 'float'
+//  date = 'date'
+//  time = 'time'
+//  timestamp = 'timestamp'
+
+// insert = 'insert'
+// into = 'into'
+// values = 'values'
+
+
+productions:
+  instr +=  sql eoi         { instr_sql }
+         ;
+         
+  sql = 'id' '=' action query      { sql_query }
+      | action table_definition    { sql_table_definition }
+      | action insert_statement    { sql_insert }
+      ;
+       
+  sql_type = '_char' '(' 'value_literal' ')'        { sql_type_char }
+           | 'varchar' '(' 'value_literal' ')'      { sql_type_varchar }
+           | 'number' '(' number_precision ')'      { sql_type_number }
+           | 'smallint'                             { sql_type_smallint }
+           | 'integer'                              { sql_type_integer }
+           | '_float'                               { sql_type_float }
+           | 'date'                                 { sql_type_date }
+           | 'time'                                 { sql_type_time }
+           | 'timestamp'                            { sql_type_timestamp }
+           ;
+           
+  number_precision = 'value_literal'                            { number_precision_integer }
+                   | 'value_literal' 'comma' 'value_literal'    { number_precision_double }
+                   ;
+       
+  table_definition = 'create' '_table' 'id' '(' table_element/'comma'* ')'   { table_definition }
+                   ;       
+                   
+  table_element = column_definition    { table_element_column_definition }
+                | table_constraint     { table_element_table_constraint }
+                ;
+                
+  column_definition = 'id' sql_type column_constraint*  { column_definition }
+                    ;
+                    
+  column_constraint = 'not' 'null'            { column_constraint_not_null }
+                    | unique_specification    { column_constraint_unique }
+                    ;
+                    
+  unique_specification = 'unique'            { unique_specification_unique } 
+                       | '_primary' 'key'    { unique_specification_primarykey }
+                       ;   
+                       
+  table_constraint = unique_specification '(' 'id'/'comma'+ ')'  { table_constraint }
+                   ;    
+                                          
+                                          
+  insert_statement = 'insert' 'into' 'id' column_name_opt 'values' '(' expr/'comma'+ ')'  { insert_statement }
+                   ;
+  
+  column_name_opt = '(' 'id'/'comma'+ ')'    { column_name_opt_columnname }
+                  |                          { column_name_opt_empty }
+                  ;
+                                                                  
+      
+  query = 'select' set_quantifier select_list table_expression   { query }
+        ;
+        
+  table_expression = from_clause where_clause? groupby_clause? orderby_clause?   { table_expression }
+                   ;
+        
+  set_quantifier = 'distinct'  { set_quantifier_distinct }
+                 | 'all'       { set_quantifier_all }
+                 |             { set_quantifier_empty }
+                 ;      
+        
+  select_list = '*'                        { select_star }
+              | select_sublist/'comma'+    { select_sublists }
+              ;
+              
+  select_sublist = 'id'                    { select_sublist_id }
+                 | 'id' '.' '*'            { select_sublist_table_star }
+                 | 'id' '.' 'id'           { select_sublist_table_id }
+                 ;
+        
+  from_clause = 'from' 'id'/'comma'+    { from_clause }
+              ;
+        
+  where_clause = 'where' search_condition   { where_clause }
+               ;
+               
+  search_condition = 'not' search_condition                               [unary]     { search_condition_not }
+                   | '(' search_condition ')'                                         { search_condition_parens }
+                   | condition_value 'like' 'string_literal'                          { search_condition_like }
+                   | search_condition 'or' search_condition               [bool]      { search_condition_or }
+                   | search_condition 'and' search_condition              [bool]      { search_condition_and }
+                   | condition_value 'is' condition_value                             { search_condition_is }
+                   | condition_value 'is' 'not' condition_value                       { search_condition_is_not }
+                   | condition_value '=' condition_value                [eq]          { search_condition_assign }
+                   | condition_value 'spaceship' condition_value        [eq]          { search_condition_spaceship }
+                   | condition_value '<' condition_value                [eq]          { search_condition_lt }
+                   | condition_value '<=' condition_value               [eq]          { search_condition_le }
+                   | condition_value '>' condition_value                [eq]          { search_condition_gt }
+                   | condition_value '>=' condition_value               [eq]          { search_condition_ge }
+                   ;
+                   
+  condition_value = 'id'                       { condition_value_id }
+                  | 'id' '.' 'id'              { condition_value_table_id }
+                  | single_literal             { condition_value_literal }
+                  | dollar_access              { condition_value_dollar_access }
+                  ;
+  
+  groupby_clause = 'group' 'by' 'id'/'comma'+     { groupby_clause }
+                 ;
+  
+  orderby_clause = 'order' 'by' sort_key/'comma'+   { orderby_clause }
+                 ;
+  
+  sort_key = 'id' 'ordering'         { sort_key }
+           ;
+  

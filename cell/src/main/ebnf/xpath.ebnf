@@ -1,0 +1,109 @@
+  
+tokens:
+//  double_slash = '\/\/'  [xpath]
+//  dotdot = '\.\.'
+//  double_colon = '::'
+//  at = '@'
+//  in = 'in'
+//  div = 'div'   [mult]
+//  mod = 'mod'   [mult]
+
+//  node_type = 'text|node'
+  
+//  axis_name = 'ancestor|ancestor-or-self|attribute|child|descendant|descendant-or-self|following|following-sibling|namespace|parent|preceding|preceding-sibling|self'
+
+// --- common with SQL ---
+// where = 'where'
+// order = 'order'
+// by = 'by'
+// let = 'let'
+
+types:
+ 'node_type': String
+ 'axis_name': String 
+ 
+ 
+productions:
+  instr += flwor eoi    { instr_flwor }
+        ;
+        
+  flwor = 'id' '=' action for_or_let+ xwhere? xorderby? 'return' expr   { flwor }
+        ;
+        
+  for_or_let = for_clause         { for_or_let_for }
+             | let_declaration    { for_or_let_let }
+             ;                                   
+                    
+  for_clause = 'for' 'id' 'in' disable_line_comment 'id' location_path enable_line_comment   { for_clause }
+             ;
+        
+  xwhere = 'where' expr    { xwhere }
+         ;
+         
+  xorderby = 'order' 'by' expr/'comma'+    { xorderby }
+           ;
+
+  disable_line_comment = { disable_line_comment } ;
+  enable_line_comment =  { enable_line_comment } ;
+
+  location_path = relative_location_path      { location_path_relative }
+                | absolute_location_path      { location_path_absolute }
+                ;
+               
+  absolute_location_path = 'xpath_slash'                         [plus]  { absolute_location_path_slash }       // [plus] < [mult]
+                         | 'xpath_slash' relative_location_path          { absolute_location_path_relative }
+                         | '//' relative_location_path                   { absolute_location_path_abbreviated }
+                         ;
+                       
+  relative_location_path = step                                          { relative_location_path_step }
+                         | relative_location_path 'xpath_slash' step     { relative_location_path_path_step }
+                         | relative_location_path '//' step              { relative_location_path_abbreviated }
+                         ;
+                       
+  step = '.'                                   { step_dot }
+       | '..'                                  { step_double_dot }
+       | node_test predicate*                  { step_node_test }
+       | axis_specifier node_test predicate*   { step_node_test_axis }
+       ;
+       
+  axis_specifier = 'axis_name' '::' { axis_specifier_name }
+                 | '@'              { axis_specifier_abbreviated }
+                 ;
+           
+  node_test =  '*'                                        { node_test_star }
+            | 'id'                                        { node_test_id }
+            | 'id' ':' '*'                                { node_test_id_star }
+            | 'id' 'dot' 'id'/'dot'+                      { node_test_qualified }
+            | 'node_type' '(' ')'                         { node_test_type }
+//          | 'processing-instruction' '(' Literal ')'
+            ;
+           
+  predicate = '[' xpath_expr ']'       { predicate }
+            ;
+  
+  xpath_expr = single_literal                                              { xpath_literal }
+             | dollar_access                                               { xpath_expr_dollar_access }
+             | location_path                                               { xpath_expr_location_path }
+//             | xpath_expr 'xpath_slash' relative_location_path  [xpath]    { xpath_expr_slash_path }
+//             | xpath_expr '//' relative_location_path           [xpath]    { xpath_expr_doubleslash_path }
+             | '+' xpath_expr                                   [unary]    { xpath_expr_unary_plus }
+             | '-' xpath_expr                                   [unary]    { xpath_expr_unary_minus }
+             | '!' xpath_expr                                   [unary]    { xpath_expr_unary_not }
+             | xpath_expr '+' xpath_expr                        [plus]     { xpath_expr_plus }
+             | xpath_expr '-' xpath_expr                        [plus]     { xpath_expr_minus }
+             | xpath_expr '*' xpath_expr                        [mult]     { xpath_expr_mult }
+             | xpath_expr 'div' xpath_expr                      [mult]     { xpath_expr_div }
+             | xpath_expr 'mod' xpath_expr                      [mult]     { xpath_expr_mod } 
+             | xpath_expr '=' xpath_expr                        [eq]       { xpath_expr_eq }
+             | xpath_expr '!=' xpath_expr                       [eq]       { xpath_expr_ne }
+             | xpath_expr '<' xpath_expr                        [eq]       { xpath_expr_lt }
+             | xpath_expr '<=' xpath_expr                       [eq]       { xpath_expr_le }
+             | xpath_expr '>' xpath_expr                        [eq]       { xpath_expr_gt }
+             | xpath_expr '>=' xpath_expr                       [eq]       { xpath_expr_ge }
+             | xpath_expr 'or' xpath_expr                       [bool]     { xpath_expr_or }
+             | xpath_expr 'and' xpath_expr                      [bool]     { xpath_expr_and }
+             ;       
+  
+  
+  
+  
