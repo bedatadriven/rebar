@@ -1,15 +1,15 @@
 package com.bedatadriven.rebar.style.rebind;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.resources.client.CssResource.ClassName;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -18,53 +18,63 @@ import com.google.gwt.user.rebind.SourceWriter;
 /**
  * Writes the Java source code of the Stylesheet interface.
  */
-public class StylesheetImplWriter  {
+public class StylesheetImplWriter {
+
+    private GenerationParameters options;
+    private JClassType interfaceType;
+
+    private String generatedSimpleSourceName;
+    private String qualifiedSourceName;
 
 	private SourceWriter sw;
-	private JClassType interfaceType;
-    private String css;
-    private String name;
 
-    private Function<String, String> classNameMangler = Functions.identity();
-
-
-    public StylesheetImplWriter(GeneratorContext context, JClassType interfaceType, String generatedSimpleSourceName,
-                                PrintWriter pw, String css) {
-		this.interfaceType = interfaceType;
-		
-		ClassSourceFileComposerFactory f = new ClassSourceFileComposerFactory(
-				interfaceType.getPackage().getName(), generatedSimpleSourceName);
-
-		f.addImplementedInterface(interfaceType.getQualifiedSourceName());
-
-		this.sw = f.createSourceWriter(context, pw);
-        this.name = interfaceType.getSimpleSourceName();
-		this.css = css;
-	}
-
-    public void setClassNameMangler(Function<String, String> classNameMangler) {
-        this.classNameMangler = classNameMangler;
+    public StylesheetImplWriter(GenerationParameters options, JClassType interfaceType) {
+        this.options = options;
+        this.interfaceType = interfaceType;
+        generatedSimpleSourceName = generatedSourceName();
+        qualifiedSourceName = interfaceType.getPackage().getName() + "." + generatedSimpleSourceName;
     }
 
-    public void write(TreeLogger logger) throws UnableToCompleteException {
+    /**
+     * Compose a unique name for the implementation class for each user agent.
+     */
+    private String generatedSourceName() {
+        return interfaceType.getSimpleSourceName() + "Impl_" +
+                options.getUserAgent().name().toLowerCase();
+    }
 
-		writeEnsureInjected();
-		writeGetText();
-        writeGetName();
-		writeClassNameMethods();
-		
-		sw.commit(logger);	
-	}
-	
+    public String getGeneratedSimpleSourceName() {
+        return generatedSimpleSourceName;
+    }
 
-	private void writeEnsureInjected() {
+    public String getQualifiedSourceName() {
+        return qualifiedSourceName;
+    }
 
+    public boolean tryCreate(GeneratorContext context, TreeLogger logger) {
+
+        PrintWriter pw = context.tryCreate(logger, interfaceType.getPackage().getName(), generatedSimpleSourceName);
+        if(pw == null) {
+            // Already exists!
+            return false;
+        } else {
+            ClassSourceFileComposerFactory factory = new ClassSourceFileComposerFactory(
+                    interfaceType.getPackage().getName(), generatedSimpleSourceName);
+
+            factory.addImplementedInterface(interfaceType.getQualifiedSourceName());
+            this.sw = factory.createSourceWriter(context, pw);
+
+            return true;
+        }
+    }
+
+	public void writeEnsureInjected() {
         sw.println("private static boolean injected;");
         sw.println("public boolean ensureInjected() {");
         sw.indent();
         sw.println("if (!injected) {");
         sw.indentln("injected = true;");
-        sw.indentln(StyleInjector.class.getName() + ".inject(\"" + Generator.escape(css) + "\");");
+        sw.indentln(StyleInjector.class.getName() + ".inject(getText());");
         sw.indentln("return true;");
         sw.println("}");
         sw.println("return false;");
@@ -72,42 +82,39 @@ public class StylesheetImplWriter  {
         sw.println("}");
 	}
 
-	private void writeGetText() throws UnableToCompleteException {
+	public void writeGetText(String css) throws UnableToCompleteException {
 		sw.println("public String getText() {");
-		sw.indentln("throw new UnsupportedOperationException();");
+        sw.indentln("return \"" + Generator.escape(css) + "\";");
 		sw.println("}");
 	}
 
-    private void writeGetName() throws UnableToCompleteException {
+    public void writeGetName() throws UnableToCompleteException {
         sw.println("public String getName() {");
-        sw.indentln("return " + quote(name) + ";");
+        sw.indentln("return " + quote(interfaceType.getSimpleSourceName()) + ";");
         sw.println("}");
     }
 
-    private void writeSimpleGetter(JMethod methodToImplement, String toReturn) {
-		sw.print(methodToImplement.getReadableDeclaration(false, true, true, true, true));
-		sw.println(" {");
-		sw.indentln("return " + toReturn + ";");
-		sw.println("}");
+    public void writeClassNameMethods(Map<String, String> accessorToClassMap) {
+        for(JMethod method : interfaceType.getOverridableMethods()) {
+            if(accessorToClassMap.containsKey(method.getName())) {
+                String className = accessorToClassMap.get(method.getName());
+                writeSimpleGetter(method, quote(className));
+            }
+        }
 	}
 
-    private void writeClassNameMethods() {
-		for(JMethod method : Methods.getClassNameMethods(interfaceType)) {
-			String className = className(method);
-			writeSimpleGetter(method, quote(className));
-		}
-	}
-	
+    private void writeSimpleGetter(JMethod methodToImplement, String toReturn) {
+        sw.print(methodToImplement.getReadableDeclaration(false, true, true, true, true));
+        sw.println(" {");
+        sw.indentln("return " + toReturn + ";");
+        sw.println("}");
+    }
+
+    public void commit(TreeLogger logger) {
+        sw.commit(logger);
+    }
+
 	private String quote(String text) {
 		return "\"" + Generator.escape(text) + "\"";
 	}
-
-	private String className(JMethod method) {
-		ClassName className = method.getAnnotation(ClassName.class);
-		if(className != null) {
-			return className.value();
-		} else {
-			return classNameMangler.apply(method.getName());
-		}
-	}	
 }

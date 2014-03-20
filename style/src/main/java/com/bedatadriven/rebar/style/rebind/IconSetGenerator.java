@@ -1,17 +1,20 @@
 package com.bedatadriven.rebar.style.rebind;
 
-import com.bedatadriven.rebar.style.client.Icon;
-import com.bedatadriven.rebar.style.rebind.css.ResourceResolver;
-import com.bedatadriven.rebar.style.rebind.icons.IconSource;
-import com.bedatadriven.rebar.style.rebind.icons.IconStrategy;
-import com.bedatadriven.rebar.style.rebind.icons.InlineSvgStrategy;
-import com.google.common.base.Function;
-import com.google.gwt.core.ext.*;
+import com.bedatadriven.rebar.style.rebind.icons.*;
+import com.bedatadriven.rebar.style.rebind.icons.font.ExternalSvgFontResource;
+import com.bedatadriven.rebar.style.rebind.icons.source.ImageSource;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gwt.core.ext.Generator;
+import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 
-import javax.annotation.Nullable;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.gwt.core.ext.TreeLogger.Type.*;
 
@@ -25,91 +28,85 @@ public class IconSetGenerator extends Generator {
                            String typeName) throws UnableToCompleteException {
 
         JClassType type = context.getTypeOracle().findType(typeName);
-        String generatedSimpleSourceName = generatedSourceName(logger, context, type);
-        String qualifiedSourceName = type.getPackage().getName() + "." + generatedSimpleSourceName;
 
-        logger.log(INFO, "Generating " + qualifiedSourceName);
+        GenerationParameters generationParameters = new GenerationParameterBuilder(context, type).build(logger);
 
-        PrintWriter pw = context.tryCreate(logger, type.getPackage().getName(), generatedSimpleSourceName);
+        StylesheetImplWriter writer = new StylesheetImplWriter(generationParameters, type);
+
+        logger.log(INFO, "Generating " + writer.getQualifiedSourceName());
 
         // if an implementation already exists, we're done.
-        if(pw != null) {
+        if(writer.tryCreate(context, logger)) {
 
-            String css = composeCss(logger, type);
+            SourceResolver sourceResolver = new SourceResolver(context, type);
+            List<Icon> icons = collectIcons(logger, type, sourceResolver);
 
-            // write the Java class implementation of the LessResource Interface
-            StylesheetImplWriter writer = new StylesheetImplWriter(context, type, generatedSimpleSourceName, pw, css);
-            writer.setClassNameMangler(new Function<String, String>() {
-                @Nullable
-                @Override
-                public String apply(String methodName) {
-                    return "icon icon-" + methodName;
+            IconStrategy strategy = chooseStrategy(generationParameters);
+            IconArtifacts results = strategy.execute(logger, new IconContext(), icons);
+
+            emitResources(logger, context, results.getExternalResources());
+
+            writer.writeGetName();
+            writer.writeGetText(results.getStylesheet());
+            writer.writeClassNameMethods(accessorMap(icons));
+            writer.writeEnsureInjected();
+            writer.commit(logger);
+        }
+
+        return writer.getQualifiedSourceName();
+    }
+
+    private Map<String, String> accessorMap(List<Icon> icons) {
+        Map<String, String> map = Maps.newHashMap();
+        for(Icon icon : icons) {
+            map.put(icon.getAccessorName(), icon.getClassName());
+        }
+        return map;
+    }
+
+    private void emitResources(TreeLogger parentLogger, GeneratorContext context,
+                               List<IconArtifacts.ExternalResource> externalResources) throws UnableToCompleteException {
+        if(!externalResources.isEmpty()) {
+            TreeLogger logger = parentLogger.branch(TreeLogger.Type.INFO, "Emitting icon set resources");
+            for(IconArtifacts.ExternalResource resource : externalResources) {
+                logger.log(TreeLogger.Type.INFO, "Emitting " + resource.getName());
+
+                OutputStream outputStream = context.tryCreateResource(logger, resource.getName());
+                if(outputStream != null) {
+                    try {
+                        outputStream.write(resource.getContent());
+                    } catch(Exception e) {
+                        logger.log(TreeLogger.Type.ERROR, "Error writing resource " + resource.getName());
+                        throw new UnableToCompleteException();
+                    }
+                    context.commitResource(logger, outputStream);
                 }
-            });
-            writer.write(logger);
+            }
         }
-
-        return qualifiedSourceName;
     }
 
-    private String composeCss(TreeLogger parentLogger, JClassType interfaceType) throws UnableToCompleteException {
-        TreeLogger logger = parentLogger.branch(INFO, "Composing icon CSS for  " + interfaceType);
-
-        IconStrategy strategy = new InlineSvgStrategy();
-
-        StringBuilder css = new StringBuilder();
-        css.append(".icon {");
-        strategy.appendCommonDeclarations(css);
-        css.append("}");
-
-
-        for(JMethod method : Methods.getClassNameMethods(interfaceType)) {
-
-            TreeLogger methodLogger = logger.branch(INFO, "Composing icon for " + method);
-
-            IconSource source = loadIcon(methodLogger, method);
-
-            String className = "icon-" + method.getName();
-            methodLogger.log(DEBUG, "Class name = " + className);
-
-            css.append(".").append(className).append(" {\n");
-            strategy.appendDeclarations(logger, source, css);
-            css.append("}").append("\n");
+    private IconStrategy chooseStrategy(GenerationParameters params) {
+        if(params.getUserAgent().equals(UserAgent.GECKO1_8)) {
+            return new SvgBackgroundStrategy();
+        } else {
+            return new IconFontStrategy(new ExternalSvgFontResource());
         }
-        return css.toString();
     }
 
-    private IconSource loadIcon(TreeLogger logger, JMethod method) throws UnableToCompleteException {
-        Icon iconDefinition = method.getAnnotation(Icon.class);
-        if(iconDefinition == null) {
-            logger.log(ERROR, "Missing the @Icon annotation");
-            throw new UnableToCompleteException();
+    private List<Icon> collectIcons(TreeLogger parentLogger, JClassType interfaceType,
+                                       SourceResolver sourceResolver) throws UnableToCompleteException {
+
+        TreeLogger logger = parentLogger.branch(INFO, "Resolving icon sources");
+
+        List<Icon> icons = Lists.newArrayList();
+        for(JMethod method : AccessorBindings.getClassNameAccessors(interfaceType)) {
+
+            TreeLogger methodLogger = logger.branch(INFO, "Resolving source for " + method.getName() + "()");
+            String svg = sourceResolver.resolveSourceText(methodLogger, method);
+            SvgDocument icon = new SvgDocument(svg);
+
+            icons.add(new Icon(method.getName(), new ImageSource(icon)));
         }
-
-        String source = IconSource.sourceName(iconDefinition);
-        String path = ResourceResolver.getPathRelativeToPackage(method.getEnclosingType().getPackage(), source);
-        String svg = ResourceResolver.resourceToString(logger, path);
-        IconSource iconSource = new IconSource(svg);
-        iconSource.parse(logger);
-        return iconSource;
-    }
-
-    /**
-     * We generate a different implementing depending on the browser's support for SVG
-     */
-    private String generatedSourceName(TreeLogger logger,
-                                       GeneratorContext context, JClassType type)
-            throws UnableToCompleteException {
-        return type.getSimpleSourceName() + "Impl_" + getUserAgent(logger, context);
-    }
-
-    private String getUserAgent(TreeLogger logger, GeneratorContext context)
-            throws UnableToCompleteException {
-        try {
-            return context.getPropertyOracle().getSelectionProperty(logger, "user.agent").getCurrentValue();
-        } catch (BadPropertyValueException e) {
-            logger.log(TreeLogger.Type.ERROR, "Could not get user.agent property", e);
-            throw new UnableToCompleteException();
-        }
+        return icons;
     }
 }

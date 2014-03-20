@@ -1,26 +1,18 @@
 package com.bedatadriven.rebar.style.rebind;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import com.bedatadriven.rebar.style.client.Source;
-import com.bedatadriven.rebar.style.rebind.css.*;
-import com.google.common.base.Charsets;
-import com.google.common.base.Function;
-import com.google.gwt.core.ext.BadPropertyValueException;
-import com.google.gwt.core.ext.Generator;
-import com.google.gwt.core.ext.GeneratorContext;
-import com.google.gwt.core.ext.TreeLogger;
+import com.bedatadriven.rebar.style.rebind.gss.GssCompiler;
+import com.bedatadriven.rebar.style.rebind.gss.GssTree;
+import com.bedatadriven.rebar.style.rebind.less.LessCompiler;
+import com.google.gwt.core.ext.*;
 import com.google.gwt.core.ext.TreeLogger.Type;
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.linker.EmittedArtifact.Visibility;
-import com.google.gwt.core.ext.linker.GeneratedResource;
 import com.google.gwt.core.ext.typeinfo.JClassType;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.NativeObject;
-import org.mozilla.javascript.ScriptableObject;
+
+import static java.lang.Character.isLowerCase;
+import static java.lang.Character.isUpperCase;
+import static java.lang.Character.toLowerCase;
 
 /**
  * Generates the implementation of a {@code Stylesheet} interface and compiles
@@ -31,87 +23,74 @@ import org.mozilla.javascript.ScriptableObject;
  */
 public class StylesheetGenerator extends Generator {
 
-
-	@Override
+    @Override
 	public String generate(TreeLogger logger, GeneratorContext context,
 			String typeName) throws UnableToCompleteException {
 
 		JClassType type = context.getTypeOracle().findType(typeName);
-		String generatedSimpleSourceName = generatedSourceName(logger, context, type);
-		String qualifiedSourceName = type.getPackage().getName() + "." + generatedSimpleSourceName;
 
-		logger.log(Type.INFO, "Generating " + qualifiedSourceName);
-		
-		PrintWriter pw = context.tryCreate(logger, type.getPackage().getName(), generatedSimpleSourceName);
+        // Collect all the details about how this stylesheet is
+        // to be generated
+        GenerationParameters generationParameters = new GenerationParameterBuilder(context, type).build(logger);
+
+        // Our goal here is to write the source of a Java class which implement our
+        // stylesheet interface
+        StylesheetImplWriter generatedSource = new StylesheetImplWriter(generationParameters, type);
+
+		logger.log(Type.INFO, "Generating " + generatedSource.getQualifiedSourceName());
 
 		// if an implementation already exists, we're done.
-		if(pw != null) {
+		if(generatedSource.tryCreate(context, logger)) {
+
+            SourceResolver sourceResolver = new SourceResolver(context, type);
 
 			// compile the LESS to CSS and write it out to an intermediate artifact
-			String css = compileCSS(logger, context, type);
-			
-			// write the Java class implementation of the LessResource Interface
-			StylesheetImplWriter writer = new StylesheetImplWriter(context, type, generatedSimpleSourceName, pw, css);
-            writer.write(logger);
+            URL sourceUrl = locateSource(logger, type, sourceResolver);
+            String css = new LessCompiler(logger).compile(sourceUrl);
+			GssTree tree = new GssCompiler().compile(logger, css);
+
+            // build the class and write
+            AccessorBindings accessorBindings = AccessorBindings.build(generationParameters, logger, type, tree);
+            StylesheetImpl impl = new StylesheetImpl(generationParameters, tree, accessorBindings);
+            impl.build(logger);
+            impl.write(generatedSource);
+
+            generatedSource.commit(logger);
 		}
 
-		return qualifiedSourceName;
+		return generatedSource.getQualifiedSourceName();
 	}
 
-	/**
-	 * This must be distinct for different user agents.
-	 * @param logger
-	 * @param context
-	 * @param type
-	 * @return
-	 * @throws UnableToCompleteException
-	 */
-	private String generatedSourceName(TreeLogger logger,
-			GeneratorContext context, JClassType type)
-					throws UnableToCompleteException {
-		return type.getSimpleSourceName() + "Impl_" + getUserAgent(logger, context);
-	}
 
-	private String getUserAgent(TreeLogger logger, GeneratorContext context)
-			throws UnableToCompleteException {
-		try {
-			return context.getPropertyOracle().getSelectionProperty(logger, "user.agent").getCurrentValue();
-		} catch (BadPropertyValueException e) {
-			logger.log(Type.ERROR, "Could not get user.agent property", e);
-			throw new UnableToCompleteException();
-		}
-	}
+    private URL locateSource(TreeLogger logger, JClassType type, SourceResolver sourceResolver)
+            throws UnableToCompleteException {
 
-	private String compileCSS(TreeLogger logger, GeneratorContext context, JClassType type) throws UnableToCompleteException {
+        String sourceName = sourceNameFromInterface(type);
 
+        URL resourceUrl = sourceResolver.tryResolveURL(sourceName);
+        if(resourceUrl == null) {
+            logger.log(TreeLogger.Type.ERROR, "Cannot find LESS source for " + type.getName() + ". Either annotate the type" +
+                    " with a @Source attribute, or use the convention of {Component}Stylesheet => {Component}.less");
+
+            throw new UnableToCompleteException();
+        }
+        return resourceUrl;
+    }
+
+    private String sourceNameFromInterface(JClassType type) {
         Source source = type.getAnnotation(Source.class);
-        String absolutePath = ResourceResolver.getPathRelativeToPackage(type.getPackage(), source.value());
-        URL resourceUrl = ResourceResolver.getResourceUrl(logger, absolutePath);
+        if(source != null) {
+            return source.value();
+        } else {
+            String typeName = type.getSimpleSourceName();
+            if(typeName.endsWith("Stylesheet")) {
+                return typeName.substring(0, typeName.length() - "Stylesheet".length());
+            } else {
+                return typeName;
+            }
+        }
+    }
 
-        // TODO: this won't work if the .less file is in a jar...
-        LessCompilerContext lessContext = new LessCompilerContext(logger, resourceUrl.getFile());
 
-        // Compile LESS -> CSS
-		String css = compileLess(logger, lessContext);
 
-		// Optimize with Closure Stylesheets Compiler
-		GssCompiler gssCompiler = new GssCompiler();
-		GssTree tree = gssCompiler.compile(logger, css);
-		tree.finalizeTree(logger);
-		tree.optimize(logger, context);
-		tree.emitResources(logger, context);
-
-		return tree.toCompactCSS();
-	}
-
-	private String compileLess(TreeLogger parentLogger, LessCompilerContext lessContext) throws UnableToCompleteException {
-		TreeLogger logger = parentLogger.branch(Type.INFO, "Compiling LESS...");
-		try {
-			Function<LessCompilerContext, String> lessCompiler = LessCompilerFactory.create();
-            return lessCompiler.apply(lessContext);
-        } catch(Exception e) {
-			logger.log(Type.ERROR, "Error compiling LESS: " + e.getMessage(), e);
-			throw new UnableToCompleteException();
-		}
-	}
 }

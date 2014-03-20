@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind.css;
+package com.bedatadriven.rebar.style.rebind.less;
 
 import com.google.gwt.core.ext.TreeLogger;
 

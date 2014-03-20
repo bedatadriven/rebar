@@ -1,10 +1,12 @@
-package com.bedatadriven.rebar.style.rebind.css;
+package com.bedatadriven.rebar.style.rebind.gss;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
+import com.bedatadriven.rebar.style.rebind.SourceResolver;
+import com.google.common.base.Preconditions;
 import com.google.common.css.compiler.ast.CssFunctionNode;
 import com.google.common.css.compiler.ast.CssStringNode;
 import com.google.common.css.compiler.ast.DefaultTreeVisitor;
@@ -14,6 +16,7 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.dev.resource.Resource;
 import com.google.gwt.dev.util.Util;
 import com.google.gwt.thirdparty.guava.common.io.Resources;
 
@@ -21,16 +24,20 @@ public class EmitResources extends DefaultTreeVisitor {
 
 
 	private MutatingVisitController visitController;
-	private TreeLogger logger;
+    private final SourceResolver sourceResolver;
+    private TreeLogger logger;
 	private boolean errors = false;
 	private GeneratorContext context;
 
-	public EmitResources(MutatingVisitController visitController, GeneratorContext context, TreeLogger parentLogger) {
+	public EmitResources(MutatingVisitController visitController, GeneratorContext context, TreeLogger parentLogger,
+                         SourceResolver sourceResolver) {
+        Preconditions.checkNotNull(sourceResolver);
+
 		this.visitController = visitController;
-		this.logger = parentLogger.branch(Type.DEBUG, "Preparing fonts...");
+        this.sourceResolver = sourceResolver;
+        this.logger = parentLogger.branch(Type.DEBUG, "Preparing fonts...");
 		this.context = context;
 	}
-
 
 	@Override
 	public boolean enterFunctionNode(CssFunctionNode value) {
@@ -56,11 +63,8 @@ public class EmitResources extends DefaultTreeVisitor {
 
 	private void emitFont(CssStringNode urlString)
 			throws UnableToCompleteException, IOException {
-		
-		URL url = ResourceResolver.getResourceUrl(logger, urlString.getValue());
 
-		byte[] data = Resources.toByteArray(url);
-
+        byte[] data = sourceResolver.resolveByteArray(logger, urlString.getValue());
 		String name = Util.computeStrongName(data) + ".cache.ttf";
 
 		logger.log(Type.INFO, "Writing font to " + name);
@@ -72,7 +76,6 @@ public class EmitResources extends DefaultTreeVisitor {
 			ByteStreams.copy(new ByteArrayInputStream(data), out);			
 			context.commitResource(logger, out);
 		}
-
 		urlString.setValue(name);
 	}
 

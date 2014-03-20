@@ -1,4 +1,4 @@
-package com.bedatadriven.rebar.style.rebind.css;
+package com.bedatadriven.rebar.style.rebind.gss;
 
 import com.google.common.css.compiler.ast.ErrorManager;
 import com.google.common.css.compiler.ast.GssError;
@@ -9,7 +9,7 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 /**
  * Adapts GSS's error reporting to GWT's TreeLogger
  */
-public class LoggingErrorManager implements ErrorManager {
+class LoggingErrorManager implements ErrorManager {
 
 	private final TreeLogger logger;
 	private boolean hasErrors;
