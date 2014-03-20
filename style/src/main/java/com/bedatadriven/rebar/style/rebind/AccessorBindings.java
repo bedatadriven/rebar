@@ -10,6 +10,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.resources.client.CssResource;
+import org.apache.xalan.xsltc.compiler.util.Type;
 
 import java.util.Collections;
 import java.util.List;
@@ -83,6 +84,8 @@ public class AccessorBindings {
             }
         }
         if(hasMissing && !params.isIgnoreMissingClasses()) {
+            logger.log(TreeLogger.Type.ERROR, "Aborting due to unmatched class name accessors (see above). " +
+                    "To ignore this error, annotate your interface with @Strictness(ignoreMissingClasses=true)");
             throw new UnableToCompleteException();
         }
         return this;
@@ -121,15 +124,19 @@ public class AccessorBindings {
             }
         }
 
+        TreeLogger.Type level = params.isIgnoreMissingClasses() ?
+                TreeLogger.Type.WARN  :
+                TreeLogger.Type.ERROR ;
+
         if(matching.size() == 1) {
             return matching.iterator().next();
 
         } else {
             if(matching.size() > 1) {
-                logger.log(TreeLogger.Type.ERROR, "Ambiguous match for " + methodLabel + ": found " +
+                logger.log(level, "Ambiguous match for " + methodLabel + ": found " +
                         classNamesToString(matching));
             } else {
-                logger.log(TreeLogger.Type.ERROR, "Unable to match " + methodLabel + " to a CSS class; considered " +
+                logger.log(level, "Unable to match " + methodLabel + " to a CSS class; considered " +
                         classNamesToString(candidates));
             }
         }
