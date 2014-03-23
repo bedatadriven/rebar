@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+  <ui:with field="icons" type="com.bedatadriven.rebar.style.client.TestIconSet"/>
+
+  <g:HTMLPanel>
+
+    <p><span class="{icons.folder}"/> This is a test of an icon extracted from an icon font</p>
+
+    <p><span class="{icons.heart}"/> This is a test of a standalone svg image used as a source</p>
+
+  </g:HTMLPanel>
+</ui:UiBinder>

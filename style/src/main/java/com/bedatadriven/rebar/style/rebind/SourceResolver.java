@@ -33,14 +33,8 @@ public class SourceResolver {
         this.interfaceType = interfaceType;
     }
 
-    public String resolveSourceText(TreeLogger logger, JMethod method) throws UnableToCompleteException {
-        IconSet.Source source = method.getAnnotation(IconSet.Source.class);
-        if(source == null) {
-            logger.log(ERROR, "Missing the @Source annotation");
-            throw new UnableToCompleteException();
-        }
-
-        String path = absolutePath(source.value());
+    public String resolveSourceText(TreeLogger logger, String relativePath) throws UnableToCompleteException {
+        String path = absolutePath(relativePath);
         return new String(resolveByteArray(logger, path), Charsets.UTF_8);
     }
 

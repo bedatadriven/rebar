@@ -51,14 +51,7 @@ public class SvgBackgroundStrategy implements IconStrategy {
     }
 
     private String toDataUri(Icon icon) {
-        String svg = toImage(icon);
-
-        System.out.println(svg);
-
-        return asciiDataUrl(svg);
-//        String base64 = base64DataUri(svg);
-//
-//        return ascii.length() < base64.length() ? ascii : base64;
+        return asciiDataUrl(toImage(icon));
     }
 
     private String toImage(Icon icon) {
@@ -66,7 +59,10 @@ public class SvgBackgroundStrategy implements IconStrategy {
         // First transform our shape to a view box so that it has a minimum of 1000 of
         Shape shape = icon.getSource().getShape(IconSource.CoordinateSystem.USER);
 
-
+        if(shape.getBounds().isEmpty()) {
+            throw new IllegalArgumentException("Icon " + icon.getAccessorName() + " with source " +
+                    icon.getSource() + " is empty");
+        }
 
         Rectangle bounds = shape.getBounds();
         double scale = 1000d / Math.max(bounds.getWidth(), bounds.getHeight());
@@ -89,10 +85,6 @@ public class SvgBackgroundStrategy implements IconStrategy {
         svg.append("'/></svg>");
 
         return svg.toString();
-    }
-
-    private String base64DataUri(String svg) {
-        return "data:image/svg+xml;base64," + base64encoder.encode(svg.getBytes(Charsets.US_ASCII));
     }
 
     public static String asciiDataUrl(String svg)  {

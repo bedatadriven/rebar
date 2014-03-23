@@ -71,12 +71,12 @@ public class ProtoFont {
     }
 
     private static String url(IconArtifacts.ExternalResource fontFile, String id) {
-        return "url('" + fontFile.getName() + "#" + id + "')";
+        return "url('" + fontFile.getUrl() + "#" + id + "')";
     }
 
 
     private static String url(IconArtifacts.ExternalResource fontFile) {
-        return "url('" + fontFile.getName() + "')";
+        return "url('" + fontFile.getUrl() + "')";
     }
 
     private static String format(FontFormat format) {

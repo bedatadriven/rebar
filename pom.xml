@@ -42,6 +42,7 @@
     <module>time</module>
     <module>asyncfun</module>
     <module>style</module>
+    <module>style-test</module>
   </modules>
 
   <scm>

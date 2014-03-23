@@ -1,10 +1,10 @@
 package com.bedatadriven.rebar.style.rebind.icons;
 
+import com.gargoylesoftware.htmlunit.javascript.host.svg.SVGRect;
+import com.gargoylesoftware.htmlunit.javascript.host.svg.SVGRectElement;
 import com.google.common.collect.Lists;
+import com.kitfox.svg.*;
 import com.kitfox.svg.Font;
-import com.kitfox.svg.SVGCache;
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
 
 import java.awt.*;
 import java.io.StringReader;
@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class SvgDocument {
 
+
     private final String source;
 
     private SVGDiagram diagram;
@@ -24,8 +25,9 @@ public class SvgDocument {
 
     public SvgDocument(String svg) {
         this.source = svg;
-        URI uri = SVGCache.getSVGUniverse().loadSVG(new StringReader(source), "myImage");
-        diagram = SVGCache.getSVGUniverse().getDiagram(uri);
+        SVGUniverse svgUniverse = new SVGUniverse();
+        URI uri = svgUniverse.loadSVG(new StringReader(source), "myImage");
+        diagram = svgUniverse.getDiagram(uri);
     }
 
     public String getSource() {
@@ -51,7 +53,12 @@ public class SvgDocument {
         }
     }
 
+    public SVGDiagram getDiagram() {
+        return diagram;
+    }
+
     public Shape getShape() {
         return diagram.getRoot().getShape();
     }
+
 }

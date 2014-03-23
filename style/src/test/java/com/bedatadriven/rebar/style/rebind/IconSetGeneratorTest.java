@@ -2,7 +2,6 @@ package com.bedatadriven.rebar.style.rebind;
 
 import com.bedatadriven.rebar.style.rebind.icons.*;
 import com.bedatadriven.rebar.style.rebind.icons.font.ExternalSvgFontResource;
-import com.bedatadriven.rebar.style.rebind.icons.font.ExternalWoffFontResource;
 import com.bedatadriven.rebar.style.rebind.icons.font.LocalSvgFontResource;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
@@ -14,13 +13,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import static com.bedatadriven.rebar.style.rebind.icons.TestIcons.awesome;
 
-/**
- * Created by alex on 3/16/14.
- */
+
 public class IconSetGeneratorTest {
 
     private File outputDir;
@@ -38,9 +34,11 @@ public class IconSetGeneratorTest {
         strategies.add(new SvgBackgroundStrategy());
         strategies.add(new IconFontStrategy(new ExternalSvgFontResource()));
         strategies.add(new IconFontStrategy(new LocalSvgFontResource()));
-  //      strategies.add(new IconFontStrategy(new ExternalWoffFontResource()));
 
         List<Icon> icons = Lists.newArrayList();
+        icons.add(TestIcons.imageIcon("heart"));
+        icons.add(TestIcons.imageIcon("remove"));
+
         icons.add(awesome("fa-music"));
         icons.add(awesome("fa-search"));
         icons.add(awesome("fa-heart"));
@@ -97,7 +95,7 @@ public class IconSetGeneratorTest {
 
         StringBuilder html = new StringBuilder();
         html.append("<html><head><style>");
-        html.append(artifacts.getStylesheet());
+        html.append(artifacts.getStylesheet(""));
         html.append("</style></head><body>");
 
         for(String svgElement : artifacts.getInlineSvgDocuments()) {

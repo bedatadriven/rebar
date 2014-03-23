@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class IconArtifacts {
 
+    public static final String STATIC_ROOT_PLACEHOLDER = "@STATIC_ROOT@";
 
     public static class ExternalResource {
         private String name;
@@ -24,6 +25,10 @@ public class IconArtifacts {
             return name;
         }
 
+        public String getUrl() {
+            return STATIC_ROOT_PLACEHOLDER + name;
+        }
+
         public byte[] getContent() {
             return content;
         }
@@ -35,7 +40,6 @@ public class IconArtifacts {
      */
     private StringBuilder stylesheet = new StringBuilder();
 
-
     /**
      * An inline SVG document
      */
@@ -43,8 +47,8 @@ public class IconArtifacts {
 
     private List<ExternalResource> externalResources = Lists.newArrayList();
 
-    public String getStylesheet() {
-        return stylesheet.toString();
+    public String getStylesheet(String staticRoot) {
+        return stylesheet.toString().replace(STATIC_ROOT_PLACEHOLDER, staticRoot);
     }
 
     public void appendToStylesheet(String stylesheet) {

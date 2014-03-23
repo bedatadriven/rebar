@@ -1,7 +1,10 @@
 package com.bedatadriven.rebar.style.rebind;
 
+import com.bedatadriven.rebar.style.client.IconSet;
 import com.bedatadriven.rebar.style.rebind.icons.*;
 import com.bedatadriven.rebar.style.rebind.icons.font.ExternalSvgFontResource;
+import com.bedatadriven.rebar.style.rebind.icons.source.GlyphSource;
+import com.bedatadriven.rebar.style.rebind.icons.source.IconSource;
 import com.bedatadriven.rebar.style.rebind.icons.source.ImageSource;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -30,8 +33,10 @@ public class IconSetGenerator extends Generator {
         JClassType type = context.getTypeOracle().findType(typeName);
 
         GenerationParameters generationParameters = new GenerationParameterBuilder(context, type).build(logger);
+        IconContext iconContext = new IconContext();
+        IconStrategy strategy = chooseStrategy(generationParameters);
 
-        StylesheetImplWriter writer = new StylesheetImplWriter(generationParameters, type);
+        IconSetImplWriter writer = new IconSetImplWriter(generationParameters, type, strategy);
 
         logger.log(INFO, "Generating " + writer.getQualifiedSourceName());
 
@@ -41,28 +46,18 @@ public class IconSetGenerator extends Generator {
             SourceResolver sourceResolver = new SourceResolver(context, type);
             List<Icon> icons = collectIcons(logger, type, sourceResolver);
 
-            IconStrategy strategy = chooseStrategy(generationParameters);
-            IconArtifacts results = strategy.execute(logger, new IconContext(), icons);
+            IconArtifacts results = strategy.execute(logger, iconContext, icons);
 
             emitResources(logger, context, results.getExternalResources());
 
-            writer.writeGetName();
-            writer.writeGetText(results.getStylesheet());
-            writer.writeClassNameMethods(accessorMap(icons));
-            writer.writeEnsureInjected();
+            writer.writeClassNameMethods(logger, iconContext, icons);
+            writer.writeEnsureInjected(results);
             writer.commit(logger);
         }
 
         return writer.getQualifiedSourceName();
     }
 
-    private Map<String, String> accessorMap(List<Icon> icons) {
-        Map<String, String> map = Maps.newHashMap();
-        for(Icon icon : icons) {
-            map.put(icon.getAccessorName(), icon.getClassName());
-        }
-        return map;
-    }
 
     private void emitResources(TreeLogger parentLogger, GeneratorContext context,
                                List<IconArtifacts.ExternalResource> externalResources) throws UnableToCompleteException {
@@ -99,13 +94,31 @@ public class IconSetGenerator extends Generator {
         TreeLogger logger = parentLogger.branch(INFO, "Resolving icon sources");
 
         List<Icon> icons = Lists.newArrayList();
+        Map<String, SvgDocument> sourceDocuments = Maps.newHashMap();
+
         for(JMethod method : AccessorBindings.getClassNameAccessors(interfaceType)) {
-
             TreeLogger methodLogger = logger.branch(INFO, "Resolving source for " + method.getName() + "()");
-            String svg = sourceResolver.resolveSourceText(methodLogger, method);
-            SvgDocument icon = new SvgDocument(svg);
 
-            icons.add(new Icon(method.getName(), new ImageSource(icon)));
+            IconSet.Source source = method.getAnnotation(IconSet.Source.class);
+            if(source == null) {
+                methodLogger.log(ERROR, "Missing the @Source annotation");
+                throw new UnableToCompleteException();
+            }
+
+            SvgDocument svgDocument = sourceDocuments.get(source.value());
+            if(svgDocument == null) {
+                String svg = sourceResolver.resolveSourceText(methodLogger, source.value());
+                svgDocument = new SvgDocument(svg);
+            }
+
+            IconSource iconSource;
+            if(source.glyph() == 0) {
+                iconSource = new ImageSource(svgDocument);
+            } else {
+                iconSource = new GlyphSource(svgDocument.getFonts().get(0), source.glyph());
+            }
+
+            icons.add(new Icon(method.getName(), iconSource));
         }
         return icons;
     }

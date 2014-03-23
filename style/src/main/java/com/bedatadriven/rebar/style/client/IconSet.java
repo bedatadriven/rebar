@@ -8,10 +8,12 @@ import com.google.gwt.safehtml.shared.SafeHtml;
  *
  *
  */
-public interface IconSet extends CssResource {
+public interface IconSet {
 
     public @interface Source {
         String value();
         int glyph() default 0;
     }
+
+    public boolean ensureInjected();
 }

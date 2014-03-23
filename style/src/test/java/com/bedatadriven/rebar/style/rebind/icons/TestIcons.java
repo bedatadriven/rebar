@@ -2,6 +2,7 @@ package com.bedatadriven.rebar.style.rebind.icons;
 
 import com.bedatadriven.rebar.style.rebind.ConsoleTreeLogger;
 import com.bedatadriven.rebar.style.rebind.icons.source.GlyphSource;
+import com.bedatadriven.rebar.style.rebind.icons.source.ImageSource;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -24,6 +25,9 @@ public abstract class TestIcons {
         return Resources.toString(Resources.getResource(SvgDocument.class, resourceName), Charsets.UTF_8);
     }
 
+    public static Icon imageIcon(String name) throws IOException, UnableToCompleteException {
+        return new Icon(name, new ImageSource(get(name + ".svg")));
+    }
 
     public static Icon awesome(String name) throws IOException, UnableToCompleteException {
         if(fa == null) {

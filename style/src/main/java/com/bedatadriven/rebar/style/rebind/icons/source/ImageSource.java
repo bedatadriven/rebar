@@ -36,7 +36,7 @@ public class ImageSource implements IconSource {
         AffineTransform at = new AffineTransform();
         at.scale(1, -1);
         Rectangle bounds = shape.getBounds();
-        at.translate(-bounds.getMinX(), bounds.getHeight() - bounds.getMinX());
+        at.translate(-bounds.getMinX(), - (bounds.getHeight() - bounds.getMinY()));
         return at.createTransformedShape(shape);
     }
 
@@ -56,5 +56,8 @@ public class ImageSource implements IconSource {
         return source.getShape().getBounds().getWidth();
     }
 
-
+    @Override
+    public String toString() {
+        return "ImageSource(" + source.getShape().getBounds() + ")";
+    }
 }
