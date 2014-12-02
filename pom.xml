@@ -67,10 +67,9 @@
 
   <properties>
     <!--  convenience to define GWT version in one place -->
-    <gwtVersion>2.6.0-rc3</gwtVersion>
+    <gwtVersion>2.6.1</gwtVersion>
   </properties>
 
- 
 
 
   <dependencies>
@@ -108,7 +107,7 @@
   			<plugin>
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>gwt-maven-plugin</artifactId>
-		        <version>2.6.0-rc3</version>
+		        <version>${gwtVersion}</version>
   			</plugin>
   			
   		</plugins>

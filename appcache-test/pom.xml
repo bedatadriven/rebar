@@ -23,7 +23,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bedatadriven.rebar</groupId>
     <artifactId>rebar-appcache-test</artifactId>
     <packaging>war</packaging>
 
