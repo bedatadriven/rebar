@@ -40,7 +40,7 @@ public class GssCompiler {
 
     private void finalizeTree(TreeLogger logger, CssTree cssTree) {
         LoggingErrorManager errorManager = new LoggingErrorManager(
-                logger.branch(TreeLogger.Type.INFO, "Finalizing Closure Stylesheet"));
+                logger.branch(TreeLogger.Type.DEBUG, "Finalizing Closure Stylesheet"));
 
         new CreateStandardAtRuleNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
         new CreateMixins(cssTree.getMutatingVisitController(), errorManager).runPass();

@@ -67,7 +67,7 @@ public class EmitResources extends DefaultTreeVisitor {
         byte[] data = sourceResolver.resolveByteArray(logger, urlString.getValue());
 		String name = Util.computeStrongName(data) + ".cache.ttf";
 
-		logger.log(Type.INFO, "Writing font to " + name);
+		logger.log(Type.DEBUG, "Writing font to " + name);
 
 		OutputStream out = context.tryCreateResource(logger, name);
 

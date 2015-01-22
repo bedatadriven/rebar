@@ -26,7 +26,7 @@ public class LessCompiler {
     private TreeLogger logger;
 
     public LessCompiler(TreeLogger parentLogger) {
-        logger = parentLogger.branch(TreeLogger.Type.INFO, "Compiling LESS...");
+        logger = parentLogger.branch(TreeLogger.Type.DEBUG, "Compiling LESS...");
 
     }
 

@@ -37,7 +37,7 @@ public class StylesheetGenerator extends Generator {
         // stylesheet interface
         StylesheetImplWriter generatedSource = new StylesheetImplWriter(generationParameters, type);
 
-		logger.log(Type.INFO, "Generating " + generatedSource.getQualifiedSourceName());
+		logger.log(Type.DEBUG, "Generating " + generatedSource.getQualifiedSourceName());
 
 		// if an implementation already exists, we're done.
 		if(generatedSource.tryCreate(context, logger)) {

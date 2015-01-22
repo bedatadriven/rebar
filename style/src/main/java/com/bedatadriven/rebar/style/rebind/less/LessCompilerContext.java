@@ -21,7 +21,7 @@ public class LessCompilerContext {
     }
 
     public void info(String message) {
-        logger.log(TreeLogger.Type.INFO, message);
+        logger.log(TreeLogger.Type.DEBUG, message);
     }
 
     public void warn(String message) {

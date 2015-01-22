@@ -125,7 +125,7 @@ public class AccessorBindings {
         }
 
         TreeLogger.Type level = params.isIgnoreMissingClasses() ?
-                TreeLogger.Type.WARN  :
+                TreeLogger.Type.DEBUG  :
                 TreeLogger.Type.ERROR ;
 
         if(matching.size() == 1) {
@@ -149,7 +149,7 @@ public class AccessorBindings {
         Set<String> unmatched = Sets.difference(classNames, Sets.newHashSet(accessorToClassName.values()));
 
         if(!unmatched.isEmpty()) {
-            TreeLogger.Type level = options.isAccessorRequiredForAllClasses() ? TreeLogger.Type.ERROR : TreeLogger.Type.WARN;
+            TreeLogger.Type level = options.isAccessorRequiredForAllClasses() ? TreeLogger.Type.ERROR : TreeLogger.Type.DEBUG;
             TreeLogger logger = parentLogger.branch(level, "Unmatched classes in stylesheet:");
             for(String name : unmatched) {
                 logger.log(level, name);
