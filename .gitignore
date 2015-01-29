@@ -4,3 +4,5 @@
 *.releaseBackup
 target
 gwt-unitCache
+.idea
+
