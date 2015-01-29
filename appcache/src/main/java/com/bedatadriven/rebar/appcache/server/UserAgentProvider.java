@@ -17,7 +17,6 @@
 package com.bedatadriven.rebar.appcache.server;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,7 +66,7 @@ public class UserAgentProvider implements PropertyProvider {
   }
   
 	public boolean isFirefox(String ua) {
-	  return ua.indexOf("gecko") != -1;
+	  return ua.contains("gecko");
   }
 
   private int parseGeckoVersion(String ua) {
@@ -82,32 +81,13 @@ public class UserAgentProvider implements PropertyProvider {
     return 0;
   }
   
-  /**
-   * 
-   * @param ua lowercase User-Agent header
-   * @return true if the browser is capable of installing gears
-   */
+  @Deprecated
   public boolean canSupportGears(String ua) {
-  	if(ua.contains("webkit")) {
-  		// earlier versions of chrome could support gears but 
-  		// updates happen automatically so we can't really count on gears
-  		// be available on chrome for long.
-  		return false;
-  		
-  	} else if(ua.contains("msie 6") || ua.contains("msie 7") || ua.contains("msie 8")) {
-  		// Gears is supported on IE 6-8
-  		return true;
-  	} else {
-  		return false;
-  	}
+  	return false;
   }
-  
-  /**
-   * 
-   * @param req http request
-   * @return true if the browser is capable of installing gears
-   */
+
+  @Deprecated
   public boolean canSupportGears(HttpServletRequest req) {
-  	return canSupportGears(userAgent(req));
+  	return false;
   }
 }

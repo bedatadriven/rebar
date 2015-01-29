@@ -22,8 +22,7 @@
   <artifactId>rebar-sync</artifactId>
   <packaging>jar</packaging>
   <name>Synchronization Tools for GWT</name>
-  <description>Provides support for synchronizing server and client-side databases, currently implemented with a Gears worker and
-    the Gears local database.</description>
+  <description>Provides support for synchronizing server and client-side Web SQL databases</description>
     
   <parent>
     <groupId>com.bedatadriven.rebar</groupId>

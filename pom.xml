@@ -35,7 +35,6 @@
   <modules>
     <module>sql</module>
     <module>sync</module>
-    <module>worker</module>
     <module>jpa-mapping</module>
     <module>appcache</module>
     <module>appcache-test</module>

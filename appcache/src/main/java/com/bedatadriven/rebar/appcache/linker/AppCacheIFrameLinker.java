@@ -76,7 +76,6 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   
         toReturn.addAll(compilationArtifacts);
         toReturn.add(doEmitBootstrapScript(logger, context, writableArtifacts));
-        toReturn.add(doEmitManifest(logger, context, new GearsManifestWriter()));
         toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
       }
   

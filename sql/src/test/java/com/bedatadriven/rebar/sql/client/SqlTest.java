@@ -16,21 +16,17 @@
 
 package com.bedatadriven.rebar.sql.client;
 
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.bedatadriven.rebar.sql.client.gears.GearsUpdateExecutor;
-import com.bedatadriven.rebar.sql.client.gears.worker.WorkerCommand;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.gears.client.Factory;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import java.util.Date;
+import java.util.logging.Logger;
+
 /**
  * Integration test case that verifies that our emulation classes,
- * gears jdbc implementation, and gears/gwt functions correctly together.
+ * function correctly together.
  */
 public class SqlTest extends GWTTestCase {
 
@@ -53,40 +49,6 @@ public class SqlTest extends GWTTestCase {
   
   private int callbacks = 0;
 
-  public void testGearsExecutor() throws Exception {
-  
-  	LOGGER.info("================= testGearsExecutor == gears_test ========");
-
-  	if(Factory.getInstance() == null) {
-  		LOGGER.info("Not a gears platform, skipping.");
-  		return;
-  	}
-  	
-  	String json = WorkerCommand.newCommandAsJson(1, "gears_test", JSON_UPDATES);
-  	
-  	GearsUpdateExecutor.Logger logger = new GearsUpdateExecutor.Logger() {
-			
-			@Override
-			public void log(String message, Exception e) {
-				LOGGER.log(Level.SEVERE, message, e);
-			}
-			
-			@Override
-			public void log(String message) {
-				LOGGER.info(message);
-			}
-		}; 
-		
-		LOGGER.info("json = " + json);
-  	
-  	WorkerCommand cmd = WorkerCommand.fromJson(json);
-  	LOGGER.fine("json parsed");
-  	
-		int rowsAffected = GearsUpdateExecutor.execute(cmd, logger);
-  	
-  	assertEquals(8, rowsAffected);
-  	
-  }
   
   
   public void testBasic() {

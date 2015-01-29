@@ -22,9 +22,7 @@
     <packaging>jar</packaging>
 
     <name>Rebar SQL</name>
-    <description>Provides a common interface to client-side databases, including Gears and
-        WebSQL.
-    </description>
+    <description>Provides an interface for using WebSQL</description>
 
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
@@ -67,12 +65,6 @@
           <classifier>sources</classifier>
         </dependency>
         <dependency>
-            <groupId>com.google.gwt.google-apis</groupId>
-            <artifactId>gwt-gears</artifactId>
-            <version>1.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
           <groupId>org.xerial</groupId>
           <artifactId>sqlite-jdbc</artifactId>
           <version>3.6.17</version>
@@ -104,7 +96,7 @@
             <artifactId>jsqlparser</artifactId>
             <version>0.7.0</version>
         </dependency>
-    
+
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
@@ -123,7 +115,7 @@
 					<include>**/emul/**/*.java</include>
 					<include>**/client/**/*.java</include>
                     <include>**/public/**/*.*</include>
-                    
+
 					<include>**/shared/**/*.java</include>
 					<include>**/*.gwt.xml</include>
 					<include>**/*.properties</include>
@@ -134,85 +126,6 @@
 			</resource>
 		</resources>
 
-		<plugins>
-			<!-- Remove misc temp folders created by GWT -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>cleanup-temp</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-						<configuration>
-							<filesets>
-								<fileset>
-									<directory>${basedir}/tomcat</directory>
-								</fileset>
-                                <fileset>
-                                    <directory>${basedir}/src/main/java/com/bedatadriven/rebar/sql/public</directory>
-                                    <includes>
-                                        <include>GearsSqlWorker.js</include>
-                                    </includes>
-                                </fileset>
-							</filesets>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
-			<!-- Compiles the Gears worker that handles requests -->
-			<!-- This needs to be explicitly built by running gwt:compile -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<configuration>
-					<modules>
-						<module>com.bedatadriven.rebar.sql.worker.GearsSqlWorker</module>
-					</modules>
-					<webappDirectory>src/main/java/com/bedatadriven/rebar/sql/public</webappDirectory>
-					<disableCastChecking>true</disableCastChecking>
-					<disableClassMetadata>true</disableClassMetadata>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>worker-compile</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<tasks>
-							    <property name="compile_classpath" refid="maven.compile.classpath" />
-								<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
-									<classpath>
-									    <pathelement path="${basedir}/src/main/java" />
-                                    	<pathelement path="${compile_classpath}" />
-									</classpath>
-									<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-									<jvmarg value="-Xmx256M" />
-									<arg value="-XdisableClassMetadata" />
-									<arg value="-XdisableCastChecking" />
-									<arg value="-war" />
-									<arg value="target/worker-output" />
-									<arg value="com.bedatadriven.rebar.sql.worker.GearsSqlWorker" />
-								</java>
-								<copy file="${basedir}/target/worker-output/GearsSqlWorker/GearsSqlWorker.js" toFile="${basedir}/src/main/java/com/bedatadriven/rebar/sql/public/GearsSqlWorker.js" overwrite="true" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-		</plugins>
 
 		<pluginManagement>
 			<plugins>

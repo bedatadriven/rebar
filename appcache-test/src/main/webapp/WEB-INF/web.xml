@@ -1,19 +1,14 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
-    <servlet>
-        <servlet-name>SelectionServlet</servlet-name>
-        <servlet-class>com.bedatadriven.rebar.appcache.server.DefaultSelectionServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SelectionServlet</servlet-name>
-        <url-pattern>/TestApp/TestApp.nocache.js</url-pattern>
-    </servlet-mapping>
-        <servlet-mapping>
-        <servlet-name>SelectionServlet</servlet-name>
-        <url-pattern>/TestApp/TestApp.gears.manifest</url-pattern>
-    </servlet-mapping>
-            <servlet-mapping>
-        <servlet-name>SelectionServlet</servlet-name>
-        <url-pattern>/TestApp/TestApp.appcache</url-pattern>
-    </servlet-mapping>
- 
+  <servlet>
+    <servlet-name>SelectionServlet</servlet-name>
+    <servlet-class>com.bedatadriven.rebar.appcache.server.DefaultSelectionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SelectionServlet</servlet-name>
+    <url-pattern>/TestApp/TestApp.nocache.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SelectionServlet</servlet-name>
+    <url-pattern>/TestApp/TestApp.appcache</url-pattern>
+  </servlet-mapping>
 </web-app>

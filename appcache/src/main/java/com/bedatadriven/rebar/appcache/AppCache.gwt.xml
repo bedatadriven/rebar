@@ -22,8 +22,7 @@
          emits the manifest files -->
 
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name='com.google.gwt.gears.Gears'/>
- 	<inherits name="com.google.gwt.logging.Logging"/>
+   	<inherits name="com.google.gwt.logging.Logging"/>
     
 </module>
 

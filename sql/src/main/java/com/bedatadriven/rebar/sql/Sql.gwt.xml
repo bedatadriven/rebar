@@ -20,8 +20,6 @@
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.google.gwt.json.JSON" />
     <inherits name="com.google.gwt.logging.Logging"/>
-    
-    <inherits name="com.google.gwt.gears.Gears"/>
 
     <inherits name="com.bedatadriven.rebar.Time"/>
     <inherits name="com.bedatadriven.rebar.AsyncFun"/>
@@ -30,19 +28,8 @@
     <source path='shared'/>
 
 
-    <!-- Our back up is always Gears, use WebSql only on safari (including chrome) and opera -->
-
-    <replace-with class="com.bedatadriven.rebar.sql.client.gears.GearsDatabaseFactory">
-        <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
-    </replace-with>
-
     <replace-with class="com.bedatadriven.rebar.sql.client.websql.WebSqlDatabaseFactory">
         <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
-         <any>
-      <when-property-is name="user.agent" value="safari"/>
-      <when-property-is name="user.agent" value="opera" />
-      <when-property-is name="user.agent" value="gecko1_8" />
-    </any>
     </replace-with>
 
 

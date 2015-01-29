@@ -62,7 +62,6 @@ public interface AppCache {
 
     /**
      * The cache manifest has disappeared from the server.
-     * (Not reported by Gears)
      */
     OBSOLETE
   }
@@ -108,7 +107,7 @@ public interface AppCache {
   /**
    * 
    * @return true if the current user agent will begin caching the app
-   * immediately on page load. Chrome and Opera will, but not Gears.
+   * immediately on page load. Chrome and Opera will
    */
   boolean isCachedOnStartup();
   

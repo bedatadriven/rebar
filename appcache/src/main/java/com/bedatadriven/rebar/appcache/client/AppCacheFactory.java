@@ -16,9 +16,9 @@
 
 package com.bedatadriven.rebar.appcache.client;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.shared.GWT;
+
+import java.util.logging.Logger;
 
 public class AppCacheFactory {
 
@@ -37,11 +37,6 @@ public class AppCacheFactory {
     		LOGGER.fine("Creating Html5AppCache");
 
     		instance = new Html5AppCache();
-    		
-    	} else if(GearsAppCache.isSupported()) {
-    		LOGGER.fine("Creating Gears AppCache");
-
-        instance = new GearsAppCache();
 
       } else {
     		LOGGER.fine("Creating Null AppCache");

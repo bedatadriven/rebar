@@ -51,7 +51,6 @@
         <version>${gwtVersion}</version>
         <configuration>
           <runTarget>/</runTarget>
-          <logLevel>TRACE</logLevel>
           <inplace>false</inplace>
           <port>9090</port>
           <extraJvmArgs>-Xmx2048M -Xss1M</extraJvmArgs>
@@ -66,7 +65,6 @@
             </goals>
             <configuration>
               <extraJvmArgs>-Xmx4048M -Xss1024k</extraJvmArgs>
-              <logLevel>DEBUG</logLevel>
               <compileReport>true</compileReport>
               <modules>
                 <module>com.bedatadriven.rebar.style.StyleTest</module>

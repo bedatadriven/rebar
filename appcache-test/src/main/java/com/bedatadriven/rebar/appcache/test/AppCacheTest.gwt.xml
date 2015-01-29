@@ -63,4 +63,7 @@
             <when-property-is name="user.agent" value="safari"/>
         </any>
     </replace-with>
+
+    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+
 </module>
