@@ -1,0 +1,34 @@
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)
+Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)
+Mozilla/4.0 (Compatible; MSIE 8.0; Windows NT 5.2; Trident/6.0)
+
+# Wrong?? Mozilla/4.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/5.0)
+
+Mozilla/1.22 (compatible; MSIE 10.0; Windows 3.1)
+
+## Source https://social.msdn.microsoft.com/Forums/en-US/6be392da-4d2f-41b4-8354-8dcee20c85cd/internet-explorer-10-user-agent-strings-on-windows-8-64bit?forum=windowsdeveloperpreviewgeneral
+
+# Internet Explorer	Metro
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)
+
+# Javascript Application Metro
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0;)
+
+# C#/VB Application	Metro	32bit
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)
+
+# C#/VB Application	Metro	64bit
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)
+
+# Internet Explorer	Desktop	32bit
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)
+
+# Internet Explorer	Desktop	64bit(1)
+Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)
+
+# WPF Application	Desktop	32bit
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident/6.0; .NET4.0E; .NET4.0C; Tablet PC 2.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 2.0.50727; Zune 4.7; InfoPath.3)
+# WPF Application	Desktop	64bit
+
+Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.2; Win64; x64; Trident/6.0; .NET4.0E; .NET4.0C; Tablet PC 2.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 2.0.50727; Zune 4.7; InfoPath.3)

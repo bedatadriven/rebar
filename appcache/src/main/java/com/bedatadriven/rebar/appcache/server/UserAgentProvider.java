@@ -36,9 +36,23 @@ public class UserAgentProvider implements PropertyProvider {
   public String get(HttpServletRequest request) {
     String ua = userAgent(request);
 
+    // When IE is in compatability mode, the user agent string
+    // sends the emulated version to the server, but the trident key word gives the true
+    // browser version.
+    // Our meta tag on the host page should force IE to render in normal mode
+    if (ua.contains("trident/4.0")) {
+      return "ie8";
+    } else if (ua.contains("trident/5.0")) {
+      return "ie9";
+    } else if (ua.contains("trident/6.0")) {
+      return "ie10";
+    } else if (ua.contains("trident/7.0")) {
+      return "ie10";
+    }
+
     if (ua.contains("opera")) {
       return "opera";
-    } else if (ua.contains("webkit")) {
+    } else if (ua.contains("webkit") || (ua.contains("chrome") && !ua.contains("chromeframe"))) {
       return "safari";
     } else if (ua.contains("msie 6") || ua.contains("msie 7")) {
         return "ie6";
@@ -49,13 +63,24 @@ public class UserAgentProvider implements PropertyProvider {
     } else if (ua.contains("msie 10") || ua.contains("msie 11")) {
       return "ie10";
     } else if (ua.contains("gecko")) {
-      return "gecko1_8";
+      int version = parseGeckoVersion(ua);
+      if ( version == 0 ) {
+        if( ua.contains("firefox")) {
+          // be conservative about assuming this is firefox, lots of browsers include
+          // 'gecko' in their UA string
+          return "gecko1_8";
+        }
+      } else {
+        // assume that no one is using pre 1.8 firefox
+        return "gecko1_8";
+      }
     }
     
     LOGGER.severe("Cannot match user agent header to supported browser: '" + ua + "'");
     
     throw new UnknownUserAgentException();
   }
+
 
 	private String userAgent(HttpServletRequest request) {
 	  return request.getHeader("User-Agent").toLowerCase();
