@@ -47,6 +47,9 @@ public class UserAgentProvider implements PropertyProvider {
     } else if (ua.contains("trident/6.0")) {
       return "ie10";
     } else if (ua.contains("trident/7.0")) {
+      // No specific support for IE 11 just yet,
+      // so the host tag should force the browser into IE 10 compatability mode
+      // and we should serve this tag
       return "ie10";
     }
 

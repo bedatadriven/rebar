@@ -24,7 +24,7 @@ public class UserAgentProviderTest {
   @Test
   public void testIE8Windows() {
     assertThat(devineUserAgent("Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; GTB7.1; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; eSobiSubscriber 2.0.4.16; .NET4.0C"), 
-   		 equalTo("ie8.txt"));
+   		 equalTo("ie8"));
    
   }
   
@@ -40,7 +40,7 @@ public class UserAgentProviderTest {
   public void fullTest() throws IOException {
     int failed =
         test("safari", "chrome.txt") +
-        test("gecko1_8", "firefox.txt") +
+        test("gecko1_8", "firefox.txt") + 
         test("ie6", "ie7.txt") + // Uses the ie6 permutation
         test("ie8", "ie8.txt") +
         test("ie9", "ie9.txt") +
