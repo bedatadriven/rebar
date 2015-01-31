@@ -26,22 +26,16 @@
   <artifactId>jpa-mapping</artifactId>
   <name>JPA Object Model</name>
 
-  <scm>
-    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/jpa-mapping</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-  
-
   <dependencies>
     <dependency>
       <groupId>javax.persistence</groupId>
       <artifactId>persistence-api</artifactId>
-      <version>1.0</version>
+      <version>1.0-rev-1</version>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20090211</version>
+      <version>20141113</version>
     </dependency>
   </dependencies>
 </project>
