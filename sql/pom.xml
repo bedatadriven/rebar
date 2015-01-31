@@ -27,12 +27,12 @@
     <parent>
         <groupId>com.bedatadriven.rebar</groupId>
         <artifactId>parent</artifactId>
-        <version>2.4.2-SNAPSHOT</version>
+        <version>2.4.2</version>
     </parent>
 
 	<scm>
 	    <developerConnection>scm:svn:https://rebar.googlecode.com/svn/trunk/sql</developerConnection>
-      <tag>HEAD</tag>
+      <tag>parent-2.4.2</tag>
   </scm>
     <dependencies>
         <dependency>
