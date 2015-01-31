@@ -29,35 +29,35 @@ class NullAppCache extends AbstractAppCache {
   public void ensureCached(AsyncCallback<Void> callback) {
     callback.onFailure(new AppCacheException(AppCacheErrorType.UNSUPPORTED));
   }
-  
+
   @Override
   public void ensureUpToDate(AsyncCallback<Void> callback) {
-  	callback.onFailure(new AppCacheException(AppCacheErrorType.UNSUPPORTED));
+    callback.onFailure(new AppCacheException(AppCacheErrorType.UNSUPPORTED));
   }
 
-	@Override
+  @Override
   public Status getStatus() {
     return Status.UNSUPPORTED;
   }
 
-	@Override
+  @Override
   public boolean isCachedOnStartup() {
-	  return false;
+    return false;
   }
 
-	@Override
+  @Override
   public boolean requiresPermission() {
-	  return false;
+    return false;
   }
 
-	@Override
+  @Override
   public void checkForUpdate() {
-	  
+
   }
 
-	@Override
+  @Override
   public void removeCache(AsyncCallback<Void> callback) {
-		callback.onSuccess(null);
+    callback.onSuccess(null);
   }
 
 }

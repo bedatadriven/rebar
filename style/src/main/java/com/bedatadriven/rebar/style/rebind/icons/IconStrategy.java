@@ -1,7 +1,6 @@
 package com.bedatadriven.rebar.style.rebind.icons;
 
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
 
 import java.util.List;
 
@@ -10,8 +9,8 @@ import java.util.List;
  */
 public interface IconStrategy {
 
-    String getName();
+  String getName();
 
-    IconArtifacts execute(TreeLogger logger, IconContext context, List<Icon> icons);
+  IconArtifacts execute(TreeLogger logger, IconContext context, List<Icon> icons);
 
 }

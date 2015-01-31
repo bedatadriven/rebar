@@ -40,7 +40,7 @@ public class CollectionMapping {
   private boolean cascadeRefresh;
 
   private JoinTable joinTable;
-  private String joinTableName = ""; 
+  private String joinTableName = "";
   private String mappedBy;
 
   public CollectionMapping(UnitMapping context, MethodInfo getter) {
@@ -50,9 +50,9 @@ public class CollectionMapping {
 
     this.getterName = getter.getName();
     this.setterName = "set" + getter.getName().substring(3);
-    this.propertyName = getterName.substring(0,1).toLowerCase() + getterName.substring(1);
+    this.propertyName = getterName.substring(0, 1).toLowerCase() + getterName.substring(1);
 
-    if(this.collectionType.getQualifiedName().equals(List.class.getName()))
+    if (this.collectionType.getQualifiedName().equals(List.class.getName()))
       persistentCollectionClass = "PersistentList"; // PersistentList.class.getName();
     else
       persistentCollectionClass = "PersistentCollection"; //PersistentSet.class.getName();
@@ -63,8 +63,8 @@ public class CollectionMapping {
       cascadeTypes = manyToMany.cascade();
       mappedBy = manyToMany.mappedBy();
       joinTable = getter.getAnnotation(JoinTable.class);
-      if (joinTable != null) 
-    	  joinTableName = joinTable.name();
+      if (joinTable != null)
+        joinTableName = joinTable.name();
     } else {
       OneToMany oneToMany = getter.getAnnotation(OneToMany.class);
       if (oneToMany != null) {
@@ -140,26 +140,26 @@ public class CollectionMapping {
   }
 
   public String getJoinTableName() {
-	  return joinTableName;
+    return joinTableName;
   }
-  
+
   public String getPersistentCollectionClass() {
     return persistentCollectionClass;
   }
-  
-  public List <String> getJoinColumns() {
-	  ArrayList <String> names = new ArrayList<String> ();
-	  if (this.joinTable != null) {
-		  JoinColumn[] cols =  joinTable.joinColumns();
-		  for (int i = 0 ; i < cols.length; i ++ ) {
-			 names.add(cols[i].name());
-		  }
-		  cols =  joinTable.inverseJoinColumns();
-		  for (int i = 0 ; i < cols.length; i ++ ) {
-			 names.add(cols[i].name());
-		  }
-	  }
-	  return names;
+
+  public List<String> getJoinColumns() {
+    ArrayList<String> names = new ArrayList<String>();
+    if (this.joinTable != null) {
+      JoinColumn[] cols = joinTable.joinColumns();
+      for (int i = 0; i < cols.length; i++) {
+        names.add(cols[i].name());
+      }
+      cols = joinTable.inverseJoinColumns();
+      for (int i = 0; i < cols.length; i++) {
+        names.add(cols[i].name());
+      }
+    }
+    return names;
   }
- 
+
 }

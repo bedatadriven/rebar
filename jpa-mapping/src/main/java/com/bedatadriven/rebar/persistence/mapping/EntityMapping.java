@@ -66,7 +66,7 @@ public class EntityMapping {
     for (MethodInfo method : entityType.getMethods()) {
       if (isPersistentGetter(context, method)) {
 
-        if(method.getAnnotation(ManyToMany.class)!=null || method.getAnnotation(OneToMany.class)!=null) {
+        if (method.getAnnotation(ManyToMany.class) != null || method.getAnnotation(OneToMany.class) != null) {
           collections.add(new CollectionMapping(context, method));
         } else {
           PropertyMapping property = maybeCreatePropertyMapping(context,
@@ -104,7 +104,7 @@ public class EntityMapping {
   }
 
   public String getIdBoxedClass() {
-    if(id == null)
+    if (id == null)
       throw new MappingException("Embedded classes don't have ids! Embedded class name = " + name);
 
     return id.getType().getQualifiedBoxedName();
@@ -131,7 +131,8 @@ public class EntityMapping {
   }
 
   public String getManagedClass() {
-    return context.getType().getSimpleName() + "_" + name + "ManagedImpl";  }
+    return context.getType().getSimpleName() + "_" + name + "ManagedImpl";
+  }
 
   public UnitMapping getContext() {
     return context;
@@ -155,7 +156,7 @@ public class EntityMapping {
    * the @Id property).
    *
    * @return the list of mapped fields in this entity (including
-   *         the @Id property)
+   * the @Id property)
    */
   public List<PropertyMapping> getProperties() {
     return properties;
@@ -216,8 +217,8 @@ public class EntityMapping {
   public List<ColumnMapping> getColumns() {
     List<ColumnMapping> list = new ArrayList<ColumnMapping>();
     for (PropertyMapping property : properties) {
-    	if (!(property.isEmbedded() && property.isId())) 	
-    		list.addAll(property.getColumns());
+      if (!(property.isEmbedded() && property.isId()))
+        list.addAll(property.getColumns());
     }
     return list;
   }
@@ -227,8 +228,8 @@ public class EntityMapping {
   }
 
   public CollectionMapping getCollection(String name) {
-    for(CollectionMapping collection : collections) {
-      if(collection.getName().equals(name)) {
+    for (CollectionMapping collection : collections) {
+      if (collection.getName().equals(name)) {
         return collection;
       }
     }
@@ -237,8 +238,8 @@ public class EntityMapping {
 
   public List<ColumnMapping> getInsertableColumns() {
     List<ColumnMapping> list = new ArrayList<ColumnMapping>();
-    for(PropertyMapping property : getProperties()) {
-      if(property.isInsertable())
+    for (PropertyMapping property : getProperties()) {
+      if (property.isInsertable())
         list.addAll(property.getColumns());
     }
     return list;
@@ -249,7 +250,7 @@ public class EntityMapping {
    * including the primary key columns.
    *
    * @return the total number of columns mapped to this entity,
-   *         including the primary key columns
+   * including the primary key columns
    */
   public int getTotalColumnCount() {
     int count = 0;
@@ -263,7 +264,7 @@ public class EntityMapping {
    * the @Id property
    *
    * @return the number of columns mapped to this entity, excluding
-   *         the @Id property
+   * the @Id property
    */
   public int getColumnCount() {
     int count = 0;
@@ -280,10 +281,6 @@ public class EntityMapping {
       }
     }
     return true;
-  }
-
-  private interface Lister<T> {
-    String itemToString(T item);
   }
 
   private <T> String makeCSList(Collection<T> items, Lister<T> lister) {
@@ -313,7 +310,6 @@ public class EntityMapping {
     });
   }
 
-
   public String getCreateTableStatement() {
     StringBuilder sb = new StringBuilder();
     sb.append("create table if not exists ").append(tableName);
@@ -333,7 +329,7 @@ public class EntityMapping {
 
     for (PropertyMapping property : properties) {
       for (ColumnMapping column : property.getColumns()) {
-        if(!property.isId()) {
+        if (!property.isId()) {
           sb.append(",").append(column.getName()).append(" ")
               .append(column.getType().toString());
         }
@@ -366,32 +362,31 @@ public class EntityMapping {
     return sb.toString();
   }
 
-
   public String getInsertStatement() {
-  	return getInsertStatement("");
+    return getInsertStatement("");
   }
 
   public String getInsertStatement(String conflictClause) {
 
-  	StringBuilder sb = new StringBuilder();
-  	sb.append("insert ").append(conflictClause).append(" into ").append(getTableName()).append(" (");
-  	sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
-  		@Override
-  		public String itemToString(ColumnMapping item) {
-  			return item.getName();
-  		}
-  	}));
-  	sb.append(") values (");
-  	sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
-  		@Override
-  		public String itemToString(ColumnMapping item) {
-  			return "?";
-  		}
-  	}));
-  	sb.append(")");
-  	return sb.toString();
+    StringBuilder sb = new StringBuilder();
+    sb.append("insert ").append(conflictClause).append(" into ").append(getTableName()).append(" (");
+    sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
+      @Override
+      public String itemToString(ColumnMapping item) {
+        return item.getName();
+      }
+    }));
+    sb.append(") values (");
+    sb.append(makeCSList(getInsertableColumns(), new Lister<ColumnMapping>() {
+      @Override
+      public String itemToString(ColumnMapping item) {
+        return "?";
+      }
+    }));
+    sb.append(")");
+    return sb.toString();
   }
-  
+
   public String getUpdateStatement() {
 
     // make a list of all columns that are updatable
@@ -437,7 +432,7 @@ public class EntityMapping {
     }));
     return sb.toString();
   }
-             
+
   /**
    * Maps a member to a TypeMapping, the class which handles DDL and conversion between
    * the ResultSet and the Entity
@@ -479,10 +474,10 @@ public class EntityMapping {
     }
 
     if (getter.getAnnotation(Embedded.class) != null ||
-    	getter.getAnnotation(EmbeddedId.class) != null) {
+        getter.getAnnotation(EmbeddedId.class) != null) {
       return new EmbeddedMapping(context, getter);
     }
-    
+
     return null;
   }
 
@@ -505,5 +500,9 @@ public class EntityMapping {
   @Override
   public int hashCode() {
     return qualifiedClassName.hashCode();
+  }
+
+  private interface Lister<T> {
+    String itemToString(T item);
   }
 }

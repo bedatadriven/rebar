@@ -7,17 +7,17 @@ import com.bedatadriven.rebar.style.rebind.icons.IconArtifacts;
  */
 public class LocalSvgFontResource implements FontResourceStrategy {
 
-    @Override
-    public String getName() {
-        return "svg_local";
-    }
+  @Override
+  public String getName() {
+    return "svg_local";
+  }
 
-    @Override
-    public FontResources apply(ProtoFont font) {
-        IconArtifacts artifacts = new IconArtifacts();
-        artifacts.addInlineSvgDocument(font.buildLocalSvg());
+  @Override
+  public FontResources apply(ProtoFont font) {
+    IconArtifacts artifacts = new IconArtifacts();
+    artifacts.addInlineSvgDocument(font.buildLocalSvg());
 
-        return new FontResources(font.defineLocalSvgSource(), artifacts);
-    }
+    return new FontResources(font.defineLocalSvgSource(), artifacts);
+  }
 
 }

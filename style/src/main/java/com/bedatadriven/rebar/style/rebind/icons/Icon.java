@@ -7,25 +7,25 @@ import com.bedatadriven.rebar.style.rebind.icons.source.IconSource;
  */
 public class Icon {
 
-    private String accessorName;
-    private String className;
-    private IconSource source;
+  private String accessorName;
+  private String className;
+  private IconSource source;
 
-    public Icon(String accessorName, IconSource source) {
-        this.accessorName = accessorName;
-        this.className = accessorName;
-        this.source = source;
-    }
+  public Icon(String accessorName, IconSource source) {
+    this.accessorName = accessorName;
+    this.className = accessorName;
+    this.source = source;
+  }
 
-    public String getAccessorName() {
-        return accessorName;
-    }
+  public String getAccessorName() {
+    return accessorName;
+  }
 
-    public IconSource getSource() {
-        return source;
-    }
+  public IconSource getSource() {
+    return source;
+  }
 
-    public String getClassName() {
-        return className;
-    }
+  public String getClassName() {
+    return className;
+  }
 }

@@ -23,28 +23,18 @@ class Html5ManifestWriter implements ManifestWriter {
 
   private StringBuilder entries = new StringBuilder();
 
-  @Override
-  public String getSuffix() {
-    return "appcache";
-  }
-
-  @Override
-  public void appendEntry(TreeLogger logger, String path) throws UnableToCompleteException {
-    entries.append(escape(logger, path)).append("\n");
-  }
-
   static String escape(TreeLogger logger, String path) throws UnableToCompleteException {
     StringBuilder builder = new StringBuilder(path.length());
-    for(int i=0;i!=path.length();++i) {
+    for (int i = 0; i != path.length(); ++i) {
       int codePoint = path.codePointAt(i);
-      if(codePoint > 255) {
+      if (codePoint > 255) {
         logger.log(TreeLogger.Type.ERROR, "Manifest entry '" + path + "' contains illegal character at index " + i);
         throw new UnableToCompleteException();
       } else {
         char c = path.charAt(i);
-        if(isAlphaNum(c) || c == '.' || c == '-' || c == '_') {
+        if (isAlphaNum(c) || c == '.' || c == '-' || c == '_') {
           builder.append(c);
-        } else if(c == '/' || c == '\\') {
+        } else if (c == '/' || c == '\\') {
           builder.append('/');
         } else {
           builder.append('%').append(Integer.toHexString(c).toUpperCase());
@@ -56,6 +46,16 @@ class Html5ManifestWriter implements ManifestWriter {
 
   private static boolean isAlphaNum(char c) {
     return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+  }
+
+  @Override
+  public String getSuffix() {
+    return "appcache";
+  }
+
+  @Override
+  public void appendEntry(TreeLogger logger, String path) throws UnableToCompleteException {
+    entries.append(escape(logger, path)).append("\n");
   }
 
   @Override

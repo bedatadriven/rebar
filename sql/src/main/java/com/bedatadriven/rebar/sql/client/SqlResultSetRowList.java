@@ -1,7 +1,6 @@
 package com.bedatadriven.rebar.sql.client;
 
 
-
 public interface SqlResultSetRowList extends Iterable<SqlResultSetRow> {
 
   int size();
@@ -9,5 +8,5 @@ public interface SqlResultSetRowList extends Iterable<SqlResultSetRow> {
   SqlResultSetRow get(int index);
 
   boolean isEmpty();
-  
+
 }

@@ -8,36 +8,36 @@ public class SqliteDialect implements SqlDialect {
 
   public static final SqlDialect INSTANCE = new SqliteDialect();
 
-	@Override
+  @Override
   public String yearFunction(String expression) {
-      throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public String monthFunction(String month) {
-      throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public String quarterFunction(String column) {
-      throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean isPossibleToDisableReferentialIntegrity() {
-      return false;
+    return false;
   }
 
   @Override
   public String disableReferentialIntegrityStatement(boolean disabled) {
-      throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public String limitClause(int offset, int limit) {
-      return "LIMIT " + limit + " OFFSET " + offset;
+    return "LIMIT " + limit + " OFFSET " + offset;
   }
-  
+
 
   @Override
   public boolean isMySql() {

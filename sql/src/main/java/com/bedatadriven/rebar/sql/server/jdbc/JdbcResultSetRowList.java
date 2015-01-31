@@ -13,24 +13,24 @@ class JdbcResultSetRowList implements SqlResultSetRowList {
   public JdbcResultSetRowList(List<SqlResultSetRow> rows) {
     this.rows = rows;
   }
-  
-	@Override
+
+  @Override
   public Iterator<SqlResultSetRow> iterator() {
-	  return rows.iterator();
+    return rows.iterator();
   }
 
-	@Override
+  @Override
   public int size() {
-	  return rows.size();
+    return rows.size();
   }
 
-	@Override
+  @Override
   public SqlResultSetRow get(int index) {
-	  return rows.get(index);
+    return rows.get(index);
   }
 
-	@Override
+  @Override
   public boolean isEmpty() {
-	  return rows.isEmpty();
+    return rows.isEmpty();
   }
 }

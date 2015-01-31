@@ -10,81 +10,75 @@ import java.util.List;
  */
 public class IconArtifacts {
 
-    public static final String STATIC_ROOT_PLACEHOLDER = "@STATIC_ROOT@";
+  public static final String STATIC_ROOT_PLACEHOLDER = "@STATIC_ROOT@";
+  /**
+   * CSS stylesheet defining at a minimum the styles for each icon
+   */
+  private StringBuilder stylesheet = new StringBuilder();
+  /**
+   * An inline SVG document
+   */
+  private List<String> inlineSvgDocuments = Lists.newArrayList();
+  private List<ExternalResource> externalResources = Lists.newArrayList();
 
-    public static class ExternalResource {
-        private String name;
-        private byte[] content;
+  public String getStylesheet(String staticRoot) {
+    return stylesheet.toString().replace(STATIC_ROOT_PLACEHOLDER, staticRoot);
+  }
 
-        ExternalResource(String name, byte[] content) {
-            this.name = name;
-            this.content = content;
-        }
+  public void appendToStylesheet(String stylesheet) {
+    this.stylesheet.append(stylesheet);
+  }
 
-        public String getName() {
-            return name;
-        }
+  public List<String> getInlineSvgDocuments() {
+    return inlineSvgDocuments;
+  }
 
-        public String getUrl() {
-            return STATIC_ROOT_PLACEHOLDER + name;
-        }
+  public void addInlineSvgDocument(String source) {
+    inlineSvgDocuments.add(source);
+  }
 
-        public byte[] getContent() {
-            return content;
-        }
+  public List<ExternalResource> getExternalResources() {
+    return externalResources;
+  }
+
+  /**
+   * @param content
+   * @param extension
+   * @return
+   */
+  public ExternalResource addExternalResource(byte[] content, String extension) {
+    String name = Util.computeStrongName(content) + ".cache." + extension;
+    ExternalResource resource = new ExternalResource(name, content);
+    externalResources.add(resource);
+
+    return resource;
+  }
+
+  public void add(IconArtifacts artifacts) {
+    this.inlineSvgDocuments.addAll(artifacts.inlineSvgDocuments);
+    this.externalResources.addAll(artifacts.externalResources);
+    this.stylesheet.append(artifacts.stylesheet);
+  }
+
+  public static class ExternalResource {
+    private String name;
+    private byte[] content;
+
+    ExternalResource(String name, byte[] content) {
+      this.name = name;
+      this.content = content;
     }
 
-
-    /**
-     * CSS stylesheet defining at a minimum the styles for each icon
-     */
-    private StringBuilder stylesheet = new StringBuilder();
-
-    /**
-     * An inline SVG document
-     */
-    private List<String> inlineSvgDocuments = Lists.newArrayList();
-
-    private List<ExternalResource> externalResources = Lists.newArrayList();
-
-    public String getStylesheet(String staticRoot) {
-        return stylesheet.toString().replace(STATIC_ROOT_PLACEHOLDER, staticRoot);
+    public String getName() {
+      return name;
     }
 
-    public void appendToStylesheet(String stylesheet) {
-        this.stylesheet.append(stylesheet);
+    public String getUrl() {
+      return STATIC_ROOT_PLACEHOLDER + name;
     }
 
-    public List<String> getInlineSvgDocuments() {
-        return inlineSvgDocuments;
+    public byte[] getContent() {
+      return content;
     }
-
-    public void addInlineSvgDocument(String source) {
-        inlineSvgDocuments.add(source);
-    }
-
-    public List<ExternalResource> getExternalResources() {
-        return externalResources;
-    }
-
-    /**
-     *
-     * @param content
-     * @param extension
-     * @return
-     */
-    public ExternalResource addExternalResource(byte[] content, String extension) {
-        String name = Util.computeStrongName(content) + ".cache." + extension;
-        ExternalResource resource = new ExternalResource(name, content);
-        externalResources.add(resource);
-
-        return resource;
-    }
-
-
-    public void add(IconArtifacts artifacts) {
-        this.inlineSvgDocuments.addAll(artifacts.inlineSvgDocuments);
-        this.externalResources.addAll(artifacts.externalResources);
-        this.stylesheet.append(artifacts.stylesheet);
-    }
+  }
 }

@@ -6,13 +6,12 @@ import java.util.Date;
 
 
 public class SqliteDates {
-	
-	public static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-	
-	public static String format(Date date) {
-		return FORMAT.format(date);
-	}
-	
+
+  public static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+  public static String format(Date date) {
+    return FORMAT.format(date);
+  }
 
 
 }

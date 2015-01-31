@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Strictness {
-    boolean requireAccessorsForAllClasses() default false;
-    boolean ignoreMissingClasses() default false;
+  boolean requireAccessorsForAllClasses() default false;
+
+  boolean ignoreMissingClasses() default false;
 }

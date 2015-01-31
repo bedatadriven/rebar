@@ -17,18 +17,17 @@
 package com.bedatadriven.rebar.sql.client;
 
 /**
- * Factory class that provides open 
- * 
- * @author alexander
+ * Factory class that provides open
  *
+ * @author alexander
  */
 public interface SqlDatabaseFactory {
 
   /**
-   * Opens a database, creating it if necessary. 
-   * This does not lock the database, so it should be possible to have multiple 
+   * Opens a database, creating it if necessary.
+   * This does not lock the database, so it should be possible to have multiple
    * instances of the same database within the page or across several pages.
-   * 
+   *
    * @param databaseName the name of the database
    * @return an SqlDatabase instance
    */

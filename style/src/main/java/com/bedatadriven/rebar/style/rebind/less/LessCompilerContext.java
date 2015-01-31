@@ -8,24 +8,24 @@ import com.google.gwt.core.ext.TreeLogger;
  */
 public class LessCompilerContext {
 
-    private TreeLogger logger;
-    private final String sourceFileName;
+  private final String sourceFileName;
+  private TreeLogger logger;
 
-    public LessCompilerContext(TreeLogger logger, String sourceFileName) {
-        this.logger = logger;
-        this.sourceFileName = sourceFileName;
-    }
+  public LessCompilerContext(TreeLogger logger, String sourceFileName) {
+    this.logger = logger;
+    this.sourceFileName = sourceFileName;
+  }
 
-    public String getSourceFileName() {
-        return sourceFileName;
-    }
+  public String getSourceFileName() {
+    return sourceFileName;
+  }
 
-    public void info(String message) {
-        logger.log(TreeLogger.Type.DEBUG, message);
-    }
+  public void info(String message) {
+    logger.log(TreeLogger.Type.DEBUG, message);
+  }
 
-    public void warn(String message) {
-        logger.log(TreeLogger.Type.WARN, message);
-    }
+  public void warn(String message) {
+    logger.log(TreeLogger.Type.WARN, message);
+  }
 
 }

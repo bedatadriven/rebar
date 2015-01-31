@@ -16,31 +16,31 @@ import static org.junit.Assert.assertThat;
 
 public class SvgBackgroundStrategyTest {
 
-    private TreeLogger logger = new ConsoleTreeLogger();
+  private TreeLogger logger = new ConsoleTreeLogger();
 
-    @Test
-    public void fromGlyph() throws IOException, UnableToCompleteException {
-
-
-        SvgDocument heartSource = TestIcons.get("heart.svg");
-        assertNotEmpty(heartSource.getShape());
-
-        Icon imageIcon = new Icon("heart", new ImageSource(heartSource));
-        assertNotEmpty(imageIcon.getSource().getShape(IconSource.CoordinateSystem.USER));
+  @Test
+  public void fromGlyph() throws IOException, UnableToCompleteException {
 
 
-        Icon glyphIcon = TestIcons.awesome("fa-music");
+    SvgDocument heartSource = TestIcons.get("heart.svg");
+    assertNotEmpty(heartSource.getShape());
+
+    Icon imageIcon = new Icon("heart", new ImageSource(heartSource));
+    assertNotEmpty(imageIcon.getSource().getShape(IconSource.CoordinateSystem.USER));
 
 
-        IconContext context = new IconContext();
-        SvgBackgroundStrategy strategy = new SvgBackgroundStrategy();
-        IconArtifacts artifacts = strategy.execute(logger, context, Arrays.asList(glyphIcon, imageIcon));
+    Icon glyphIcon = TestIcons.awesome("fa-music");
 
-        System.out.println(artifacts.getStylesheet(""));
 
-    }
+    IconContext context = new IconContext();
+    SvgBackgroundStrategy strategy = new SvgBackgroundStrategy();
+    IconArtifacts artifacts = strategy.execute(logger, context, Arrays.asList(glyphIcon, imageIcon));
 
-    private void assertNotEmpty(Shape shape) {
-        assertThat(shape.getBounds().isEmpty(), equalTo(false));
-    }
+    System.out.println(artifacts.getStylesheet(""));
+
+  }
+
+  private void assertNotEmpty(Shape shape) {
+    assertThat(shape.getBounds().isEmpty(), equalTo(false));
+  }
 }

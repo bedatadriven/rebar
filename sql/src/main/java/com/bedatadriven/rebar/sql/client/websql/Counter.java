@@ -4,19 +4,19 @@ import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 
 class Counter implements WebSqlResultCallback {
 
-	private int rowsAffected = 0;
-	
-	@Override
+  private int rowsAffected = 0;
+
+  @Override
   public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-		rowsAffected = results.safeGetRowsAffected();
+    rowsAffected = results.safeGetRowsAffected();
   }
 
-	@Override
+  @Override
   public boolean onFailure(WebSqlException e) {
-	  return SqlResultCallback.ABORT;
+    return SqlResultCallback.ABORT;
   }
 
-	public int getRowsAffected() {
-  	return rowsAffected;
+  public int getRowsAffected() {
+    return rowsAffected;
   }
 }

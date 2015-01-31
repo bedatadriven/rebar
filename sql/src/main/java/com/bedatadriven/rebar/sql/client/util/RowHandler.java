@@ -7,13 +7,13 @@ import com.bedatadriven.rebar.sql.client.SqlTransaction;
 
 public abstract class RowHandler extends SqlResultCallback {
 
-	@Override
+  @Override
   public final void onSuccess(SqlTransaction tx, SqlResultSet results) {
-	  for(SqlResultSetRow row : results.getRows()) {
-	  	handleRow(row);
-	  }
+    for (SqlResultSetRow row : results.getRows()) {
+      handleRow(row);
+    }
   }
 
-	public abstract void handleRow(SqlResultSetRow row);
-	
+  public abstract void handleRow(SqlResultSetRow row);
+
 }

@@ -5,7 +5,7 @@ import com.google.gwt.resources.client.CssResource;
 
 /**
  * Compiles, optimizes, CSS/LESS Stylesheets.
- *
+ * <p/>
  * <p>By convention, the generator will load a {@code Component.less} for an
  * interface named {@code ComponentStylesheet}. This can be overridden using the
  * {@link com.bedatadriven.rebar.style.client.Source} annotation.

@@ -96,14 +96,14 @@ public class PrimitiveMapping extends SingleColumnPropertyMapping {
 
   @Override
   public void writeColumnValues(JSONStringer writer, Object entity) throws JSONException {
-    if("java.lang.Boolean".equals(this.getType().getQualifiedBoxedName())) {
+    if ("java.lang.Boolean".equals(this.getType().getQualifiedBoxedName())) {
       Boolean value = (Boolean) getValue(entity);
-      if(value == null)
+      if (value == null)
         writer.value(null);
       else
         writer.value(value ? 1 : 0);
     } else {
-        super.writeColumnValues(writer, entity);
+      super.writeColumnValues(writer, entity);
     }
   }
 }

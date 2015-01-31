@@ -2,17 +2,24 @@ package com.bedatadriven.rebar.appcache.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class ProgressEvent extends GwtEvent<ProgressEventHandler>{
+public class ProgressEvent extends GwtEvent<ProgressEventHandler> {
 
   /**
    * Handler type.
    */
   private static Type<ProgressEventHandler> TYPE;
+  private int filesComplete;
+  private int filesTotal;
 
+  public ProgressEvent(int filesComplete, int filesTotal) {
+    super();
+    this.filesComplete = filesComplete;
+    this.filesTotal = filesTotal;
+  }
 
   /**
    * Gets the type associated with this event.
-   * 
+   *
    * @return returns the handler type
    */
   public static Type<ProgressEventHandler> getType() {
@@ -22,41 +29,30 @@ public class ProgressEvent extends GwtEvent<ProgressEventHandler>{
     return TYPE;
   }
 
-  private int filesComplete;
-  private int filesTotal;
-
-  
-  public ProgressEvent(int filesComplete, int filesTotal) {
-	  super();
-	  this.filesComplete = filesComplete;
-	  this.filesTotal = filesTotal;
-  }
-
-	public int getFilesComplete() {
-  	return filesComplete;
+  public int getFilesComplete() {
+    return filesComplete;
   }
 
 
-	public int getFilesTotal() {
-  	return filesTotal;
+  public int getFilesTotal() {
+    return filesTotal;
   }
 
 
-
-	@Override
+  @Override
   public final Type<ProgressEventHandler> getAssociatedType() {
     return TYPE;
   }
 
- 
+
   @Override
   public String toDebugString() {
     return super.toDebugString() + filesComplete + "/" + filesTotal;
   }
 
-	@Override
+  @Override
   protected void dispatch(ProgressEventHandler handler) {
-		handler.onProgress(filesComplete, filesTotal);
+    handler.onProgress(filesComplete, filesTotal);
   }
 
 }

@@ -1,20 +1,14 @@
 package com.bedatadriven.rebar.sql.shared.adapter;
 
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.bedatadriven.rebar.sql.client.SqlException;
-import com.bedatadriven.rebar.sql.client.SqlResultCallback;
-import com.bedatadriven.rebar.sql.client.SqlResultSet;
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
-import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
+import com.bedatadriven.rebar.sql.client.*;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Adapts a synchronous database API to the WebSql-style asynchronous
@@ -22,22 +16,11 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  */
 public class SyncTransactionAdapter implements SqlTransaction {
 
+  private static final Logger LOGGER = Logger.getLogger(SyncTransactionAdapter.class.getName());
   private static int nextTxId = 1;
   private boolean committed = false;
   private boolean manualCommitting = false;
-  
-  private static final Logger LOGGER = Logger.getLogger(SyncTransactionAdapter.class.getName());
-  
-  public static interface Executor {
-    SqlResultSet execute(String statement, Object[] params) throws Exception;
-    boolean begin() throws Exception;
-    void commit() throws Exception;
-    void rollback() throws Exception;
-  }
-
-
   private LinkedList<ScheduledCommand> queue = new LinkedList<ScheduledCommand>();
-
   private SqlTransactionCallback callback;
   private Executor executor;
   private Scheduler scheduler;
@@ -53,23 +36,22 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     scheduleBeginTransaction();
   }
-  
 
-	public void withManualCommitting() {
-		this.manualCommitting = true;
+  public void withManualCommitting() {
+    this.manualCommitting = true;
   }
 
-	private void beginTransaction() {
-	  try {
-      if(!executor.begin()) {
+  private void beginTransaction() {
+    try {
+      if (!executor.begin()) {
 
-      	LOGGER.warning("SyncTx[" + id + "]: Unable to acquire tx lock, rescheduling");
+        LOGGER.warning("SyncTx[" + id + "]: Unable to acquire tx lock, rescheduling");
 
-      	scheduleBeginTransaction();
-      	return;
+        scheduleBeginTransaction();
+        return;
       }
-    } catch(Exception e) {
-    	LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown during executor.begin()", e);
 
       callback.onError(new SqlException(e));
       return;
@@ -82,7 +64,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     try {
       callback.begin(this);
-    } catch(Throwable e) {
+    } catch (Throwable e) {
       LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown in transaction callback", e);
 
       errorInCallback(e);
@@ -92,48 +74,47 @@ public class SyncTransactionAdapter implements SqlTransaction {
     scheduleProcess();
   }
 
-	
   private void scheduleBeginTransaction() {
 
-  	scheduler.scheduleDeferred(new ScheduledCommand() {
-			
-			@Override
-			public void execute() {
-				beginTransaction();
-			}
-		});
+    scheduler.scheduleDeferred(new ScheduledCommand() {
+
+      @Override
+      public void execute() {
+        beginTransaction();
+      }
+    });
   }
 
-	private void errorInCallback(Throwable e) {
-  	try {
-  		LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Rolling back transaction");
-  		executor.rollback();
-  	} catch(Exception rollbackException) {
-  		LOGGER.log(Level.WARNING, "SyncTx[" + id + "]: Exception while rolling back transaction", rollbackException);
-  	}
+  private void errorInCallback(Throwable e) {
+    try {
+      LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Rolling back transaction");
+      executor.rollback();
+    } catch (Exception rollbackException) {
+      LOGGER.log(Level.WARNING, "SyncTx[" + id + "]: Exception while rolling back transaction", rollbackException);
+    }
     callback.onError(new SqlException(e));
   }
 
   private void scheduleProcess() {
-  	scheduler.scheduleFinally(new Scheduler.ScheduledCommand() {
+    scheduler.scheduleFinally(new Scheduler.ScheduledCommand() {
       @Override
       public void execute() {
-      	 if(queue.isEmpty()) {
-      		 if(!committed && !manualCommitting) {
-	      		 committed = true;
-	           commitTransaction();
-      		 }
-         } else {
-           queue.poll().execute();
-           scheduleProcess();
-         }
+        if (queue.isEmpty()) {
+          if (!committed && !manualCommitting) {
+            committed = true;
+            commitTransaction();
+          }
+        } else {
+          queue.poll().execute();
+          scheduleProcess();
+        }
       }
     });
-   
+
   }
 
   public void process() {
-  	scheduleProcess();
+    scheduleProcess();
   }
 
   public void commitTransaction() {
@@ -141,18 +122,18 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
     try {
       executor.commit();
-    } catch(Exception e) {
+    } catch (Exception e) {
       LOGGER.log(Level.SEVERE, "SyncTx[" + id + "]: Exception thrown while committing", e);
 
       errorInCallback(e);
       return;
     }
-    
+
     LOGGER.fine("SyncTx[" + id + "]: Commit succeeded.");
-    
+
     // everything worked! let the caller know
     callback.onSuccess();
-    
+
   }
 
   @Override
@@ -161,27 +142,37 @@ public class SyncTransactionAdapter implements SqlTransaction {
   }
 
   private void enqueue(ScheduledCommand statement) {
-  	if(committed) {
-  		throw new IllegalStateException("transaction has already started committed, no new statements can be queued");
-  	}
-	  queue.add(statement);
-	  scheduleProcess();
+    if (committed) {
+      throw new IllegalStateException("transaction has already started committed, no new statements can be queued");
+    }
+    queue.add(statement);
+    scheduleProcess();
   }
 
-	@Override
+  @Override
   public void executeSql(String statement, Object[] parameters) {
-		enqueue(new Statement(statement, parameters, null));
+    enqueue(new Statement(statement, parameters, null));
   }
 
   @Override
   public void executeSql(String statement, Object[] parameters,
-      SqlResultCallback callback) {
-   enqueue(new Statement(statement, parameters, callback));
+                         SqlResultCallback callback) {
+    enqueue(new Statement(statement, parameters, callback));
   }
 
   @Override
   public void executeSql(String statement, SqlResultCallback resultCallback) {
-  	enqueue(new Statement(statement, null, resultCallback));
+    enqueue(new Statement(statement, null, resultCallback));
+  }
+
+  public static interface Executor {
+    SqlResultSet execute(String statement, Object[] params) throws Exception;
+
+    boolean begin() throws Exception;
+
+    void commit() throws Exception;
+
+    void rollback() throws Exception;
   }
 
   private class Statement implements ScheduledCommand {
@@ -202,37 +193,37 @@ public class SyncTransactionAdapter implements SqlTransaction {
 
       try {
         handleStatementSuccess(executor.execute(statement, params));
-      } catch(SqlException e) {
+      } catch (SqlException e) {
         handleStatementError(e);
-      } catch(Exception e) {
+      } catch (Exception e) {
         errorInCallback(e);
       }
     }
 
     private void handleStatementSuccess(final SqlResultSet results) {
-      if(callback != null) {
-      		// If the statement has a result set callback that is not null, queue a task to invoke it with the
-      	  // SQLTransaction object as its first argument and the new SQLResultSet object as its second argument, 
-      	  // and wait for that task to be run.
-      	
-        	SyncTransactionAdapter.this.enqueue(new ScheduledCommand() {
-						@Override
-						public void execute() {
-			        try {
-			        	callback.onSuccess(SyncTransactionAdapter.this, results);
-			          scheduleProcess();
-			        } catch(Exception e) {
-			          errorInCallback(e);
-			        }
-						}
-					});
+      if (callback != null) {
+        // If the statement has a result set callback that is not null, queue a task to invoke it with the
+        // SQLTransaction object as its first argument and the new SQLResultSet object as its second argument, 
+        // and wait for that task to be run.
+
+        SyncTransactionAdapter.this.enqueue(new ScheduledCommand() {
+          @Override
+          public void execute() {
+            try {
+              callback.onSuccess(SyncTransactionAdapter.this, results);
+              scheduleProcess();
+            } catch (Exception e) {
+              errorInCallback(e);
+            }
+          }
+        });
       } else {
-      	scheduleProcess();
+        scheduleProcess();
       }
     }
 
     private void handleStatementError(SqlException e) {
-      if(shouldContinue(e)) {
+      if (shouldContinue(e)) {
         scheduleProcess();
       } else {
         errorInCallback(e);
@@ -240,7 +231,7 @@ public class SyncTransactionAdapter implements SqlTransaction {
     }
 
     private boolean shouldContinue(SqlException e) {
-      if(callback == null) {
+      if (callback == null) {
         return false;
       }
       return callback.onFailure(e) == SqlResultCallback.CONTINUE;

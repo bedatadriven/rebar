@@ -17,7 +17,6 @@ public class SqlException extends RuntimeException {
   public SqlException(Throwable arg0) {
     super(arg0);
   }
-  
-  
+
 
 }

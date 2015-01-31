@@ -17,14 +17,11 @@
 package com.bedatadriven.rebar.sql.client.websql;
 
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
-import com.bedatadriven.rebar.sql.client.SqlException;
-import com.bedatadriven.rebar.sql.client.SqlTransaction;
-import com.bedatadriven.rebar.sql.client.SqlTransactionCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * Javascript Overlay of the WebSql API Database object.
- *
+ * <p/>
  * This wrappers also implements the common {@link SqlDatabase} interface.
  *
  * @see <a href="http://www.w3.org/TR/webdatabase/#databases for definitions.">W3 standard</a>
@@ -36,21 +33,22 @@ public final class WebSqlDatabase extends JavaScriptObject {
 
   public static final int DEFAULT_SIZE = 1024 * 1024 * 4;
 
-  protected WebSqlDatabase() { }
+  protected WebSqlDatabase() {
+  }
 
   /**
    * WebSql-specific method to open a client-side database.
    *
-   * @param name the name of the database.
-   * @param version the expected version of the database, or an empty string if any version is acceptable. If a
-   * database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
-   * @param displayName the name to present to the user
-   * @param estimatedSize estimated size — in bytes — of the data that will be stored in the database
-   * @param creationCallback  a callback to be invoked if the database has not yet been created.
+   * @param name             the name of the database.
+   * @param version          the expected version of the database, or an empty string if any version is acceptable. If a
+   *                         database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
+   * @param displayName      the name to present to the user
+   * @param estimatedSize    estimated size — in bytes — of the data that will be stored in the database
+   * @param creationCallback a callback to be invoked if the database has not yet been created.
    * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
   public static native WebSqlDatabase openDatabase(String name, String version, String displayName, int estimatedSize,
-                      WebSqlCreationCallback creationCallback) /*-{
+                                                   WebSqlCreationCallback creationCallback) /*-{
     return $wnd.openDatabase(name, version, displayName, estimatedSize,
         function(db) {
           creationCallback.@com.bedatadriven.rebar.sql.client.websql.WebSqlCreationCallback::onCreated(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlDatabase;)(db);
@@ -61,12 +59,11 @@ public final class WebSqlDatabase extends JavaScriptObject {
   /**
    * WebSql-specific method to open a client-side database.
    *
-   * @param name the name of the database.
-   * @param version the expected version of the database, or an empty string if any version is acceptable. If a
-   * database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
-   * @param displayName the name to present to the user
+   * @param name          the name of the database.
+   * @param version       the expected version of the database, or an empty string if any version is acceptable. If a
+   *                      database with the same name but different version already exists, then an {@code INVALID_STATE_ERR}
+   * @param displayName   the name to present to the user
    * @param estimatedSize estimated size — in bytes — of the data that will be stored in the database
-   *
    * @see <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">W3 Standard</a>
    */
   public static native WebSqlDatabase openDatabase(String name, String version, String displayName, int estimatedSize) /*-{
@@ -90,5 +87,5 @@ public final class WebSqlDatabase extends JavaScriptObject {
     });
   }-*/;
 
- 
+
 }

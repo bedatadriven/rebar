@@ -4,6 +4,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface AsyncCommand {
 
-	void execute(AsyncCallback<Void> callback);
-	
+  void execute(AsyncCallback<Void> callback);
+
 }

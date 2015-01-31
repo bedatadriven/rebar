@@ -1,47 +1,46 @@
 package com.bedatadriven.rebar.style.rebind.less;
 
 import com.bedatadriven.rebar.style.rebind.ConsoleTreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import org.junit.Test;
 
 import static com.google.common.io.Resources.getResource;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-
-import com.google.gwt.core.ext.UnableToCompleteException;
+import static org.junit.Assert.assertThat;
 
 
 public class LessCompilerTest {
 
-	private ConsoleTreeLogger logger = new ConsoleTreeLogger();
+  private ConsoleTreeLogger logger = new ConsoleTreeLogger();
 
-	@Test
-	public void compiledParserLoads() throws Exception {
+  @Test
+  public void compiledParserLoads() throws Exception {
 
-        LessCompiler.newCompiler();
-    }
+    LessCompiler.newCompiler();
+  }
 
-    @Test
-    public void test() throws UnableToCompleteException {
-        compile("test.less");
-	}
+  @Test
+  public void test() throws UnableToCompleteException {
+    compile("test.less");
+  }
 
-    @Test
-    public void withImports() throws UnableToCompleteException {
-        String output = compile("nested-imports.less");
+  @Test
+  public void withImports() throws UnableToCompleteException {
+    String output = compile("nested-imports.less");
 
-        assertThat(output, not(equalTo("undefined")));
-    }
+    assertThat(output, not(equalTo("undefined")));
+  }
 
-    @Test(expected = Exception.class)
-	public void compileError() throws UnableToCompleteException {
-		String output = compile("invalid.less");
-	}
+  @Test(expected = Exception.class)
+  public void compileError() throws UnableToCompleteException {
+    String output = compile("invalid.less");
+  }
 
-    private String compile(String resourceName) throws UnableToCompleteException {
-        String output = new LessCompiler(logger).compile(getResource(resourceName));
-        System.out.println(output);
-        return output;
-    }
+  private String compile(String resourceName) throws UnableToCompleteException {
+    String output = new LessCompiler(logger).compile(getResource(resourceName));
+    System.out.println(output);
+    return output;
+  }
 
 }

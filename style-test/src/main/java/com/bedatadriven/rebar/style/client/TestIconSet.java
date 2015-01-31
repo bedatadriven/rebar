@@ -5,13 +5,13 @@ import com.google.gwt.core.client.GWT;
 
 public interface TestIconSet extends IconSet {
 
-    public static final TestIconSet INSTANCE = GWT.create(TestIconSet.class);
+  public static final TestIconSet INSTANCE = GWT.create(TestIconSet.class);
 
-    @Source(value = "fontawesome.svg", glyph = 0xf115)
-    String folder();
+  @Source(value = "fontawesome.svg", glyph = 0xf115)
+  String folder();
 
-    @Source("heart.svg")
-    String heart();
+  @Source("heart.svg")
+  String heart();
 
 
 }

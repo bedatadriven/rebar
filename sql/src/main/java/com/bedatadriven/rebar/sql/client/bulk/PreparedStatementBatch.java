@@ -23,8 +23,7 @@ import com.google.gwt.core.client.JsArrayString;
 import java.util.Date;
 
 /**
- * A JavaScript overlay for classes 
- *
+ * A JavaScript overlay for classes
  *
  * @author Alex Bertram
  */
@@ -39,7 +38,7 @@ public final class PreparedStatementBatch extends JavaScriptObject {
   }-*/;
 
   public static native JsArray<PreparedStatementBatch> fromJson(String json) /*-{
-  	if($wnd.JSON) {
+    if($wnd.JSON) {
   		return $wnd.JSON.parse(json);
   	} else {
     	return eval('(' + json + ')');
@@ -48,7 +47,7 @@ public final class PreparedStatementBatch extends JavaScriptObject {
 
   /**
    * Gets the parametrized SQL statement to execute.
-
+   *
    * @return the parametrized SQL statement
    */
   public native String getStatement() /*-{
@@ -86,10 +85,10 @@ public final class PreparedStatementBatch extends JavaScriptObject {
 
   public void addExecution(Object... parameters) {
     JsArrayString array = JsArray.createArray().cast();
-    for(int i=0; i!=parameters.length; ++i) {
+    for (int i = 0; i != parameters.length; ++i) {
       Object param = parameters[i];
-      if(param instanceof Date)
-        array.push(Long.toString(((Date)param).getTime()));
+      if (param instanceof Date)
+        array.push(Long.toString(((Date) param).getTime()));
       else
         array.push(param.toString());
     }

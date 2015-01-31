@@ -8,20 +8,18 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TestPanel implements IsWidget {
 
-    private final HTMLPanel rootElement;
+  private static TestPanelUiBinder ourUiBinder = GWT.create(TestPanelUiBinder.class);
+  private final HTMLPanel rootElement;
 
+  public TestPanel() {
+    rootElement = ourUiBinder.createAndBindUi(this);
+  }
 
-    interface TestPanelUiBinder extends UiBinder<HTMLPanel, TestPanel> {
-    }
+  @Override
+  public Widget asWidget() {
+    return rootElement;
+  }
 
-    private static TestPanelUiBinder ourUiBinder = GWT.create(TestPanelUiBinder.class);
-
-    public TestPanel() {
-        rootElement = ourUiBinder.createAndBindUi(this);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return rootElement;
-    }
+  interface TestPanelUiBinder extends UiBinder<HTMLPanel, TestPanel> {
+  }
 }

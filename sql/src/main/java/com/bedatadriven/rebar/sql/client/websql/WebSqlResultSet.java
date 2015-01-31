@@ -30,9 +30,8 @@ public final class WebSqlResultSet extends JavaScriptObject {
   }
 
   /**
-   *
-   * @return  the row ID of the row that the SQLResultSet object's SQL statement inserted into the database,
-   *  if the statement inserted a row. If the statement inserted multiple rows, the ID of the last row must
+   * @return the row ID of the row that the SQLResultSet object's SQL statement inserted into the database,
+   * if the statement inserted a row. If the statement inserted multiple rows, the ID of the last row must
    * be the one returned. If the statement did not insert a row, then the
    * attribute must instead raise an INVALID_ACCESS_ERR exception.
    */
@@ -41,19 +40,17 @@ public final class WebSqlResultSet extends JavaScriptObject {
   }-*/;
 
   /**
-   * 
    * @return the insertId or -1 if there were no rows inserted
    */
   public int safeGetInsertId() {
-  	try {
-  		return getInsertId();
-  	} catch(Exception e) {
-  		return -1;
-  	}
+    try {
+      return getInsertId();
+    } catch (Exception e) {
+      return -1;
+    }
   }
-  
+
   /**
-   * 
    * @return the <strong>total</strong> number of rows affected during the transaction in progress.
    */
   public native int getRowsAffected() /*-{
@@ -61,15 +58,14 @@ public final class WebSqlResultSet extends JavaScriptObject {
   }-*/;
 
   public int safeGetRowsAffected() {
-  	try {
-  		return getInsertId();
-  	} catch(Exception e) {
-  		return 0;
-  	}
+    try {
+      return getInsertId();
+    } catch (Exception e) {
+      return 0;
+    }
   }
-  
+
   /**
-   *
    * @return a {@link WebSqlResultSetRowList} representing the rows returned, in the order
    * returned by the database. The same object must be returned each time.
    * If no rows were returned, then the object will be empty (its length will be zero).
@@ -80,9 +76,8 @@ public final class WebSqlResultSet extends JavaScriptObject {
 
 
   public SqlResultSet toSqlResultSet() {
-  	return new SqlResultSet(safeGetInsertId(), safeGetRowsAffected(), new WebSqlResultListImpl(getRows()));
+    return new SqlResultSet(safeGetInsertId(), safeGetRowsAffected(), new WebSqlResultListImpl(getRows()));
   }
-
 
 
 }

@@ -3,49 +3,48 @@ package com.bedatadriven.rebar.appcache.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * A stub implementation of the AppCache for use during host mode. 
- * 
+ * A stub implementation of the AppCache for use during host mode.
  */
 class AppCacheStub extends AbstractAppCache {
 
-	@Override
+  @Override
   public String getImplementation() {
-	  return "HostedMode";
+    return "HostedMode";
   }
 
-	@Override
+  @Override
   public void ensureCached(AsyncCallback<Void> callback) {
-		callback.onSuccess(null);
+    callback.onSuccess(null);
   }
 
-	@Override
+  @Override
   public void ensureUpToDate(AsyncCallback<Void> callback) {
-		callback.onSuccess(null);
+    callback.onSuccess(null);
   }
 
-	@Override
+  @Override
   public Status getStatus() {
-	  return AppCache.Status.IDLE;
+    return AppCache.Status.IDLE;
   }
 
-	@Override
+  @Override
   public void checkForUpdate() {
 
   }
 
-	@Override
+  @Override
   public boolean isCachedOnStartup() {
-	  return false;
+    return false;
   }
 
-	@Override
+  @Override
   public boolean requiresPermission() {
-	  return true;
+    return true;
   }
 
-	@Override
+  @Override
   public void removeCache(AsyncCallback<Void> callback) {
-		callback.onSuccess(null);
+    callback.onSuccess(null);
   }
 
 }

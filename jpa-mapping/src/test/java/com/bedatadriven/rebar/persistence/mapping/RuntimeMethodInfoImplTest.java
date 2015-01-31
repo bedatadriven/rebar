@@ -29,20 +29,6 @@ import java.util.Set;
  */
 public class RuntimeMethodInfoImplTest {
 
-  public class MyClass<Z> {
-
-    public void aMethod(String p0,
-                        List<Set<Integer>> p1,
-                        Map<Integer, String>[] p2,
-                        Collection<? extends Integer> p3,
-                        Z p4,
-                        boolean p5,
-                        int[] p6) {
-
-    }
-  }
-
-
   @Test
   public void testComposeTypeDecl() {
 
@@ -57,5 +43,18 @@ public class RuntimeMethodInfoImplTest {
     Assert.assertEquals("Z", params.get(4));
     Assert.assertEquals("boolean", params.get(5));
     Assert.assertEquals("int[]", params.get(6));
+  }
+
+  public class MyClass<Z> {
+
+    public void aMethod(String p0,
+                        List<Set<Integer>> p1,
+                        Map<Integer, String>[] p2,
+                        Collection<? extends Integer> p3,
+                        Z p4,
+                        boolean p5,
+                        int[] p6) {
+
+    }
   }
 }

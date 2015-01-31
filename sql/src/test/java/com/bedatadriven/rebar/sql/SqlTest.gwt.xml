@@ -16,11 +16,11 @@
 
 <module>
 
-    <inherits name="com.bedatadriven.rebar.sql.Sql"/>
-    <set-property name="gwt.logging.logLevel" value="FINEST"/>    
-    <set-property name="gwt.logging.popupHandler" value="ENABLED" />
+  <inherits name="com.bedatadriven.rebar.sql.Sql"/>
+  <set-property name="gwt.logging.logLevel" value="FINEST"/>
+  <set-property name="gwt.logging.popupHandler" value="ENABLED"/>
 
-    <source path='client'/>
+  <source path='client'/>
 
 
 </module>

@@ -1,7 +1,7 @@
 package com.bedatadriven.rebar.sql.server.jdbc;
 
-import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
 import com.bedatadriven.rebar.sql.client.SqlDatabase;
+import com.bedatadriven.rebar.sql.client.SqlDatabaseFactory;
 
 public class JdbcDatabaseFactory implements SqlDatabaseFactory {
 

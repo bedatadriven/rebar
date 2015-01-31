@@ -16,45 +16,39 @@
 
 package com.bedatadriven.rebar.sync.server;
 
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertTrue;
+import com.bedatadriven.rebar.sql.client.SqlDatabase;
+import com.bedatadriven.rebar.sql.server.jdbc.SqliteStubDatabase;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.bedatadriven.rebar.sql.client.SqlDatabase;
-import com.bedatadriven.rebar.sql.server.jdbc.SqliteStubDatabase;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BuilderTest {
   protected JpaUpdateBuilder builder;
   protected SqlDatabase database;
-	private String connectionUrl;
+  private String connectionUrl;
 
 
   @Before
   public void setUp() throws ClassNotFoundException, SQLException {
 
-	String databaseName = "buildertest" + new java.util.Date().getTime();
-	System.out.println("db = " + databaseName);
-	
-  	Class.forName("org.sqlite.JDBC");
+    String databaseName = "buildertest" + new java.util.Date().getTime();
+    System.out.println("db = " + databaseName);
+
+    Class.forName("org.sqlite.JDBC");
     connectionUrl = "jdbc:sqlite:" + databaseName;
 
-        
-    builder = new JpaUpdateBuilder();
-		database = new SqliteStubDatabase(databaseName);
-  }
 
+    builder = new JpaUpdateBuilder();
+    database = new SqliteStubDatabase(databaseName);
+  }
 
 
   @Test
@@ -74,16 +68,16 @@ public class BuilderTest {
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery("select id, name, birthDate, height, active, lastVisit from Person order by id");
 
-    for(int i=0;i!=list.size();++i) {
+    for (int i = 0; i != list.size(); ++i) {
       rs.next();
       assertEquals(list.get(i).getId(), rs.getInt(1));
       assertEquals(list.get(i).getName(), rs.getString(2));
-      if(i==0) {
-      	assertEquals("1982-01-16", rs.getString(3));
+      if (i == 0) {
+        assertEquals("1982-01-16", rs.getString(3));
       }
       assertEquals(list.get(i).getHeight(), rs.getDouble(4));
       assertEquals(list.get(i).isActive(), rs.getBoolean(5));
-      assertTrue(rs.getDouble(6) > 1316171856l );
+      assertTrue(rs.getDouble(6) > 1316171856l);
     }
     rs.close();
     conn.close();
@@ -106,17 +100,17 @@ public class BuilderTest {
     System.out.println(json);
 
     database.executeUpdates(json, new AsyncCallback<Integer>() {
-			
-			@Override
-			public void onSuccess(Integer rows) {
-		    assertEquals("rows updated", 3, (int)rows);				
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				throw new AssertionError(caught);
-			}
-		});
+
+      @Override
+      public void onSuccess(Integer rows) {
+        assertEquals("rows updated", 3, (int) rows);
+      }
+
+      @Override
+      public void onFailure(Throwable caught) {
+        throw new AssertionError(caught);
+      }
+    });
 
 
     // now verify that the data were populated correctly
@@ -124,10 +118,10 @@ public class BuilderTest {
     Statement stmt = conn.createStatement();
     ResultSet rs = stmt.executeQuery("select id, city from Contact order by id");
 
-    for(int i=0;i!=3;++i) {
+    for (int i = 0; i != 3; ++i) {
       assertTrue(rs.next());
       assertEquals(list.get(i).getId(), rs.getString(1));
-      if(list.get(i).getAddress() != null)
+      if (list.get(i).getAddress() != null)
         assertEquals(list.get(i).getAddress().getCity(), rs.getString(2));
     }
     rs.close();
@@ -136,23 +130,23 @@ public class BuilderTest {
 
   private void executeUpdateAndExpectedAffectedRowsToBe(final int expectedRowsAffected) throws Exception {
     database.executeUpdates(builder.asJson(), new AsyncCallback<Integer>() {
-			
-			@Override
-			public void onSuccess(Integer rows) {
-		    assertEquals("rowsAffected", expectedRowsAffected, (int)rows);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				throw new AssertionError(caught);
-			}
-		});
+
+      @Override
+      public void onSuccess(Integer rows) {
+        assertEquals("rowsAffected", expectedRowsAffected, (int) rows);
+      }
+
+      @Override
+      public void onFailure(Throwable caught) {
+        throw new AssertionError(caught);
+      }
+    });
   }
 
   private java.util.Date makeDate(int year, int month, int day) {
     Calendar cal = Calendar.getInstance();
     cal.set(Calendar.YEAR, year);
-    cal.set(Calendar.MONTH, month-1);
+    cal.set(Calendar.MONTH, month - 1);
     cal.set(Calendar.DATE, day);
     return cal.getTime();
   }

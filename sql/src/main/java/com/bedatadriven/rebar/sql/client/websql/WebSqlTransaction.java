@@ -16,15 +16,14 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.bedatadriven.rebar.sql.client.SqlResultCallback;
 import com.bedatadriven.rebar.sql.client.SqlTransaction;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.logging.Level;
 
 /**
  * Javascript overlay for the {@code SQLTransaction} WebSql interface.
@@ -32,8 +31,8 @@ import com.google.gwt.core.client.JsArray;
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqltransaction">W3 Standard</a>
  */
 public final class WebSqlTransaction extends JavaScriptObject implements SqlTransaction {
- 
-	
+
+
   protected WebSqlTransaction() {
   }
 
@@ -47,31 +46,31 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   }-*/;
 
   public void executeSql(final String statement, JavaScriptObject parameters, final WebSqlResultCallback callback) {
-  	if(WebSqlLogger.INSTANCE.isLoggable(Level.SEVERE)) {
-	  	doExecuteSql(statement, parameters, new WebSqlResultCallback() {
-				
-				@Override
-				public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-					try {
-						callback.onSuccess(tx, results);
-					} catch(Exception e) {
-						WebSqlLogger.INSTANCE.log(Level.SEVERE, "Execution of callback for statement '" + statement + "' threw exception: " + e.getMessage(), e);
-						throw new RuntimeException(e);
-					}
-				}
-				
-				@Override
-				public boolean onFailure(WebSqlException e) {
-					WebSqlLogger.INSTANCE.severe("Execution of statement '" + statement + "'");
-					return callback.onFailure(e);
-				}
-			});
-  	} else {
-  		doExecuteSql(statement, parameters, callback);
-  	}
+    if (WebSqlLogger.INSTANCE.isLoggable(Level.SEVERE)) {
+      doExecuteSql(statement, parameters, new WebSqlResultCallback() {
+
+        @Override
+        public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
+          try {
+            callback.onSuccess(tx, results);
+          } catch (Exception e) {
+            WebSqlLogger.INSTANCE.log(Level.SEVERE, "Execution of callback for statement '" + statement + "' threw exception: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+          }
+        }
+
+        @Override
+        public boolean onFailure(WebSqlException e) {
+          WebSqlLogger.INSTANCE.severe("Execution of statement '" + statement + "'");
+          return callback.onFailure(e);
+        }
+      });
+    } else {
+      doExecuteSql(statement, parameters, callback);
+    }
   }
 
-  
+
   private native void doExecuteSql(String statement, JavaScriptObject parameters, WebSqlResultCallback callback)/*-{
     this.executeSql(statement, parameters, function(tx, results) {
       callback.@com.bedatadriven.rebar.sql.client.websql.WebSqlResultCallback::onSuccess(Lcom/bedatadriven/rebar/sql/client/websql/WebSqlTransaction;Lcom/bedatadriven/rebar/sql/client/websql/WebSqlResultSet;)(tx, results);
@@ -82,18 +81,18 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
   }-*/;
 
   public void executeSql(String statement, Object[] parameters) {
-  	WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+    WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
     executeSql(statement, toParamArray(parameters));
   }
 
-  
+
   public void executeSql(String statement, Object[] parameters, WebSqlResultCallback callback) {
-  	WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
-  	executeSql(statement, toParamArray(parameters), callback);
+    WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with parameters " + Arrays.toString(parameters));
+    executeSql(statement, toParamArray(parameters), callback);
   }
 
   public void executeSql(String statement, WebSqlResultCallback resultCallback) {
-  	WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with no parameters");
+    WebSqlLogger.INSTANCE.fine("WebSql: Queuing statement '" + statement + "' with no parameters");
     executeSql(statement, JavaScriptObject.createArray(), resultCallback);
   }
 
@@ -102,7 +101,7 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
     executeSql(statement, parameters, new WebSqlResultCallback() {
       @Override
       public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
-      	callback.onSuccess(tx, results.toSqlResultSet());
+        callback.onSuccess(tx, results.toSqlResultSet());
       }
 
       @Override
@@ -111,28 +110,28 @@ public final class WebSqlTransaction extends JavaScriptObject implements SqlTran
       }
     });
   }
-  
+
 
   @Override
   public void executeSql(String statement, SqlResultCallback resultCallback) {
-    executeSql(statement, new Object[] {}, resultCallback);
+    executeSql(statement, new Object[]{}, resultCallback);
   }
 
   private ParamArray toParamArray(Object[] parameters) {
     ParamArray paramArray = JsArray.createArray().cast();
-    for(Object param : parameters) {
-    	if(param == null) {
-    		paramArray.push(null);
-    	} else if(param instanceof Number) {
-        paramArray.push(((Number)param).doubleValue());
-      } else if(param instanceof String) {
-        paramArray.push((String)param);
-      } else if(param instanceof Boolean) {
-      	paramArray.push( ((Boolean)param) ? 1 : 0 );
-      } else if(param instanceof Date) {
-      	paramArray.push(Long.toString(((Date)param).getTime()));
+    for (Object param : parameters) {
+      if (param == null) {
+        paramArray.push(null);
+      } else if (param instanceof Number) {
+        paramArray.push(((Number) param).doubleValue());
+      } else if (param instanceof String) {
+        paramArray.push((String) param);
+      } else if (param instanceof Boolean) {
+        paramArray.push(((Boolean) param) ? 1 : 0);
+      } else if (param instanceof Date) {
+        paramArray.push(Long.toString(((Date) param).getTime()));
       } else {
-      	paramArray.push(param.toString());
+        paramArray.push(param.toString());
       }
     }
     return paramArray;

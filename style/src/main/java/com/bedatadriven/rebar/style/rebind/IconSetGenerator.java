@@ -19,107 +19,108 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.gwt.core.ext.TreeLogger.Type.*;
+import static com.google.gwt.core.ext.TreeLogger.Type.ERROR;
+import static com.google.gwt.core.ext.TreeLogger.Type.INFO;
 
 /**
  *
  */
 public class IconSetGenerator extends Generator {
 
-    @Override
-    public String generate(TreeLogger logger, GeneratorContext context,
-                           String typeName) throws UnableToCompleteException {
+  @Override
+  public String generate(TreeLogger logger, GeneratorContext context,
+                         String typeName) throws UnableToCompleteException {
 
-        JClassType type = context.getTypeOracle().findType(typeName);
+    JClassType type = context.getTypeOracle().findType(typeName);
 
-        GenerationParameters generationParameters = new GenerationParameterBuilder(context, type).build(logger);
-        IconContext iconContext = new IconContext();
-        IconStrategy strategy = chooseStrategy(generationParameters);
+    GenerationParameters generationParameters = new GenerationParameterBuilder(context, type).build(logger);
+    IconContext iconContext = new IconContext();
+    IconStrategy strategy = chooseStrategy(generationParameters);
 
-        IconSetImplWriter writer = new IconSetImplWriter(generationParameters, type, strategy);
+    IconSetImplWriter writer = new IconSetImplWriter(generationParameters, type, strategy);
 
-        logger.log(INFO, "Generating " + writer.getQualifiedSourceName());
+    logger.log(INFO, "Generating " + writer.getQualifiedSourceName());
 
-        // if an implementation already exists, we're done.
-        if(writer.tryCreate(context, logger)) {
+    // if an implementation already exists, we're done.
+    if (writer.tryCreate(context, logger)) {
 
-            SourceResolver sourceResolver = new SourceResolver(context, type);
-            List<Icon> icons = collectIcons(logger, type, sourceResolver);
+      SourceResolver sourceResolver = new SourceResolver(context, type);
+      List<Icon> icons = collectIcons(logger, type, sourceResolver);
 
-            IconArtifacts results = strategy.execute(logger, iconContext, icons);
+      IconArtifacts results = strategy.execute(logger, iconContext, icons);
 
-            emitResources(logger, context, results.getExternalResources());
+      emitResources(logger, context, results.getExternalResources());
 
-            writer.writeClassNameMethods(logger, iconContext, icons);
-            writer.writeEnsureInjected(results);
-            writer.commit(logger);
-        }
-
-        return writer.getQualifiedSourceName();
+      writer.writeClassNameMethods(logger, iconContext, icons);
+      writer.writeEnsureInjected(results);
+      writer.commit(logger);
     }
 
+    return writer.getQualifiedSourceName();
+  }
 
-    private void emitResources(TreeLogger parentLogger, GeneratorContext context,
-                               List<IconArtifacts.ExternalResource> externalResources) throws UnableToCompleteException {
-        if(!externalResources.isEmpty()) {
-            TreeLogger logger = parentLogger.branch(TreeLogger.Type.INFO, "Emitting icon set resources");
-            for(IconArtifacts.ExternalResource resource : externalResources) {
-                logger.log(TreeLogger.Type.INFO, "Emitting " + resource.getName());
 
-                OutputStream outputStream = context.tryCreateResource(logger, resource.getName());
-                if(outputStream != null) {
-                    try {
-                        outputStream.write(resource.getContent());
-                    } catch(Exception e) {
-                        logger.log(TreeLogger.Type.ERROR, "Error writing resource " + resource.getName());
-                        throw new UnableToCompleteException();
-                    }
-                    context.commitResource(logger, outputStream);
-                }
-            }
+  private void emitResources(TreeLogger parentLogger, GeneratorContext context,
+                             List<IconArtifacts.ExternalResource> externalResources) throws UnableToCompleteException {
+    if (!externalResources.isEmpty()) {
+      TreeLogger logger = parentLogger.branch(TreeLogger.Type.INFO, "Emitting icon set resources");
+      for (IconArtifacts.ExternalResource resource : externalResources) {
+        logger.log(TreeLogger.Type.INFO, "Emitting " + resource.getName());
+
+        OutputStream outputStream = context.tryCreateResource(logger, resource.getName());
+        if (outputStream != null) {
+          try {
+            outputStream.write(resource.getContent());
+          } catch (Exception e) {
+            logger.log(TreeLogger.Type.ERROR, "Error writing resource " + resource.getName());
+            throw new UnableToCompleteException();
+          }
+          context.commitResource(logger, outputStream);
         }
+      }
     }
+  }
 
-    private IconStrategy chooseStrategy(GenerationParameters params) {
-        if(params.getUserAgent().equals(UserAgent.GECKO1_8)) {
-            return new SvgBackgroundStrategy();
-        } else {
-            return new IconFontStrategy(new ExternalSvgFontResource());
-        }
+  private IconStrategy chooseStrategy(GenerationParameters params) {
+    if (params.getUserAgent().equals(UserAgent.GECKO1_8)) {
+      return new SvgBackgroundStrategy();
+    } else {
+      return new IconFontStrategy(new ExternalSvgFontResource());
     }
+  }
 
-    private List<Icon> collectIcons(TreeLogger parentLogger, JClassType interfaceType,
-                                       SourceResolver sourceResolver) throws UnableToCompleteException {
+  private List<Icon> collectIcons(TreeLogger parentLogger, JClassType interfaceType,
+                                  SourceResolver sourceResolver) throws UnableToCompleteException {
 
-        TreeLogger logger = parentLogger.branch(INFO, "Resolving icon sources");
+    TreeLogger logger = parentLogger.branch(INFO, "Resolving icon sources");
 
-        List<Icon> icons = Lists.newArrayList();
-        Map<String, SvgDocument> sourceDocuments = Maps.newHashMap();
+    List<Icon> icons = Lists.newArrayList();
+    Map<String, SvgDocument> sourceDocuments = Maps.newHashMap();
 
-        for(JMethod method : AccessorBindings.getClassNameAccessors(interfaceType)) {
-            TreeLogger methodLogger = logger.branch(INFO, "Resolving source for " + method.getName() + "()");
+    for (JMethod method : AccessorBindings.getClassNameAccessors(interfaceType)) {
+      TreeLogger methodLogger = logger.branch(INFO, "Resolving source for " + method.getName() + "()");
 
-            IconSet.Source source = method.getAnnotation(IconSet.Source.class);
-            if(source == null) {
-                methodLogger.log(ERROR, "Missing the @Source annotation");
-                throw new UnableToCompleteException();
-            }
+      IconSet.Source source = method.getAnnotation(IconSet.Source.class);
+      if (source == null) {
+        methodLogger.log(ERROR, "Missing the @Source annotation");
+        throw new UnableToCompleteException();
+      }
 
-            SvgDocument svgDocument = sourceDocuments.get(source.value());
-            if(svgDocument == null) {
-                String svg = sourceResolver.resolveSourceText(methodLogger, source.value());
-                svgDocument = new SvgDocument(svg);
-            }
+      SvgDocument svgDocument = sourceDocuments.get(source.value());
+      if (svgDocument == null) {
+        String svg = sourceResolver.resolveSourceText(methodLogger, source.value());
+        svgDocument = new SvgDocument(svg);
+      }
 
-            IconSource iconSource;
-            if(source.glyph() == 0) {
-                iconSource = new ImageSource(svgDocument);
-            } else {
-                iconSource = new GlyphSource(svgDocument.getFonts().get(0), source.glyph());
-            }
+      IconSource iconSource;
+      if (source.glyph() == 0) {
+        iconSource = new ImageSource(svgDocument);
+      } else {
+        iconSource = new GlyphSource(svgDocument.getFonts().get(0), source.glyph());
+      }
 
-            icons.add(new Icon(method.getName(), iconSource));
-        }
-        return icons;
+      icons.add(new Icon(method.getName(), iconSource));
     }
+    return icons;
+  }
 }

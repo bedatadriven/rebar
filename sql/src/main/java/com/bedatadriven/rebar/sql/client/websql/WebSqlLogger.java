@@ -4,6 +4,6 @@ import java.util.logging.Logger;
 
 public class WebSqlLogger {
 
-	public static final Logger INSTANCE = Logger.getLogger(WebSqlLogger.class.getName());
+  public static final Logger INSTANCE = Logger.getLogger(WebSqlLogger.class.getName());
 
 }

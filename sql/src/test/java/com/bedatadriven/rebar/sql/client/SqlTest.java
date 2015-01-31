@@ -30,29 +30,26 @@ import java.util.logging.Logger;
  */
 public class SqlTest extends GWTTestCase {
 
-	private static Logger LOGGER = Logger.getLogger(SqlTest.class.getName());
-	
-  private static final String JSON_UPDATES  =
-      "[ { statement: \"create table mytest (number int)\" }, "  +
-        "{ statement: \"delete from mytest where number = 99\" }, " +
-        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [1], [2], [3], [4] ] }, " + 
-        "{ statement: \"insert into mytest (number) values (?)\", executions: [ [91], [92], [93], [94] ] } " +
-      "]";
+  private static final String JSON_UPDATES =
+      "[ { statement: \"create table mytest (number int)\" }, " +
+          "{ statement: \"delete from mytest where number = 99\" }, " +
+          "{ statement: \"insert into mytest (number) values (?)\", executions: [ [1], [2], [3], [4] ] }, " +
+          "{ statement: \"insert into mytest (number) values (?)\", executions: [ [91], [92], [93], [94] ] } " +
+          "]";
+  private static Logger LOGGER = Logger.getLogger(SqlTest.class.getName());
+  private static long TIME1 = 1316179555000l;
+  private static long TIME2 = 380035555000l;
+  private int callbacks = 0;
 
-	
   /**
    * Must refer to a valid module that sources this class.
    */
   public String getModuleName() {
     return "com.bedatadriven.rebar.sql.SqlTest";
   }
-  
-  private int callbacks = 0;
 
-  
-  
   public void testBasic() {
-  	LOGGER.fine("================= testBasic == db1 ========");
+    LOGGER.fine("================= testBasic == db1 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db1");
@@ -62,13 +59,13 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("create table if not exists foobar (id INT, name TEXT)");
         tx.executeSql("insert into foobar (id, name) values (1, 'foo') ");
         tx.executeSql("insert into foobar (id, name) values (2, 'bar') ");
-        tx.executeSql("select * from foobar where id > ?", new Object[] { 1 }, new SqlResultCallback() {
+        tx.executeSql("select * from foobar where id > ?", new Object[]{1}, new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             assertEquals(1, results.getRows().size());
             assertEquals("bar", results.getRow(0).getString("name"));
 
-            callbacks ++;
+            callbacks++;
           }
         });
 
@@ -78,30 +75,29 @@ public class SqlTest extends GWTTestCase {
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             assertEquals(2, results.getRows().size());
             assertEquals(1, callbacks);
-            
-            callbacks ++;
+
+            callbacks++;
           }
         });
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         fail(e.getMessage());
       }
-			
+
       @Override
       public void onSuccess() {
-      	assertEquals(2, callbacks);
+        assertEquals(2, callbacks);
         finishTest();
       }
     });
 
     delayTestFinish(30000);
   }
-  
 
   public void testSingle() {
-  	LOGGER.fine("================= testSingle == db2 ========");
+    LOGGER.fine("================= testSingle == db2 ========");
 
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("db2");
@@ -111,29 +107,29 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("create table if not exists numbers (x INT)");
         tx.executeSql("insert into numbers (x) values (33) ");
         tx.executeSql("insert into numbers (x) values (41) ");
-        tx.executeSql("insert into numbers (x) values (?) ", new Object[] {null});
-        tx.executeSql("insert into numbers (x) values (?) ", new Object[] {true});
-        tx.executeSql("select sum(x) from numbers",  new SqlResultCallback() {
+        tx.executeSql("insert into numbers (x) values (?) ", new Object[]{null});
+        tx.executeSql("insert into numbers (x) values (?) ", new Object[]{true});
+        tx.executeSql("select sum(x) from numbers", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(75, (int)results.intResult());
+            assertEquals(75, (int) results.intResult());
           }
         });
         tx.executeSql("select count(*) from numbers where x is null", new SqlResultCallback() {
 
-					@Override
+          @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-						assertEquals(1, (int)results.intResult());
+            assertEquals(1, (int) results.intResult());
           }
         });
       }
 
-			@Override
+      @Override
       public void onSuccess() {
-				finishTest();
+        finishTest();
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         fail(e.getMessage());
       }
@@ -141,14 +137,14 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
-  
+
   public void testExecutorWithJson() throws Exception {
 
-  	LOGGER.fine("================= testExecutorWithJson == db4 ========");
+    LOGGER.fine("================= testExecutorWithJson == db4 ========");
 
-  	
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
-    SqlDatabase db = factory.open("db4");    
+    SqlDatabase db = factory.open("db4");
     db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
       @Override
       public void onFailure(Throwable throwable) {
@@ -158,7 +154,7 @@ public class SqlTest extends GWTTestCase {
 
       @Override
       public void onSuccess(Integer rowsAffected) {
-        assertEquals("testExecutorWithJson: rows affected", 8, (int)rowsAffected);
+        assertEquals("testExecutorWithJson: rows affected", 8, (int) rowsAffected);
         finishTest();
       }
     });
@@ -168,69 +164,68 @@ public class SqlTest extends GWTTestCase {
 
   public void testExecutorWithJsonAndLocking() throws Exception {
 
-  	LOGGER.fine("================= testExecutorWithJsonAndLocking == db5 ========");
-  	
+    LOGGER.fine("================= testExecutorWithJsonAndLocking == db5 ========");
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
-    final SqlDatabase db = factory.open("db5"); 
+    final SqlDatabase db = factory.open("db5");
     db.transaction(new SqlTransactionCallback() {
-			
-			@Override
-			public void begin(SqlTransaction tx) {
 
-				// we've know got a lock on the main js event loop for this database
-				
-				tx.executeSql("create table nonsense (id INTEGER)");
-				tx.executeSql("select * from sqlite_master", new SqlResultCallback() {
-					
-					@Override
-					public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+      @Override
+      public void begin(SqlTransaction tx) {
 
-						// this should queue a transaction on the worker 
-						db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
-							@Override
-							public void onFailure(Throwable throwable) {
-								Window.alert("failed: " + throwable.getMessage());
-								fail(throwable.getMessage());
-							}
+        // we've know got a lock on the main js event loop for this database
 
-							@Override
-							public void onSuccess(Integer rowsAffected) {
-								assertEquals("testExecutorWithJsonAndLocking: rows affected", 8, (int)rowsAffected);
-								finishTest();
-							}
-						});	
-					}
-				});
-				
-				// spend more time in the main event loop, keeping the transaction alive
-				// and the lock active. we want to assure that even if the worker thread times out 
-				// waiting for a lock, the 
-				LOGGER.fine("starting busy work");
-				for(int i=0;i!=5000;++i) {
-					tx.executeSql("insert into nonsense (id) values (?)", new Object[] { i });
-				}
-			}
-			
-			@Override
+        tx.executeSql("create table nonsense (id INTEGER)");
+        tx.executeSql("select * from sqlite_master", new SqlResultCallback() {
+
+          @Override
+          public void onSuccess(SqlTransaction tx, SqlResultSet results) {
+
+            // this should queue a transaction on the worker 
+            db.executeUpdates(JSON_UPDATES, new AsyncCallback<Integer>() {
+              @Override
+              public void onFailure(Throwable throwable) {
+                Window.alert("failed: " + throwable.getMessage());
+                fail(throwable.getMessage());
+              }
+
+              @Override
+              public void onSuccess(Integer rowsAffected) {
+                assertEquals("testExecutorWithJsonAndLocking: rows affected", 8, (int) rowsAffected);
+                finishTest();
+              }
+            });
+          }
+        });
+
+        // spend more time in the main event loop, keeping the transaction alive
+        // and the lock active. we want to assure that even if the worker thread times out 
+        // waiting for a lock, the 
+        LOGGER.fine("starting busy work");
+        for (int i = 0; i != 5000; ++i) {
+          tx.executeSql("insert into nonsense (id) values (?)", new Object[]{i});
+        }
+      }
+
+      @Override
       public void onSuccess() {
-				LOGGER.fine("transaction commited on the main event loop");
+        LOGGER.fine("transaction commited on the main event loop");
       }
 
 
-			@Override
+      @Override
       public void onError(SqlException e) {
-	      fail(e.getMessage());
+        fail(e.getMessage());
       }
-		});
-   
+    });
+
     delayTestFinish(30000);
   }
-  
-  
+
   public void testDates() {
 
-  	LOGGER.fine("================= testDates == dates ========");
-  	
+    LOGGER.fine("================= testDates == dates ========");
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("dates");
     db.transaction(new SqlTransactionCallback() {
@@ -240,25 +235,25 @@ public class SqlTest extends GWTTestCase {
         tx.executeSql("insert into dates (x) values ('2001-01-31') ");
         tx.executeSql("insert into dates (x) values ('2011-01-01') ");
         tx.executeSql("insert into dates (x) values ('1982-04-15') ");
-        tx.executeSql("insert into dates (x) values ( ? ) ", new Object[] { null });
-        tx.executeSql("select x, strftime('%Y', x) as year from dates",  new SqlResultCallback() {
+        tx.executeSql("insert into dates (x) values ( ? ) ", new Object[]{null});
+        tx.executeSql("select x, strftime('%Y', x) as year from dates", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
-            assertEquals(makeDate(2001,1,31), results.getRow(0).getDate("x"));
-            assertEquals(makeDate(2011,1,1), results.getRow(1).getDate("x"));
-            assertEquals(makeDate(1982,4,15), results.getRow(2).getDate("x"));
+            assertEquals(makeDate(2001, 1, 31), results.getRow(0).getDate("x"));
+            assertEquals(makeDate(2011, 1, 1), results.getRow(1).getDate("x"));
+            assertEquals(makeDate(1982, 4, 15), results.getRow(2).getDate("x"));
             assertNull(results.getRow(3).getDate("x"));
-            
+
             assertEquals(2001, results.getRow(0).getInt("year"));
             assertEquals(2011, results.getRow(1).getInt("year"));
-            assertEquals(1982, results.getRow(2).getInt("year"));  
-            
+            assertEquals(1982, results.getRow(2).getInt("year"));
+
             finishTest();
           }
         });
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         fail(e.getMessage());
       }
@@ -266,37 +261,34 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
-  
-  private static long TIME1 = 1316179555000l;
-  private static long TIME2 = 380035555000l;
-  
+
   public void testTimes() {
 
-  	LOGGER.fine("================= testTimes == times ========");
-  	
+    LOGGER.fine("================= testTimes == times ========");
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("times");
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
         tx.executeSql("create table if not exists times (x REAL)");
-        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME1 });
-        tx.executeSql("insert into times (x) values (?) ", new Object[] { TIME2 });
-        tx.executeSql("select x, strftime('%Y', x/1000, 'unixepoch') as year from times",  new SqlResultCallback() {
+        tx.executeSql("insert into times (x) values (?) ", new Object[]{TIME1});
+        tx.executeSql("insert into times (x) values (?) ", new Object[]{TIME2});
+        tx.executeSql("select x, strftime('%Y', x/1000, 'unixepoch') as year from times", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             assertEquals(TIME1, results.getRow(0).getDate("x").getTime());
             assertEquals(TIME2, results.getRow(1).getDate("x").getTime());
-            
+
             assertEquals(2011, results.getRow(0).getInt("year"));
-            assertEquals(1982, results.getRow(1).getInt("year"));  
-            
+            assertEquals(1982, results.getRow(1).getInt("year"));
+
             finishTest();
           }
         });
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         fail(e.getMessage());
       }
@@ -304,31 +296,31 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
-  
+
   public void testTxFailsOnStatementError() {
-  
-  	LOGGER.fine("================= testErrorhandling == errors ========");
-  	
+
+    LOGGER.fine("================= testErrorhandling == errors ========");
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("errors");
-  	
+
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
-        tx.executeSql("select x from non_existant_table",  new SqlResultCallback() {
+        tx.executeSql("select x from non_existant_table", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             fail("query should not succeeed");
           }
         });
       }
-      
- 			@Override
+
+      @Override
       public void onSuccess() {
-	      fail("tx should not succeed");
+        fail("tx should not succeed");
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         finishTest();
       }
@@ -338,30 +330,30 @@ public class SqlTest extends GWTTestCase {
   }
 
   public void testTxFailsOnExceptionInResultCallback() {
-    
-  	LOGGER.fine("================= testErrorhandling == errors ========");
-  	
+
+    LOGGER.fine("================= testErrorhandling == errors ========");
+
     SqlDatabaseFactory factory = GWT.create(SqlDatabaseFactory.class);
     SqlDatabase db = factory.open("errors");
-  	
+
     db.transaction(new SqlTransactionCallback() {
       @Override
       public void begin(SqlTransaction tx) {
-      	tx.executeSql("create table my_table (x int)");
-        tx.executeSql("select count(*) from my_table",  new SqlResultCallback() {
+        tx.executeSql("create table my_table (x int)");
+        tx.executeSql("select count(*) from my_table", new SqlResultCallback() {
           @Override
           public void onSuccess(SqlTransaction tx, SqlResultSet results) {
             throw new RuntimeException("test exception");
           }
         });
       }
-      
- 			@Override
+
+      @Override
       public void onSuccess() {
-	      fail("tx should not succeed");
+        fail("tx should not succeed");
       }
 
-			@Override
+      @Override
       public void onError(SqlException e) {
         finishTest();
       }
@@ -369,11 +361,11 @@ public class SqlTest extends GWTTestCase {
 
     delayTestFinish(2000);
   }
-  
+
   @SuppressWarnings("deprecation")
   private Date makeDate(int year, int month, int day) {
-  	return new Date(year-1900, month-1, day);
+    return new Date(year - 1900, month - 1, day);
   }
 
-  
+
 }

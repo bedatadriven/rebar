@@ -66,7 +66,7 @@ public class UnitMapping {
    * we are generating an implementation.
    *
    * @return the <code>PersistenceContext</code> interface for which
-   *         we are generating an implementation.
+   * we are generating an implementation.
    */
   public TypeInfo getType() {
     return type;
@@ -77,7 +77,7 @@ public class UnitMapping {
    * requested <code>PersistenceContext</code>
    *
    * @return the (simple) name of the class that implements the
-   *         requested <code>PersistenceContext</code>
+   * requested <code>PersistenceContext</code>
    */
   public String getPersistenceUnitImplClass() {
     return type.getSimpleName() + "_Impl";
@@ -88,7 +88,7 @@ public class UnitMapping {
    * requested <code>PersistenceContext</code>
    *
    * @return the (simple) name of the class that implements the
-   *         requested <code>PersistenceContext</code>
+   * requested <code>PersistenceContext</code>
    */
   public String getPersistenceContextImplQualifiedClass() {
     return getPackageName() + "." + getPersistenceUnitImplClass();
@@ -99,7 +99,7 @@ public class UnitMapping {
    * <code>EntityManagerFactory</code> interface
    *
    * @return the simple name of the class that implements the
-   *         <code>EntityManagerFactory</code> interface
+   * <code>EntityManagerFactory</code> interface
    */
   public String getEntityManagerFactoryClass() {
     return type.getSimpleName() + "_EmfImpl";
@@ -110,7 +110,7 @@ public class UnitMapping {
    * <code>EntityManager</code> interface
    *
    * @return the simple name of the class that implements the
-   *         <code>EntityManager</code> interface
+   * <code>EntityManager</code> interface
    */
   public String getEntityManagerClass() {
     return type.getSimpleName() + "_EmImpl";
@@ -121,7 +121,7 @@ public class UnitMapping {
    * by this <code>PersistenceContext</code>
    *
    * @return the list of mappings to entities that are managed
-   *         by this <code>PersistenceContext</code>
+   * by this <code>PersistenceContext</code>
    */
   public Collection<EntityMapping> getEntities() {
     return entityMappings.values();
@@ -136,7 +136,7 @@ public class UnitMapping {
     EntityMapping mapping = entityMappings.get(entityType.getQualifiedName());
     if (mapping == null) {
       mapping = new EntityMapping(this, entityType);
-      if(mapping.getType().getAnnotation(Entity.class)!=null)
+      if (mapping.getType().getAnnotation(Entity.class) != null)
         entityMappings.put(entityType.getQualifiedName(), mapping);
     }
     return mapping;

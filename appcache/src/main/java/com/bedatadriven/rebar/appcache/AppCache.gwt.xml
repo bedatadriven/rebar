@@ -17,12 +17,12 @@
 
 <module>
 
-    <!-- To generate a manifest for your module, you simply need to inherit this
-         module. The IFrame linker will be replaced with the ModuleStoreLinker, which
-         emits the manifest files -->
+  <!-- To generate a manifest for your module, you simply need to inherit this
+       module. The IFrame linker will be replaced with the ModuleStoreLinker, which
+       emits the manifest files -->
 
-    <inherits name='com.google.gwt.user.User'/>
-   	<inherits name="com.google.gwt.logging.Logging"/>
-    
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.google.gwt.logging.Logging"/>
+
 </module>
 

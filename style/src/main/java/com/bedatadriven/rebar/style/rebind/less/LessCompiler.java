@@ -23,37 +23,37 @@ import java.net.URL;
 
 public class LessCompiler {
 
-    private TreeLogger logger;
+  private TreeLogger logger;
 
-    public LessCompiler(TreeLogger parentLogger) {
-        logger = parentLogger.branch(TreeLogger.Type.DEBUG, "Compiling LESS...");
+  public LessCompiler(TreeLogger parentLogger) {
+    logger = parentLogger.branch(TreeLogger.Type.DEBUG, "Compiling LESS...");
 
+  }
+
+  /**
+   * Constructs a new <code>LessCompiler</code>.
+   */
+  @SuppressWarnings("unchecked")
+  public static Function<LessCompilerContext, String> newCompiler() {
+    try {
+      Class compiledClass = Class.forName("com.bedatadriven.rebar.less.rebind.LessImpl");
+      return (Function<LessCompilerContext, String>) compiledClass.newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException("Exception loading LESS compiler", e);
     }
+  }
 
-    public String compile(URL sourceURL) throws UnableToCompleteException {
+  public String compile(URL sourceURL) throws UnableToCompleteException {
 
-        // TODO: this won't work if the .less file is in a jar...
-        LessCompilerContext context = new LessCompilerContext(logger, sourceURL.getFile());
+    // TODO: this won't work if the .less file is in a jar...
+    LessCompilerContext context = new LessCompilerContext(logger, sourceURL.getFile());
 
-        try {
-            Function<LessCompilerContext, String> compiler = LessCompiler.newCompiler();
-            return compiler.apply(context);
-        } catch(Exception e) {
-            logger.log(TreeLogger.Type.ERROR, "Error compiling LESS: " + e.getMessage(), e);
-            throw new UnableToCompleteException();
-        }
+    try {
+      Function<LessCompilerContext, String> compiler = LessCompiler.newCompiler();
+      return compiler.apply(context);
+    } catch (Exception e) {
+      logger.log(TreeLogger.Type.ERROR, "Error compiling LESS: " + e.getMessage(), e);
+      throw new UnableToCompleteException();
     }
-
-    /**
-	 * Constructs a new <code>LessCompiler</code>.
-	 */
-	@SuppressWarnings("unchecked")
-    public static Function<LessCompilerContext, String> newCompiler() {
-		try { 
-			Class compiledClass = Class.forName("com.bedatadriven.rebar.less.rebind.LessImpl");
-			return (Function<LessCompilerContext, String>) compiledClass.newInstance();
-		} catch(Exception e) {
-			throw new RuntimeException("Exception loading LESS compiler", e); 
-		}
-	}
+  }
 }

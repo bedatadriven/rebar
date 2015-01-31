@@ -1,10 +1,10 @@
 package com.bedatadriven.rebar.style.rebind.icons;
 
-import com.gargoylesoftware.htmlunit.javascript.host.svg.SVGRect;
-import com.gargoylesoftware.htmlunit.javascript.host.svg.SVGRectElement;
 import com.google.common.collect.Lists;
-import com.kitfox.svg.*;
 import com.kitfox.svg.Font;
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGElement;
+import com.kitfox.svg.SVGUniverse;
 
 import java.awt.*;
 import java.io.StringReader;
@@ -18,47 +18,47 @@ import java.util.List;
 public class SvgDocument {
 
 
-    private final String source;
+  private final String source;
 
-    private SVGDiagram diagram;
-    private List<Font> fonts = null;
+  private SVGDiagram diagram;
+  private List<Font> fonts = null;
 
-    public SvgDocument(String svg) {
-        this.source = svg;
-        SVGUniverse svgUniverse = new SVGUniverse();
-        URI uri = svgUniverse.loadSVG(new StringReader(source), "myImage");
-        diagram = svgUniverse.getDiagram(uri);
+  public SvgDocument(String svg) {
+    this.source = svg;
+    SVGUniverse svgUniverse = new SVGUniverse();
+    URI uri = svgUniverse.loadSVG(new StringReader(source), "myImage");
+    diagram = svgUniverse.getDiagram(uri);
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public List<Font> getFonts() {
+    if (fonts == null) {
+      fonts = Lists.newArrayList();
+      findFonts(diagram.getRoot());
     }
+    return fonts;
+  }
 
-    public String getSource() {
-        return source;
+  private void findFonts(SVGElement parent) {
+    for (int i = 0; i != parent.getNumChildren(); ++i) {
+      SVGElement child = parent.getChild(i);
+      if (child instanceof Font) {
+        fonts.add((Font) child);
+      } else {
+        findFonts(child);
+      }
     }
+  }
 
-    public List<Font> getFonts() {
-        if (fonts == null) {
-            fonts = Lists.newArrayList();
-            findFonts(diagram.getRoot());
-        }
-        return fonts;
-    }
+  public SVGDiagram getDiagram() {
+    return diagram;
+  }
 
-    private void findFonts(SVGElement parent) {
-        for (int i = 0; i != parent.getNumChildren(); ++i) {
-            SVGElement child = parent.getChild(i);
-            if (child instanceof Font) {
-                fonts.add((Font) child);
-            } else {
-                findFonts(child);
-            }
-        }
-    }
-
-    public SVGDiagram getDiagram() {
-        return diagram;
-    }
-
-    public Shape getShape() {
-        return diagram.getRoot().getShape();
-    }
+  public Shape getShape() {
+    return diagram.getRoot().getShape();
+  }
 
 }

@@ -34,7 +34,6 @@ import java.util.*;
  * Extends the standard <code>IFrameLinker</code> to generate manifests for
  * <code>ManagedResourceStores</code>, and to enable server-side selection of
  * permutations.
- *
  */
 @LinkerOrder(Order.PRIMARY)
 public final class AppCacheIFrameLinker extends IFrameLinker {
@@ -51,48 +50,48 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
   @Override
   public ArtifactSet link(TreeLogger logger, LinkerContext linkerContext, ArtifactSet artifacts) throws UnableToCompleteException {
-    
+
     Collection<CompilationResult> compilationResults = artifacts.find(CompilationResult.class);
-    
+
     hostedMode = compilationResults.size() == 0;
-    
-    if(hostedMode) {
+
+    if (hostedMode) {
       // if we are being run in hosted mode, revert entirely to the IFrameLinker
-      
+
       return super.link(logger, linkerContext, artifacts);
-    
+
     } else {
-    	
-      ArtifactSet writableArtifacts = new ArtifactSet(artifacts);     
+
+      ArtifactSet writableArtifacts = new ArtifactSet(artifacts);
       ArtifactSet toReturn = new ArtifactSet(artifacts);
-  
+
       for (CompilationResult compilation : compilationResults) {
         PermutationContext context = new PermutationContext(linkerContext, writableArtifacts, compilation);
-  
+
         Collection<Artifact<?>> compilationArtifacts = doEmitCompilation(logger, linkerContext, compilation, writableArtifacts);
-  
+
         context.addToCache(writableArtifacts.find(EmittedArtifact.class));
         context.addToCache(emittedArtifacts(compilationArtifacts));
-  
+
         toReturn.addAll(compilationArtifacts);
         toReturn.add(doEmitBootstrapScript(logger, context, writableArtifacts));
         toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
       }
-  
+
       toReturn.add(emitPermutationMap(logger, linkerContext, writableArtifacts));
-     
+
       return toReturn;
     }
   }
-  
+
   private Collection<EmittedArtifact> emittedArtifacts(Collection<Artifact<?>> artifacts) {
-	  List<EmittedArtifact> list = new ArrayList<EmittedArtifact>();
-	  for(Artifact artifact : artifacts) {
-		  if(artifact instanceof EmittedArtifact) {
-			  list.add((EmittedArtifact) artifact);
-		  }
-	  }
-	  return list;
+    List<EmittedArtifact> list = new ArrayList<EmittedArtifact>();
+    for (Artifact artifact : artifacts) {
+      if (artifact instanceof EmittedArtifact) {
+        list.add((EmittedArtifact) artifact);
+      }
+    }
+    return list;
   }
 
 
@@ -123,18 +122,17 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
    * The bootstrap script is an analog of the IFrameLinker's selection script,
    * execpt that permutation selection has already been done so it's mostly
    * straight-line code to load the body of the app.
-   *
    */
-  private String generateBootstrapScript(TreeLogger logger, PermutationContext context, 
-  		ArtifactSet artifacts)
+  private String generateBootstrapScript(TreeLogger logger, PermutationContext context,
+                                         ArtifactSet artifacts)
       throws UnableToCompleteException {
 
     // ICK,  copy-and-pasted from SelectionScriptLinker. Ideally work with
     // the GWT folks to make this more easily overridable.
 
-  	
-  	// from SelectionScriptLinker.fillSelectionScriptTemplate
-  	
+
+    // from SelectionScriptLinker.fillSelectionScriptTemplate
+
     StringBuffer selectionScript;
     try {
       selectionScript = new StringBuffer(
@@ -145,7 +143,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
           e);
       throw new UnableToCompleteException();
     }
-    
+
     selectionScript = fillSelectionScriptTemplate(logger, context, artifacts,
         selectionScript);
 
@@ -153,10 +151,10 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     return selectionScript.toString();
   }
 
-	private StringBuffer fillSelectionScriptTemplate(TreeLogger logger,
-      PermutationContext context, ArtifactSet artifacts,
-      StringBuffer selectionScript) throws UnableToCompleteException {
-	  String computeScriptBase;
+  private StringBuffer fillSelectionScriptTemplate(TreeLogger logger,
+                                                   PermutationContext context, ArtifactSet artifacts,
+                                                   StringBuffer selectionScript) throws UnableToCompleteException {
+    String computeScriptBase;
     String processMetas;
     try {
       computeScriptBase = Utility.getFileFromClassPath(COMPUTE_SCRIPT_BASE_JS);
@@ -166,40 +164,40 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
           e);
       throw new UnableToCompleteException();
     }
-    
+
     replaceAll(selectionScript, "__COMPUTE_SCRIPT_BASE__", computeScriptBase);
     replaceAll(selectionScript, "__PROCESS_METAS__", processMetas);
 
-    
+
     addPermutationJs(context, selectionScript);
     selectionScript = ResourceInjectionUtil.injectResources(selectionScript, artifacts);
 
-   
+
     replaceAll(selectionScript, "__MODULE_FUNC__",
         context.getModuleFunctionName());
     replaceAll(selectionScript, "__MODULE_NAME__", context.getModuleName());
     replaceAll(selectionScript, "__HOSTED_FILENAME__", getHostedFilename());
-	  return selectionScript;
+    return selectionScript;
   }
 
   // analog to permutationsUtil.addPermutationsJs
-	private void addPermutationJs(PermutationContext context,
-      StringBuffer selectionScript) {
-	  int startPos;
+  private void addPermutationJs(PermutationContext context,
+                                StringBuffer selectionScript) {
+    int startPos;
     startPos = selectionScript.indexOf("// __PERMUTATIONS_END__");
     if (startPos != -1) {
       StringBuffer text = new StringBuffer();
       // Just one distinct compilation; no need to evaluate properties
-      text.append("strongName = '" + context.getStrongName()  + "';");
+      text.append("strongName = '" + context.getStrongName() + "';");
       selectionScript.insert(startPos, text);
     }
   }
 
   @Override
   protected String getSelectionScriptTemplate(TreeLogger logger,
-      LinkerContext context) {
-    
-    if(hostedMode) {
+                                              LinkerContext context) {
+
+    if (hostedMode) {
       return super.getSelectionScriptTemplate(logger, context);
     } else {
       return "com/bedatadriven/rebar/appcache/linker/BootstrapTemplate.js";
@@ -208,7 +206,6 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
   /**
    * The permutation map is used on the server side to serve the appropriate permutation
-   *
    */
   protected EmittedArtifact emitPermutationMap(TreeLogger logger,
                                                LinkerContext context,
@@ -225,14 +222,14 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       SortedSet<CompilationResult> compilationResults = artifacts.find(CompilationResult.class);
       writer.beginArray();
 
-      for(CompilationResult result : compilationResults) {
-        for(SortedMap<SelectionProperty,String> map : result.getPropertyMap()) {
+      for (CompilationResult result : compilationResults) {
+        for (SortedMap<SelectionProperty, String> map : result.getPropertyMap()) {
           writer.beginObject();
           writer.name("permutation").value(result.getStrongName());
           writer.name("properties");
           writer.beginObject();
 
-          for(Map.Entry<SelectionProperty, String> property : map.entrySet()) {
+          for (Map.Entry<SelectionProperty, String> property : map.entrySet()) {
             writer.name(property.getKey().getName());
             writer.value(property.getValue());
           }
@@ -243,7 +240,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       writer.endArray();
       return emitString(logger, json.toString(), "permutations");
 
-    } catch(IOException e ) {
+    } catch (IOException e) {
       logger.log(TreeLogger.Type.ERROR, "Error writing permutation map", e);
       throw new UnableToCompleteException();
     }
@@ -263,7 +260,6 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     appendEntries(logger, context, writer);
 
 
-
     // use the current time as the version number
     replaceAll(out, "__NAME__", context.getModuleName());
     replaceAll(out, "__VERSION__", context.getStrongName());
@@ -278,8 +274,6 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     return emitBytes(logger, Util.getBytes(out.toString()),
         context.getStrongName() + "." + writer.getSuffix());
   }
-
-
 
 
   /**
@@ -298,25 +292,25 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
     for (EmittedArtifact artifact : context.getToCache()) {
       if (artifact.getVisibility() == Visibility.Public) {
-	
-	      
-	      logger.log(TreeLogger.DEBUG, "adding to manifest:" + artifact.getPartialPath() + " of class " +
-	      		artifact.getClass().getName() + " and visibility " + artifact.getVisibility());
-	
-	      if (artifact.getPartialPath().endsWith(".gwt.rpc")) {
-	        // only used by the server
-	        continue;
-	      }
-	
-	      String path = artifact.getPartialPath();
-	
-	      // certain paths on the Windows platform (notably deferredjs stuff)
-	      // show up with backslahes, which throws an illegal escape sequence
-	      // error when the json is parsed.
-	      path = path.replace('\\', '/');
-	
-	      logger.log(TreeLogger.DEBUG, "adding: " + path);
-	      writer.appendEntry(logger, path);
+
+
+        logger.log(TreeLogger.DEBUG, "adding to manifest:" + artifact.getPartialPath() + " of class " +
+            artifact.getClass().getName() + " and visibility " + artifact.getVisibility());
+
+        if (artifact.getPartialPath().endsWith(".gwt.rpc")) {
+          // only used by the server
+          continue;
+        }
+
+        String path = artifact.getPartialPath();
+
+        // certain paths on the Windows platform (notably deferredjs stuff)
+        // show up with backslahes, which throws an illegal escape sequence
+        // error when the json is parsed.
+        path = path.replace('\\', '/');
+
+        logger.log(TreeLogger.DEBUG, "adding: " + path);
+        writer.appendEntry(logger, path);
       } else {
         logger.log(TreeLogger.DEBUG, "excluding " + artifact.getVisibility() + ": " + artifact.getPartialPath());
       }
@@ -327,15 +321,15 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   private StringBuffer readManifestTemplate(TreeLogger logger, PermutationContext context, String suffix) throws UnableToCompleteException {
     // first try to find a template provided in the module's public
     // folder
-    for(PublicResource artifact : context.find(PublicResource.class)) {
-      if(artifact.getPartialPath().equals(context.getModuleName() + "." + suffix)) {
+    for (PublicResource artifact : context.find(PublicResource.class)) {
+      if (artifact.getPartialPath().equals(context.getModuleName() + "." + suffix)) {
         return readAll(logger, artifact.getContents(logger));
       }
     }
 
     String defaultTemplate = "Default." + suffix;
     InputStream defaultIn = getClass().getResourceAsStream(defaultTemplate);
-    if(defaultIn == null) {
+    if (defaultIn == null) {
       logger.log(TreeLogger.Type.ERROR, "Could not read default '" + defaultTemplate + "'");
       throw new UnableToCompleteException();
     }
@@ -355,7 +349,6 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     }
     return out;
   }
-
 
 
 }

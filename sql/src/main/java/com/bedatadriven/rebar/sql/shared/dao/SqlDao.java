@@ -1,9 +1,8 @@
 package com.bedatadriven.rebar.sql.shared.dao;
 
 /**
- * 
- * Marker interface for Data Access Objects that will be auto-generated. 
- * 
+ * Marker interface for Data Access Objects that will be auto-generated.
+ * <p/>
  * <h2>Defining Methods</h2>
  * Renjin will provide an implementation for your methods based on their signature. Methods must
  * be prefixed by one of four identifiers:
@@ -14,9 +13,8 @@ package com.bedatadriven.rebar.sql.shared.dao;
  * <li><b>insert</b>Something()</li>
  * <li><b>insertOrReplace</b>Something()</li>
  * </ul>
- *  
- * @author alex
  *
+ * @author alex
  */
 public interface SqlDao {
 

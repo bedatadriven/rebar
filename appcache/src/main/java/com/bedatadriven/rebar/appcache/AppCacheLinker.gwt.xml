@@ -17,12 +17,12 @@
 
 <module>
 
-    <!-- To generate a manifest for your module, you simply need to inherit this
-         module. The IFrame linker will be replaced with the ModuleStoreLinker, which
-         emits the manifest files -->
+  <!-- To generate a manifest for your module, you simply need to inherit this
+       module. The IFrame linker will be replaced with the ModuleStoreLinker, which
+       emits the manifest files -->
 
-   
-    <define-linker name="std" class="com.bedatadriven.rebar.appcache.linker.AppCacheIFrameLinker"/>
+
+  <define-linker name="std" class="com.bedatadriven.rebar.appcache.linker.AppCacheIFrameLinker"/>
 
 </module>
 

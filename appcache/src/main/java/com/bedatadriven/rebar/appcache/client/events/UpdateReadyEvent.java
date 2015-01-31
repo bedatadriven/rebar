@@ -12,7 +12,7 @@ public class UpdateReadyEvent extends GwtEvent<UpdateReadyEventHandler> {
 
   /**
    * Gets the type associated with this event.
-   * 
+   *
    * @return returns the handler type
    */
   public static Type<UpdateReadyEventHandler> getType() {
@@ -23,20 +23,20 @@ public class UpdateReadyEvent extends GwtEvent<UpdateReadyEventHandler> {
   }
 
 
-	@Override
+  @Override
   public final Type<UpdateReadyEventHandler> getAssociatedType() {
     return TYPE;
   }
 
- 
+
   @Override
   public String toDebugString() {
     return super.toDebugString();
   }
 
-	@Override
+  @Override
   protected void dispatch(UpdateReadyEventHandler handler) {
-		handler.onAppCacheUpdateReady();
+    handler.onAppCacheUpdateReady();
   }
 
 }

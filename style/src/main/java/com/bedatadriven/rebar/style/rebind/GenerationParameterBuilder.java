@@ -12,82 +12,82 @@ import java.util.Arrays;
  */
 public class GenerationParameterBuilder {
 
-    public static final String NAMING_CONVENTION_ENFORCEMENT_LEVEL = "rebar.style.convention.enforcement.level";
+  public static final String NAMING_CONVENTION_ENFORCEMENT_LEVEL = "rebar.style.convention.enforcement.level";
 
-    private final GeneratorContext context;
-    private final JClassType interfaceType;
-    private TreeLogger logger;
+  private final GeneratorContext context;
+  private final JClassType interfaceType;
+  private TreeLogger logger;
 
-    public GenerationParameterBuilder(GeneratorContext context, JClassType interfaceType) {
-        this.context = context;
-        this.interfaceType = interfaceType;
+  public GenerationParameterBuilder(GeneratorContext context, JClassType interfaceType) {
+    this.context = context;
+    this.interfaceType = interfaceType;
+  }
+
+  public GenerationParameters build(TreeLogger logger)
+      throws UnableToCompleteException {
+
+    this.logger = logger;
+
+    GenerationParameters parameters = new GenerationParameters();
+    parameters.setUserAgent(getUserAgent());
+    parameters.setNamingConventionEnforcementLevel(parseEnforcementLevel(NAMING_CONVENTION_ENFORCEMENT_LEVEL));
+
+    Strictness strictness = interfaceType.getAnnotation(Strictness.class);
+    if (strictness != null) {
+      parameters.setRequireAccessorsForAllClasses(strictness.requireAccessorsForAllClasses());
+      parameters.setIgnoreMissingClasses(strictness.ignoreMissingClasses());
     }
 
-    public GenerationParameters build(TreeLogger logger)
-            throws UnableToCompleteException {
+    return parameters;
+  }
 
-        this.logger = logger;
+  private boolean isPresent(Class<? extends Annotation> annotation) {
+    return interfaceType.getAnnotation(annotation) != null;
+  }
 
-        GenerationParameters parameters = new GenerationParameters();
-        parameters.setUserAgent(getUserAgent());
-        parameters.setNamingConventionEnforcementLevel(parseEnforcementLevel(NAMING_CONVENTION_ENFORCEMENT_LEVEL));
 
-        Strictness strictness = interfaceType.getAnnotation(Strictness.class);
-        if(strictness != null) {
-            parameters.setRequireAccessorsForAllClasses(strictness.requireAccessorsForAllClasses());
-            parameters.setIgnoreMissingClasses(strictness.ignoreMissingClasses());
-        }
+  private UserAgent getUserAgent() throws UnableToCompleteException {
+    String value;
+    try {
+      value = context.getPropertyOracle().getSelectionProperty(logger, "user.agent").getCurrentValue();
+    } catch (BadPropertyValueException e) {
+      logger.log(TreeLogger.Type.ERROR, "Could not get user.agent property", e);
+      throw new UnableToCompleteException();
+    }
+    try {
+      return UserAgent.valueOf(value.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      logger.log(TreeLogger.Type.ERROR, "Unexpected user.agent property, expected one of [ " +
+          Arrays.toString(UserAgent.values()) + "]");
+      throw new UnableToCompleteException();
+    }
+  }
 
-        return parameters;
+
+  private TreeLogger.Type parseEnforcementLevel(String propertyName)
+      throws UnableToCompleteException {
+    ConfigurationProperty property = null;
+    try {
+      property = context.getPropertyOracle().getConfigurationProperty(propertyName);
+    } catch (BadPropertyValueException e) {
+      logger.log(TreeLogger.Type.ERROR, "Our configuration property " + propertyName +
+          " is not defined, something has gone wrong!");
+      throw new UnableToCompleteException();
     }
 
-    private boolean isPresent(Class<? extends Annotation> annotation) {
-        return interfaceType.getAnnotation(annotation) != null;
+    if (property == null ||
+        property.getValues().isEmpty() ||
+        property.getValues().get(0) == null) {
+
+      return TreeLogger.Type.DEBUG;
     }
-
-
-    private UserAgent getUserAgent() throws UnableToCompleteException {
-        String value;
-        try {
-            value = context.getPropertyOracle().getSelectionProperty(logger, "user.agent").getCurrentValue();
-        } catch (BadPropertyValueException e) {
-            logger.log(TreeLogger.Type.ERROR, "Could not get user.agent property", e);
-            throw new UnableToCompleteException();
-        }
-        try {
-            return UserAgent.valueOf(value.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.log(TreeLogger.Type.ERROR, "Unexpected user.agent property, expected one of [ " +
-                    Arrays.toString(UserAgent.values()) + "]" );
-            throw new UnableToCompleteException();
-        }
+    try {
+      return TreeLogger.Type.valueOf(property.getValues().get(0));
+    } catch (IllegalArgumentException e) {
+      logger.log(TreeLogger.Type.ERROR, "Invalid property value for " + propertyName + ": expected [ " +
+          TreeLogger.Type.values() + "]");
+      throw new UnsupportedOperationException();
     }
-
-
-    private TreeLogger.Type parseEnforcementLevel(String propertyName)
-            throws UnableToCompleteException {
-        ConfigurationProperty property = null;
-        try {
-            property = context.getPropertyOracle().getConfigurationProperty(propertyName);
-        } catch (BadPropertyValueException e) {
-            logger.log(TreeLogger.Type.ERROR, "Our configuration property " + propertyName +
-                    " is not defined, something has gone wrong!");
-            throw new UnableToCompleteException();
-        }
-
-        if( property == null ||
-            property.getValues().isEmpty() ||
-            property.getValues().get(0) == null) {
-
-            return TreeLogger.Type.DEBUG;
-        }
-        try {
-            return TreeLogger.Type.valueOf(property.getValues().get(0));
-        } catch(IllegalArgumentException e) {
-            logger.log(TreeLogger.Type.ERROR, "Invalid property value for " + propertyName + ": expected [ " +
-                    TreeLogger.Type.values() + "]");
-            throw new UnsupportedOperationException();
-        }
-    }
+  }
 
 }

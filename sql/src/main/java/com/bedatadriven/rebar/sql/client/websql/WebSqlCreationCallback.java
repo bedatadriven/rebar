@@ -19,7 +19,6 @@ package com.bedatadriven.rebar.sql.client.websql;
 /**
  * Callback interface for the WebSql API.
  *
- *
  * @remarks Note that callback on creation is not supported by Gears so this
  * interface is not present in the common API.
  */

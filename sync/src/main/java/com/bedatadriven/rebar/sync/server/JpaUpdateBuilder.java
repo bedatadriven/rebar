@@ -62,7 +62,7 @@ public class JpaUpdateBuilder {
 
   public void addExecution(Object... parameters) throws JSONException {
     json.array();
-    for(Object p : parameters) {
+    for (Object p : parameters) {
       json.value(p);
     }
     json.endArray();
@@ -80,7 +80,7 @@ public class JpaUpdateBuilder {
 
     json.key("statement");
     json.value(mapping.getCreateTableStatement());
-    
+
     json.endObject();
   }
 
@@ -97,43 +97,43 @@ public class JpaUpdateBuilder {
   }
 
   public <T> void insert(Class<T> entityClass, List<T> entities) throws JSONException {
-  	insert("", entityClass, entities);
+    insert("", entityClass, entities);
   }
 
   public <T> void insert(String conflictClause, Class<T> entityClass, List<T> entities) throws JSONException {
 
-  	if (entities.size() == 0) {
-  		return; // nothing to do
-  	}
-  	// get/create the mapping for this entity
-  	EntityMapping mapping = context.getMapping(entityClass);
+    if (entities.size() == 0) {
+      return; // nothing to do
+    }
+    // get/create the mapping for this entity
+    EntityMapping mapping = context.getMapping(entityClass);
 
-  	// start a new BulkOperation object
-  	json.object();
+    // start a new BulkOperation object
+    json.object();
 
-  	// first build the insert statement
-  	json.key("statement");
-  	json.value(mapping.getInsertStatement(conflictClause));
+    // first build the insert statement
+    json.key("statement");
+    json.value(mapping.getInsertStatement(conflictClause));
 
-  	json.key("executions");
-  	json.array();
+    json.key("executions");
+    json.array();
 
-  	// loop through each of the entities in the list
-  	for (T entity : entities) {
+    // loop through each of the entities in the list
+    for (T entity : entities) {
 
-  		json.array();
+      json.array();
 
-  		// write the other columns
-  		for (PropertyMapping property : mapping.getProperties()) {
-  			if (property.isInsertable()) {
-  				property.writeColumnValues(json, entity);
-  			}
-  		}
-  		json.endArray();
-  	}
+      // write the other columns
+      for (PropertyMapping property : mapping.getProperties()) {
+        if (property.isInsertable()) {
+          property.writeColumnValues(json, entity);
+        }
+      }
+      json.endArray();
+    }
 
-  	json.endArray(); // end our batches
-  	json.endObject(); //end the BulkOperation object
+    json.endArray(); // end our batches
+    json.endObject(); //end the BulkOperation object
   }
 
   public <T> void update(Class<T> entityClass, List<T> entities) throws JSONException {
@@ -207,7 +207,6 @@ public class JpaUpdateBuilder {
     json.endArray(); // end our batches
     json.endObject(); //end the BulkOperation object
   }
-
 
 
   public String asJson() throws JSONException {

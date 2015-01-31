@@ -16,9 +16,9 @@
 
 package com.bedatadriven.rebar.sql.client.websql;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.junit.client.GWTTestCase;
+
+import java.util.logging.Logger;
 
 public class WebSqlTest extends GWTTestCase {
 
@@ -33,7 +33,7 @@ public class WebSqlTest extends GWTTestCase {
 
     WebSqlDatabase db = WebSqlDatabase.openDatabase("testInsert", "1", "My test database", 1024 * 50);
     assertNotNull(db);
-    db.transaction(new WebSqlTransactionCallback() { 
+    db.transaction(new WebSqlTransactionCallback() {
       @Override
       public void begin(WebSqlTransaction tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
@@ -48,9 +48,9 @@ public class WebSqlTest extends GWTTestCase {
         finishTest();
       }
 
-			@Override
+      @Override
       public void onError(WebSqlException e) {
-		Logger.getLogger("").severe("error: " + e.getMessage());
+        Logger.getLogger("").severe("error: " + e.getMessage());
         fail(e.getMessage());
       }
     });
@@ -66,27 +66,27 @@ public class WebSqlTest extends GWTTestCase {
       public void begin(WebSqlTransaction tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS MyTable (id unique, text) ");
         tx.executeSql("INSERT INTO MyTable (id, text) VALUES (?, ?) ",
-            new Object[] { 1, "balloons" });
+            new Object[]{1, "balloons"});
         tx.executeSql("SELECT id, text FROM MyTable", new WebSqlResultCallback() {
           @Override
           public void onSuccess(WebSqlTransaction tx, WebSqlResultSet results) {
             assertEquals(1, results.getRows().length());
           }
-      
+
           @Override
           public boolean onFailure(WebSqlException e) {
             fail(e.getMessage() + ", Code = " + e.getCode());
-						return false;
+            return false;
           }
         });
       }
-      
+
       @Override
       public void onSuccess() {
         finishTest();
       }
 
-			@Override
+      @Override
       public void onError(WebSqlException e) {
         fail(e.getMessage());
       }

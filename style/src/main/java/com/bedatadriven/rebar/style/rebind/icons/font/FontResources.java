@@ -7,19 +7,19 @@ import com.bedatadriven.rebar.style.rebind.icons.IconArtifacts;
  */
 public class FontResources {
 
-    private FontSource source;
-    private IconArtifacts artifacts;
+  private FontSource source;
+  private IconArtifacts artifacts;
 
-    public FontResources(FontSource source, IconArtifacts artifacts) {
-        this.source = source;
-        this.artifacts = artifacts;
-    }
+  public FontResources(FontSource source, IconArtifacts artifacts) {
+    this.source = source;
+    this.artifacts = artifacts;
+  }
 
-    public FontSource getSource() {
-        return source;
-    }
+  public FontSource getSource() {
+    return source;
+  }
 
-    public IconArtifacts getArtifacts() {
-        return artifacts;
-    }
+  public IconArtifacts getArtifacts() {
+    return artifacts;
+  }
 }

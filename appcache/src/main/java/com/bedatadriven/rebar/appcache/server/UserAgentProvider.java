@@ -22,9 +22,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserAgentProvider implements PropertyProvider {
-	
-	private static final Logger LOGGER = Logger.getLogger(UserAgentProvider.class.getName());
-	
+
+  private static final Logger LOGGER = Logger.getLogger(UserAgentProvider.class.getName());
+
   private final Pattern geckoRevision;
 
   public UserAgentProvider() {
@@ -58,7 +58,7 @@ public class UserAgentProvider implements PropertyProvider {
     } else if (ua.contains("webkit") || (ua.contains("chrome") && !ua.contains("chromeframe"))) {
       return "safari";
     } else if (ua.contains("msie 6") || ua.contains("msie 7")) {
-        return "ie6";
+      return "ie6";
     } else if (ua.contains("msie 8")) {
       return "ie8";
     } else if (ua.contains("msie 9")) {
@@ -67,8 +67,8 @@ public class UserAgentProvider implements PropertyProvider {
       return "ie10";
     } else if (ua.contains("gecko")) {
       int version = parseGeckoVersion(ua);
-      if ( version == 0 ) {
-        if( ua.contains("firefox")) {
+      if (version == 0) {
+        if (ua.contains("firefox")) {
           // be conservative about assuming this is firefox, lots of browsers include
           // 'gecko' in their UA string
           return "gecko1_8";
@@ -78,28 +78,28 @@ public class UserAgentProvider implements PropertyProvider {
         return "gecko1_8";
       }
     }
-    
+
     LOGGER.severe("Cannot match user agent header to supported browser: '" + ua + "'");
-    
+
     throw new UnknownUserAgentException();
   }
 
 
-	private String userAgent(HttpServletRequest request) {
-	  return request.getHeader("User-Agent").toLowerCase();
+  private String userAgent(HttpServletRequest request) {
+    return request.getHeader("User-Agent").toLowerCase();
   }
-  
+
   public boolean isFirefox(HttpServletRequest request) {
-  	return isFirefox(userAgent(request));
+    return isFirefox(userAgent(request));
   }
-  
-	public boolean isFirefox(String ua) {
-	  return ua.contains("gecko");
+
+  public boolean isFirefox(String ua) {
+    return ua.contains("gecko");
   }
 
   private int parseGeckoVersion(String ua) {
     Matcher matcher = geckoRevision.matcher(ua);
-    if(matcher.find()) {
+    if (matcher.find()) {
 
       int major = Integer.parseInt(matcher.group(1));
       int minor = Integer.parseInt(matcher.group(2));
@@ -108,14 +108,14 @@ public class UserAgentProvider implements PropertyProvider {
     }
     return 0;
   }
-  
+
   @Deprecated
   public boolean canSupportGears(String ua) {
-  	return false;
+    return false;
   }
 
   @Deprecated
   public boolean canSupportGears(HttpServletRequest req) {
-  	return false;
+    return false;
   }
 }

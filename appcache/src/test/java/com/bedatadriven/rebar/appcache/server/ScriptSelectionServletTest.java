@@ -16,18 +16,8 @@
 
 package com.bedatadriven.rebar.appcache.server;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -35,9 +25,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.easymock.EasyMock.*;
 
 public class ScriptSelectionServletTest {
 
@@ -75,7 +67,7 @@ public class ScriptSelectionServletTest {
     replay(response);
 
     servlet.doGet(request, response);
-    
+
     verify(context, config, request, response);
   }
 

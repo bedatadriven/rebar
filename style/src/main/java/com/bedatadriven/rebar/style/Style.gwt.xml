@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-  <inherits name="com.google.gwt.resources.Resources" />
+  <inherits name="com.google.gwt.resources.Resources"/>
 
   <generate-with class="com.bedatadriven.rebar.style.rebind.StylesheetGenerator">
-    <when-type-assignable class="com.bedatadriven.rebar.style.client.Stylesheet" />
+    <when-type-assignable class="com.bedatadriven.rebar.style.client.Stylesheet"/>
   </generate-with>
 
   <generate-with class="com.bedatadriven.rebar.style.rebind.IconSetGenerator">
-    <when-type-assignable class="com.bedatadriven.rebar.style.client.IconSet" />
+    <when-type-assignable class="com.bedatadriven.rebar.style.client.IconSet"/>
   </generate-with>
 
   <!-- Fail if camel case is used as CSS class names -->
-  <define-configuration-property name="rebar.style.convention.enforcement.level" is-multi-valued="false" />
+  <define-configuration-property name="rebar.style.convention.enforcement.level" is-multi-valued="false"/>
 
-  <source path="client" />
+  <source path="client"/>
 
 </module>

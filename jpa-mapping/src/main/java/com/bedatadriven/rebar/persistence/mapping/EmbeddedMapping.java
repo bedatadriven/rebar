@@ -41,7 +41,7 @@ import java.util.List;
  * determined by the access type of the entity in which it is embedded. <strong>Support for only one level of
  * embedding is required by this specification.</strong>
  * Additional requirements on embeddable classes are described in section 9.1.34.</p>
- *
+ * <p/>
  * <p><strong>From the specification 9.1.34:</strong></p>
  * <p>The Embeddable annotation is used to specify a class whose instances are stored as an intrinsic part
  * of an owning entity and share the identity of the entity. Each of the persistent properties or fields of the
@@ -52,7 +52,7 @@ import java.util.List;
  * @author Alex Bertram
  */
 public class EmbeddedMapping extends PropertyMapping {
- 
+
   private boolean id;
   private UnitMapping context;
   private int propertyId;
@@ -68,7 +68,7 @@ public class EmbeddedMapping extends PropertyMapping {
                The embeddable class must be annotated as Embeddable.[44]
      */
 
-    if(getter.getAnnotation(EmbeddedId.class)!=null) {
+    if (getter.getAnnotation(EmbeddedId.class) != null) {
       id = true;
     }
 
@@ -78,7 +78,7 @@ public class EmbeddedMapping extends PropertyMapping {
   public EntityMapping getEmbeddedClass() {
     return context.getMapping(getType());
   }
-  
+
   @Override
   public boolean isId() {
     return this.id;
@@ -88,7 +88,7 @@ public class EmbeddedMapping extends PropertyMapping {
   public boolean isEmbedded() {
     return true;
   }
-  
+
   @Override
   public String getReaderName() {
     return "";
@@ -100,7 +100,7 @@ public class EmbeddedMapping extends PropertyMapping {
 
     List<ColumnMapping> columns = new ArrayList<ColumnMapping>();
     for (PropertyMapping property : getEmbeddedClass().getProperties()) {
-      if(! (property instanceof SingleColumnPropertyMapping)) {
+      if (!(property instanceof SingleColumnPropertyMapping)) {
         throw new MappingException("Only Basic, Column, Lob, Temporal,\n" +
             " and Enumerated mapping annotations may portably be used to map the persistent fields or\n" +
             " properties of classes annotated as Embeddable");
@@ -117,7 +117,7 @@ public class EmbeddedMapping extends PropertyMapping {
     Object embedded = getValue(entity);
 
     if (embedded == null) {
-      for(int i=0;i!=getEmbeddedClass().getColumnCount();++i)
+      for (int i = 0; i != getEmbeddedClass().getColumnCount(); ++i)
         writer.value(null);
     } else {
       for (PropertyMapping prop : getEmbeddedClass().getProperties()) {

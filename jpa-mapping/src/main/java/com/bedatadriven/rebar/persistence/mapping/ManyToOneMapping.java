@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * Encapsulates the ManyToOne and OneToOne property mappings
  *
  * @author Alex Bertram
@@ -76,10 +75,10 @@ public class ManyToOneMapping extends PropertyMapping {
 
     PropertyMapping relatedEntityId = getRelatedEntity().getId();
 
-    if(relatedEntityId.getColumns().size() > 1) {
+    if (relatedEntityId.getColumns().size() > 1) {
 
-        throw new MappingException("Multiple join columns not yet supported. Terribly sorry. " +
-            "If you've got some time on your hands, implement me in ManyToOneMapping.java");
+      throw new MappingException("Multiple join columns not yet supported. Terribly sorry. " +
+          "If you've got some time on your hands, implement me in ManyToOneMapping.java");
 
     } else {
 
@@ -107,7 +106,7 @@ public class ManyToOneMapping extends PropertyMapping {
 
       JoinColumn joinColumn = getter.getAnnotation(JoinColumn.class);
       if (joinColumn != null && joinColumn.name() != null && joinColumn.name().length() != 0)
-          columnName = joinColumn.name();
+        columnName = joinColumn.name();
 
       return Collections.singletonList(new ColumnMapping(columnName,
           referencedPrimaryKeyColumn.getType(),
@@ -126,7 +125,7 @@ public class ManyToOneMapping extends PropertyMapping {
     Object linkedEntity = getValue(entity);
 
     if (linkedEntity == null) {
-      for(int i=0;i!=joinColumn.getColumns().size();i++) {
+      for (int i = 0; i != joinColumn.getColumns().size(); i++) {
         writer.value(null);
       }
     } else {

@@ -13,47 +13,47 @@ import java.util.Set;
 
 /**
  * Wrapper around Google (Closure) Style-sheet Compiler.
- *
+ * <p/>
  * <p>We use GSS to post-process and optimize the CSS</p>
  */
 public class GssCompiler {
 
-    private Set<String> allowedAtRules = Collections.emptySet();
+  private Set<String> allowedAtRules = Collections.emptySet();
 
-    public GssTree compile(TreeLogger logger, String css) throws UnableToCompleteException {
+  public GssTree compile(TreeLogger logger, String css) throws UnableToCompleteException {
 
-		TreeLogger branchLogger = logger.branch(TreeLogger.DEBUG,
-				"Parsing LESS output as GSS stylesheet");
+    TreeLogger branchLogger = logger.branch(TreeLogger.DEBUG,
+        "Parsing LESS output as GSS stylesheet");
 
-		SourceCode lessOutput = new SourceCode("less.css", css);
+    SourceCode lessOutput = new SourceCode("less.css", css);
 
-		try {
-            CssTree tree = new GssParser(lessOutput).parse();
-            finalizeTree(logger, tree);
-            return new GssTree(tree);
+    try {
+      CssTree tree = new GssParser(lessOutput).parse();
+      finalizeTree(logger, tree);
+      return new GssTree(tree);
 
-		} catch (GssParserException e) {
-			branchLogger.log(TreeLogger.ERROR, "Unable to parse CSS", e);
-			throw new UnableToCompleteException();
-		}
-	}
-
-    private void finalizeTree(TreeLogger logger, CssTree cssTree) {
-        LoggingErrorManager errorManager = new LoggingErrorManager(
-                logger.branch(TreeLogger.Type.DEBUG, "Finalizing Closure Stylesheet"));
-
-        new CreateStandardAtRuleNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
-        new CreateMixins(cssTree.getMutatingVisitController(), errorManager).runPass();
-        new CreateDefinitionNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
-        new CreateConstantReferences(cssTree.getMutatingVisitController()).runPass();
-        new CreateConditionalNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
-        new CreateComponentNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
-
-        new HandleUnknownAtRuleNodes(cssTree.getMutatingVisitController(), errorManager,
-                allowedAtRules , true, false).runPass();
-        new ProcessKeyframes(cssTree.getMutatingVisitController(), errorManager, true, true).runPass();
-        new ProcessRefiners(cssTree.getMutatingVisitController(), errorManager, true).runPass();
-
-        new ProcessComponents<Object>(cssTree.getMutatingVisitController(), errorManager).runPass();
+    } catch (GssParserException e) {
+      branchLogger.log(TreeLogger.ERROR, "Unable to parse CSS", e);
+      throw new UnableToCompleteException();
     }
+  }
+
+  private void finalizeTree(TreeLogger logger, CssTree cssTree) {
+    LoggingErrorManager errorManager = new LoggingErrorManager(
+        logger.branch(TreeLogger.Type.DEBUG, "Finalizing Closure Stylesheet"));
+
+    new CreateStandardAtRuleNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
+    new CreateMixins(cssTree.getMutatingVisitController(), errorManager).runPass();
+    new CreateDefinitionNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
+    new CreateConstantReferences(cssTree.getMutatingVisitController()).runPass();
+    new CreateConditionalNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
+    new CreateComponentNodes(cssTree.getMutatingVisitController(), errorManager).runPass();
+
+    new HandleUnknownAtRuleNodes(cssTree.getMutatingVisitController(), errorManager,
+        allowedAtRules, true, false).runPass();
+    new ProcessKeyframes(cssTree.getMutatingVisitController(), errorManager, true, true).runPass();
+    new ProcessRefiners(cssTree.getMutatingVisitController(), errorManager, true).runPass();
+
+    new ProcessComponents<Object>(cssTree.getMutatingVisitController(), errorManager).runPass();
+  }
 }

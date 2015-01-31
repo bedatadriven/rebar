@@ -16,21 +16,21 @@
   -->
 
 <module>
-    <!-- Inherit the core Web Toolkit stuff.                        -->
-    <inherits name='com.google.gwt.user.User'/>
-    <inherits name="com.google.gwt.json.JSON" />
-    <inherits name="com.google.gwt.logging.Logging"/>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.google.gwt.json.JSON"/>
+  <inherits name="com.google.gwt.logging.Logging"/>
 
-    <inherits name="com.bedatadriven.rebar.Time"/>
-    <inherits name="com.bedatadriven.rebar.AsyncFun"/>
+  <inherits name="com.bedatadriven.rebar.Time"/>
+  <inherits name="com.bedatadriven.rebar.AsyncFun"/>
 
-    <source path='client'/>
-    <source path='shared'/>
+  <source path='client'/>
+  <source path='shared'/>
 
 
-    <replace-with class="com.bedatadriven.rebar.sql.client.websql.WebSqlDatabaseFactory">
-        <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.sql.client.websql.WebSqlDatabaseFactory">
+    <when-type-is class="com.bedatadriven.rebar.sql.client.SqlDatabaseFactory"/>
+  </replace-with>
 
 
 </module>

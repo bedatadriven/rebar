@@ -16,54 +16,54 @@
   -->
 <module rename-to="TestApp">
 
-    <!-- To generate a manifest for your module, you simply need to inherit this
-         module. The IFrame linker will be replaced with the ModuleStoreLinker, which
-         emits the manifest files -->
+  <!-- To generate a manifest for your module, you simply need to inherit this
+       module. The IFrame linker will be replaced with the ModuleStoreLinker, which
+       emits the manifest files -->
 
-    <inherits name='com.google.gwt.user.User'/>
-    <inherits name="com.bedatadriven.rebar.appcache.AppCache"/>
-    <inherits name="com.bedatadriven.rebar.appcache.AppCacheLinker"/>
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name="com.bedatadriven.rebar.appcache.AppCache"/>
+  <inherits name="com.bedatadriven.rebar.appcache.AppCacheLinker"/>
 
-    <entry-point class="com.bedatadriven.rebar.appcache.test.client.TestEntryPoint"/>
+  <entry-point class="com.bedatadriven.rebar.appcache.test.client.TestEntryPoint"/>
 
-    <replace-with class="com.bedatadriven.rebar.appcache.test.client.IE6Greeter">
-        <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter" />
-        <any>
-            <when-property-is name="user.agent" value="ie6"/>
-        </any>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.appcache.test.client.IE6Greeter">
+    <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter"/>
+    <any>
+      <when-property-is name="user.agent" value="ie6"/>
+    </any>
+  </replace-with>
 
-    <replace-with class="com.bedatadriven.rebar.appcache.test.client.IE8Greeter">
-        <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter" />
-        <any>
-            <when-property-is name="user.agent" value="ie8"/>
-            <when-property-is name="user.agent" value="ie9"/>
-            <when-property-is name="user.agent" value="ie10"/>
-        </any>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.appcache.test.client.IE8Greeter">
+    <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter"/>
+    <any>
+      <when-property-is name="user.agent" value="ie8"/>
+      <when-property-is name="user.agent" value="ie9"/>
+      <when-property-is name="user.agent" value="ie10"/>
+    </any>
+  </replace-with>
 
-    <replace-with class="com.bedatadriven.rebar.appcache.test.client.FFGreeter">
-        <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter" />
-        <any>
-            <when-property-is name="user.agent" value="gecko"/>
-            <when-property-is name="user.agent" value="gecko1_8"/>
-        </any>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.appcache.test.client.FFGreeter">
+    <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter"/>
+    <any>
+      <when-property-is name="user.agent" value="gecko"/>
+      <when-property-is name="user.agent" value="gecko1_8"/>
+    </any>
+  </replace-with>
 
-    <replace-with class="com.bedatadriven.rebar.appcache.test.client.OperaGreeter">
-        <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter" />
-        <any>
-            <when-property-is name="user.agent" value="opera"/>
-        </any>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.appcache.test.client.OperaGreeter">
+    <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter"/>
+    <any>
+      <when-property-is name="user.agent" value="opera"/>
+    </any>
+  </replace-with>
 
-    <replace-with class="com.bedatadriven.rebar.appcache.test.client.SafariGreeter">
-        <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter" />
-        <any>
-            <when-property-is name="user.agent" value="safari"/>
-        </any>
-    </replace-with>
+  <replace-with class="com.bedatadriven.rebar.appcache.test.client.SafariGreeter">
+    <when-type-is class="com.bedatadriven.rebar.appcache.test.client.Greeter"/>
+    <any>
+      <when-property-is name="user.agent" value="safari"/>
+    </any>
+  </replace-with>
 
-    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+  <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 
 </module>

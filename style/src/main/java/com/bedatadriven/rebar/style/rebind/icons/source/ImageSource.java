@@ -10,54 +10,54 @@ import java.awt.geom.AffineTransform;
  */
 public class ImageSource implements IconSource {
 
-    private final SvgDocument source;
+  private final SvgDocument source;
 
-    public ImageSource(SvgDocument source) {
-        this.source = source;
+  public ImageSource(SvgDocument source) {
+    this.source = source;
+  }
+
+  @Override
+  public Shape getShape(CoordinateSystem coordinateSystem) {
+    switch (coordinateSystem) {
+      case USER:
+        return source.getShape();
+
+      case FONT:
+        return transformToFontCoordinateSystem();
     }
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Shape getShape(CoordinateSystem coordinateSystem) {
-        switch(coordinateSystem) {
-            case USER:
-                return source.getShape();
+  private Shape transformToFontCoordinateSystem() {
+    Shape shape = source.getShape();
 
-            case FONT:
-                return transformToFontCoordinateSystem();
-        }
-        throw new UnsupportedOperationException();
-    }
+    // reflect to get in glyph coordinate system
+    // and translate so that it's on the base line
+    AffineTransform at = new AffineTransform();
+    at.scale(1, -1);
+    Rectangle bounds = shape.getBounds();
+    at.translate(-bounds.getMinX(), -(bounds.getHeight() - bounds.getMinY()));
+    return at.createTransformedShape(shape);
+  }
 
-    private Shape transformToFontCoordinateSystem() {
-        Shape shape = source.getShape();
+  @Override
+  public double getAscent() {
+    // assume the image is flush with the baseline...
+    return source.getShape().getBounds().getHeight();
+  }
 
-        // reflect to get in glyph coordinate system
-        // and translate so that it's on the base line
-        AffineTransform at = new AffineTransform();
-        at.scale(1, -1);
-        Rectangle bounds = shape.getBounds();
-        at.translate(-bounds.getMinX(), - (bounds.getHeight() - bounds.getMinY()));
-        return at.createTransformedShape(shape);
-    }
+  @Override
+  public double getDescent() {
+    return 0;
+  }
 
-    @Override
-    public double getAscent() {
-        // assume the image is flush with the baseline...
-        return source.getShape().getBounds().getHeight();
-    }
+  @Override
+  public double getHorizontalAdvance() {
+    return source.getShape().getBounds().getWidth();
+  }
 
-    @Override
-    public double getDescent() {
-        return 0;
-    }
-
-    @Override
-    public double getHorizontalAdvance() {
-        return source.getShape().getBounds().getWidth();
-    }
-
-    @Override
-    public String toString() {
-        return "ImageSource(" + source.getShape().getBounds() + ")";
-    }
+  @Override
+  public String toString() {
+    return "ImageSource(" + source.getShape().getBounds() + ")";
+  }
 }

@@ -22,7 +22,9 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 interface ManifestWriter {
 
   String getSuffix();
+
   void appendEntry(TreeLogger logger, String path) throws UnableToCompleteException;
+
   String getEntries();
 
 }

@@ -3,21 +3,21 @@ package com.bedatadriven.rebar.sql.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public abstract class InnerSqlTxCallback<T> extends SqlTransactionCallback {
-	private AsyncCallback<T> outer;
+  private AsyncCallback<T> outer;
 
-	public InnerSqlTxCallback(AsyncCallback<T> outer) {
-	  super();
-	  this.outer = outer;
+  public InnerSqlTxCallback(AsyncCallback<T> outer) {
+    super();
+    this.outer = outer;
   }
 
-	@Override
+  @Override
   public void onError(SqlException e) {
-		outer.onFailure(e);
+    outer.onFailure(e);
   }
 
-	@Override
+  @Override
   public void onSuccess() {
-	  outer.onSuccess(null);
+    outer.onSuccess(null);
   }
-	
+
 }

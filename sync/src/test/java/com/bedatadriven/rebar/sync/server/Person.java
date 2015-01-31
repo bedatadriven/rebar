@@ -20,7 +20,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.util.Date;
 
 
@@ -33,7 +32,7 @@ public class Person {
   private Date lastVisit;
   private double height;
   private boolean active;
-  
+
 
   public Person() {
   }
@@ -75,14 +74,14 @@ public class Person {
 
   @Temporal(TemporalType.TIME)
   public Date getLastVisit() {
-  	return lastVisit;
+    return lastVisit;
   }
 
-	public void setLastVisit(Date lastVisit) {
-  	this.lastVisit = lastVisit;
+  public void setLastVisit(Date lastVisit) {
+    this.lastVisit = lastVisit;
   }
 
-	public double getHeight() {
+  public double getHeight() {
     return height;
   }
 

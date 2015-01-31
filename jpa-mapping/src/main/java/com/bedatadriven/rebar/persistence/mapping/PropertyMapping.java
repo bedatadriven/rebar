@@ -30,15 +30,14 @@ import java.util.List;
  */
 public abstract class PropertyMapping {
 
-  private String name;
-  private String getterName;
-  private String setterName;
-  private TypeInfo type;
-
   protected boolean unique = false;
   protected boolean insertable = true;
   protected boolean updatable = true;
   protected boolean nullable = true;
+  private String name;
+  private String getterName;
+  private String setterName;
+  private TypeInfo type;
 
   public PropertyMapping(MethodInfo getterMethod) {
 
@@ -110,7 +109,7 @@ public abstract class PropertyMapping {
 
   /**
    * Returns true if the property/field is an unboxed, primitive type
-   * 
+   *
    * @return true if the property/field is an unboxed, primitive type
    */
   public boolean isPrimitive() {
@@ -153,7 +152,7 @@ public abstract class PropertyMapping {
   public boolean isUpdatable() {
     return updatable;
   }
-  
+
   public String getReaderName() {
     return null;
   }
@@ -176,9 +175,9 @@ public abstract class PropertyMapping {
    */
   public ColumnMapping getColumn() {
     List<ColumnMapping> columns = getColumns();
-    if(columns.size() == 1)
+    if (columns.size() == 1)
       return columns.get(0);
-    
+
     return null;
   }
 

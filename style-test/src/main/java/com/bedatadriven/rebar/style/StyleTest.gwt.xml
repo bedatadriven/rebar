@@ -3,10 +3,10 @@
 
   <inherits name='com.google.gwt.user.User'/>
 
-  <inherits name="com.bedatadriven.rebar.style.Style" />
+  <inherits name="com.bedatadriven.rebar.style.Style"/>
 
 
-  <source path="client" />
+  <source path="client"/>
 
   <entry-point class="com.bedatadriven.rebar.style.client.TestEntryPoint"/>
 

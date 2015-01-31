@@ -1,6 +1,6 @@
 package com.bedatadriven.rebar.style.rebind;
 
-import com.google.gwt.core.ext.*;
+import com.google.gwt.core.ext.TreeLogger;
 
 
 /**
@@ -8,40 +8,40 @@ import com.google.gwt.core.ext.*;
  */
 public class GenerationParameters {
 
-    private TreeLogger.Type getNamingConventionsEnforcementLevel;
-    private boolean requireAccessorsForAllClasses;
-    private UserAgent userAgent;
-    private boolean ignoreMissingClasses;
+  private TreeLogger.Type getNamingConventionsEnforcementLevel;
+  private boolean requireAccessorsForAllClasses;
+  private UserAgent userAgent;
+  private boolean ignoreMissingClasses;
 
-    public TreeLogger.Type getGetNamingConventionsEnforcementLevel() {
-        return getNamingConventionsEnforcementLevel;
-    }
+  public TreeLogger.Type getGetNamingConventionsEnforcementLevel() {
+    return getNamingConventionsEnforcementLevel;
+  }
 
-    public void setNamingConventionEnforcementLevel(TreeLogger.Type enforceNamingConventions) {
-        this.getNamingConventionsEnforcementLevel = enforceNamingConventions;
-    }
+  public void setNamingConventionEnforcementLevel(TreeLogger.Type enforceNamingConventions) {
+    this.getNamingConventionsEnforcementLevel = enforceNamingConventions;
+  }
 
-    public boolean isAccessorRequiredForAllClasses() {
-        return requireAccessorsForAllClasses;
-    }
+  public boolean isAccessorRequiredForAllClasses() {
+    return requireAccessorsForAllClasses;
+  }
 
-    public void setRequireAccessorsForAllClasses(boolean requireAccessorsForAllClasses) {
-        this.requireAccessorsForAllClasses = requireAccessorsForAllClasses;
-    }
+  public void setRequireAccessorsForAllClasses(boolean requireAccessorsForAllClasses) {
+    this.requireAccessorsForAllClasses = requireAccessorsForAllClasses;
+  }
 
-    public UserAgent getUserAgent() {
-        return userAgent;
-    }
+  public UserAgent getUserAgent() {
+    return userAgent;
+  }
 
-    public void setUserAgent(UserAgent userAgent) {
-        this.userAgent = userAgent;
-    }
+  public void setUserAgent(UserAgent userAgent) {
+    this.userAgent = userAgent;
+  }
 
-    public void setIgnoreMissingClasses(boolean ignoreMissingClasses) {
-        this.ignoreMissingClasses = ignoreMissingClasses;
-    }
+  public boolean isIgnoreMissingClasses() {
+    return ignoreMissingClasses;
+  }
 
-    public boolean isIgnoreMissingClasses() {
-        return ignoreMissingClasses;
-    }
+  public void setIgnoreMissingClasses(boolean ignoreMissingClasses) {
+    this.ignoreMissingClasses = ignoreMissingClasses;
+  }
 }

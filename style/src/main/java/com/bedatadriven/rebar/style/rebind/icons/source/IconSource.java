@@ -8,17 +8,17 @@ import java.awt.*;
  */
 public interface IconSource {
 
-    enum CoordinateSystem {
-        USER,
-        FONT
-    }
+  Shape getShape(CoordinateSystem system);
 
-    Shape getShape(CoordinateSystem system);
+  double getAscent();
 
-    double getAscent();
+  double getDescent();
 
-    double getDescent();
+  double getHorizontalAdvance();
 
-    double getHorizontalAdvance();
+  enum CoordinateSystem {
+    USER,
+    FONT
+  }
 
 }

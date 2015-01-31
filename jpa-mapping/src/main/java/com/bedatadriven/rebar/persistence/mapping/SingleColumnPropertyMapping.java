@@ -44,17 +44,17 @@ public abstract class SingleColumnPropertyMapping extends PropertyMapping {
     columnName = getName();
 
     // @Id annotation makes this field an id
-    id = (getterMethod.getAnnotation(Id.class)!=null);
+    id = (getterMethod.getAnnotation(Id.class) != null);
 
     // define default values for the column
     updatable = !id;
     unique = id;
 
     // @GeneratedValue(strategy = GeneratedType.Auto)
-    if(id) {
+    if (id) {
       ClientSideGeneratedValue generatedValue = getterMethod.getAnnotation(ClientSideGeneratedValue.class);
-      if(generatedValue!=null) {
-        if(generatedValue.strategy() == GenerationType.AUTO) {
+      if (generatedValue != null) {
+        if (generatedValue.strategy() == GenerationType.AUTO) {
           autoincrement = true;
           insertable = false;
         }
@@ -94,7 +94,7 @@ public abstract class SingleColumnPropertyMapping extends PropertyMapping {
 
   protected abstract String getStmtSetter();
 
-   @Override
+  @Override
   public void writeColumnValues(JSONStringer writer, Object entity) throws JSONException {
     writer.value(getValue(entity));
   }

@@ -23,6 +23,7 @@ package com.bedatadriven.rebar.sql.client.websql;
  */
 public interface WebSqlResultCallback {
   void onSuccess(WebSqlTransaction tx, WebSqlResultSet results);
+
   boolean onFailure(WebSqlException e);
 
 }

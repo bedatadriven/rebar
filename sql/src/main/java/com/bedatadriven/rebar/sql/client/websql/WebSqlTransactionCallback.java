@@ -23,10 +23,10 @@ package com.bedatadriven.rebar.sql.client.websql;
  * @see <a href="http://www.w3.org/TR/webdatabase/#sqltransactioncallback">W3 Standard</a>
  */
 public interface WebSqlTransactionCallback {
- 
+
   void begin(WebSqlTransaction tx);
-  
+
   void onSuccess();
-  
+
   void onError(WebSqlException e);
 }

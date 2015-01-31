@@ -5,12 +5,12 @@ import com.bedatadriven.rebar.style.client.Stylesheet;
 
 public interface TestStylesheet extends Stylesheet {
 
-    String containerBlue();
+  String containerBlue();
 
-    @ClassName("alert-bg")
-    String alertBackground();
+  @ClassName("alert-bg")
+  String alertBackground();
 
-    String importantWidget();
+  String importantWidget();
 
-    String emptyClass();
+  String emptyClass();
 }

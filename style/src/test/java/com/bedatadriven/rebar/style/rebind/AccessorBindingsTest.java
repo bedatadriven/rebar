@@ -19,104 +19,104 @@ import static org.junit.Assert.assertThat;
 
 public class AccessorBindingsTest {
 
-    private TreeLogger logger;
-    private GenerationParameters params = new GenerationParameters();
-    private Set<String> classNames;
-    private List<JMethod> methods;
-    private AccessorBindings bindings;
+  private TreeLogger logger;
+  private GenerationParameters params = new GenerationParameters();
+  private Set<String> classNames;
+  private List<JMethod> methods;
+  private AccessorBindings bindings;
 
-    @Before
-    public void setup() throws UnableToCompleteException {
-        logger = new ConsoleTreeLogger();
-        methods = Lists.newArrayList();
-    }
+  @Before
+  public void setup() throws UnableToCompleteException {
+    logger = new ConsoleTreeLogger();
+    methods = Lists.newArrayList();
+  }
 
-    @Test
-    public void hyphenatedMatching() throws NotFoundException, UnableToCompleteException {
+  @Test
+  public void hyphenatedMatching() throws NotFoundException, UnableToCompleteException {
 
-        givenStylesheetWithClassNames("container-blue", "other-widget");
-        withAccessor("containerBlue");
+    givenStylesheetWithClassNames("container-blue", "other-widget");
+    withAccessor("containerBlue");
 
-        thenTryMatching();
+    thenTryMatching();
 
-        assertMapping("containerBlue", "container-blue");
-    }
+    assertMapping("containerBlue", "container-blue");
+  }
 
-    @Test
-    public void strictMatchingFailsOnUnmatched() throws NotFoundException, UnableToCompleteException {
+  @Test
+  public void strictMatchingFailsOnUnmatched() throws NotFoundException, UnableToCompleteException {
 
-        givenStylesheetWithClassNames("container-blue", "important-widget");
-        withAccessor("containerBlue");
+    givenStylesheetWithClassNames("container-blue", "important-widget");
+    withAccessor("containerBlue");
 
-        thenTryMatching();
-    }
+    thenTryMatching();
+  }
 
-    @Test
-    public void strictMatchingCanSucceed() throws UnableToCompleteException {
-        usingStrict();
-        givenStylesheetWithClassNames("important-widget", "alert-bg", "container-blue");
+  @Test
+  public void strictMatchingCanSucceed() throws UnableToCompleteException {
+    usingStrict();
+    givenStylesheetWithClassNames("important-widget", "alert-bg", "container-blue");
 
-        withAccessor("containerBlue");
-        withAccessor("alertBg");
-        withAccessor("importantWidget");
+    withAccessor("containerBlue");
+    withAccessor("alertBg");
+    withAccessor("importantWidget");
 
-        thenTryMatching();
-    }
+    thenTryMatching();
+  }
 
 
-    @Test
-    public void camelCaseMatching() throws UnableToCompleteException {
-        givenStylesheetWithClassNames("importantWidget");
+  @Test
+  public void camelCaseMatching() throws UnableToCompleteException {
+    givenStylesheetWithClassNames("importantWidget");
 
-        withAccessor("importantWidget");
+    withAccessor("importantWidget");
 
-        thenTryMatching();
+    thenTryMatching();
 
-        assertMapping("importantWidget", "importantWidget");
-    }
+    assertMapping("importantWidget", "importantWidget");
+  }
 
-    @Test(expected = UnableToCompleteException.class)
-    public void ambiguousMatching() throws UnableToCompleteException {
-        givenStylesheetWithClassNames("greeting-widget", "greetingWidget");
+  @Test(expected = UnableToCompleteException.class)
+  public void ambiguousMatching() throws UnableToCompleteException {
+    givenStylesheetWithClassNames("greeting-widget", "greetingWidget");
 
-        withAccessor("greetingWidget");
-        thenTryMatching();
-    }
+    withAccessor("greetingWidget");
+    thenTryMatching();
+  }
 
-    @Test(expected = UnableToCompleteException.class)
-    public void throwsErrorOnNoMatch() throws UnableToCompleteException {
-        givenStylesheetWithClassNames("important-widget");
+  @Test(expected = UnableToCompleteException.class)
+  public void throwsErrorOnNoMatch() throws UnableToCompleteException {
+    givenStylesheetWithClassNames("important-widget");
 
-        withAccessor("importantwidgest");
+    withAccessor("importantwidgest");
 
-        thenTryMatching();
-    }
+    thenTryMatching();
+  }
 
-    private void givenStylesheetWithClassNames(String... names) throws UnableToCompleteException {
-        this.classNames = Sets.newHashSet(names);
-    }
+  private void givenStylesheetWithClassNames(String... names) throws UnableToCompleteException {
+    this.classNames = Sets.newHashSet(names);
+  }
 
-    private void withAccessor(String methodName) {
-        JMethod method = createNiceMock(methodName, JMethod.class);
-        expect(method.getName()).andReturn(methodName).anyTimes();
-        replay(method);
-        methods.add(method);
-    }
+  private void withAccessor(String methodName) {
+    JMethod method = createNiceMock(methodName, JMethod.class);
+    expect(method.getName()).andReturn(methodName).anyTimes();
+    replay(method);
+    methods.add(method);
+  }
 
-    private void thenTryMatching() throws UnableToCompleteException {
-        bindings = new AccessorBindings(params, methods, classNames);
-        bindings.build(logger);
+  private void thenTryMatching() throws UnableToCompleteException {
+    bindings = new AccessorBindings(params, methods, classNames);
+    bindings.build(logger);
 
-        System.out.println(Joiner.on("\n").withKeyValueSeparator(" -> ").join(bindings.getMap()));
+    System.out.println(Joiner.on("\n").withKeyValueSeparator(" -> ").join(bindings.getMap()));
 
-        bindings.validate(logger, params);
-    }
+    bindings.validate(logger, params);
+  }
 
-    private void assertMapping(String accessor, String cssName) {
-        assertThat(accessor, bindings.classNameForAccessor(accessor), equalTo(cssName));
-    }
+  private void assertMapping(String accessor, String cssName) {
+    assertThat(accessor, bindings.classNameForAccessor(accessor), equalTo(cssName));
+  }
 
-    private void usingStrict() {
-        params.setRequireAccessorsForAllClasses(true);
-    }
+  private void usingStrict() {
+    params.setRequireAccessorsForAllClasses(true);
+  }
 }
