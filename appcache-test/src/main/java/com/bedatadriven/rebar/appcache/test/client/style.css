@@ -1,0 +1,12 @@
+
+body {
+    background-color: white;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.labeledValueWidget {
+    padding: 5px;
+}
