@@ -24,7 +24,7 @@
   <packaging>jar</packaging>
 
   <name>Rebar Async Functions</name>
-  <description>Micro-library to faciliate asynchronous programming with GWT in a quasi functional style</description>
+  <description>Micro-library to facilitate asynchronous programming with GWT in a quasi functional style</description>
 
   <parent>
     <groupId>com.bedatadriven.rebar</groupId>
