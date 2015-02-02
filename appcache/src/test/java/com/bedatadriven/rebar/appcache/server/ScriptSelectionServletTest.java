@@ -51,7 +51,7 @@ public class ScriptSelectionServletTest {
     replay(context);
 
     ServletConfig config = createMock(ServletConfig.class);
-    expect(config.getServletContext()).andReturn(context);
+    expect(config.getServletContext()).andReturn(context).anyTimes();
     replay(config);
 
     DefaultSelectionServlet servlet = new DefaultSelectionServlet();

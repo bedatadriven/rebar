@@ -22,8 +22,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -44,26 +42,21 @@ import java.util.logging.Logger;
  */
 public class DefaultSelectionServlet extends HttpServlet {
 
-  protected static final int CACHE_OBSOLETE = 404;
+  private static final int CACHE_OBSOLETE = 404;
+  
   private static final Logger logger = Logger.getLogger(DefaultSelectionServlet.class.getName());
-  private ServletContext context;
-  private Map<String, PropertyProvider> providers;
+  
+  private final Map<String, PropertyProvider> providers;
 
   public DefaultSelectionServlet() {
-    providers = new HashMap<String, PropertyProvider>();
+    providers = new HashMap<>();
     registerProvider("user.agent", new UserAgentProvider());
   }
 
   public final void registerProvider(String propertyName, PropertyProvider provider) {
     providers.put(propertyName, provider);
   }
-
-
-  @Override
-  public void init(ServletConfig config) throws ServletException {
-    context = config.getServletContext();
-  }
-
+  
   @Override
   protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -83,7 +76,7 @@ public class DefaultSelectionServlet extends HttpServlet {
       serveDefault(resp, path);
     } else {
       try {
-        String permutation = computePermutation(req, permutationMap, path);
+        String permutation = computePermutation(req, permutationMap);
         if (permutation == null) {
           handleNoAvailablePermutation(path, resp);
         } else {
@@ -114,7 +107,7 @@ public class DefaultSelectionServlet extends HttpServlet {
   private void servePermutationSpecificFile(Path path, String permutation, HttpServletResponse resp) throws IOException, ServletException {
     // first verify that the file exists and is readable
     String resource = resolvePermutationSpecificResource(path, permutation);
-    if (!new File(context.getRealPath(resource)).exists()) {
+    if (!new File(getServletContext().getRealPath(resource)).exists()) {
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } else {
 
@@ -142,7 +135,7 @@ public class DefaultSelectionServlet extends HttpServlet {
   }
 
   private void serve(HttpServletResponse resp, String path) throws IOException {
-    InputStream is = new FileInputStream(context.getRealPath(path));
+    InputStream is = new FileInputStream(getServletContext().getRealPath(path));
     ServletOutputStream os = resp.getOutputStream();
     byte[] buffer = new byte[1024];
     int bytesRead;
@@ -172,7 +165,7 @@ public class DefaultSelectionServlet extends HttpServlet {
       InputStreamReader reader =
           new InputStreamReader(
               new FileInputStream(
-                  context.getRealPath(path.moduleBase + "permutations")));
+                  getServletContext().getRealPath(path.moduleBase + "permutations")));
 
       JsonParser parser = new JsonParser();
       return (JsonArray) parser.parse(reader);
@@ -183,10 +176,10 @@ public class DefaultSelectionServlet extends HttpServlet {
     }
   }
 
-  private String computePermutation(HttpServletRequest req, JsonArray permutationMap, Path path) throws ServletException {
+  private String computePermutation(HttpServletRequest req, JsonArray permutationMap) throws ServletException {
 
     Map<String, String> properties = computeProperties(req);
-    Set<String> matches = new HashSet<String>();
+    Set<String> matches = new HashSet<>();
 
     for (int i = 0; i != permutationMap.size(); ++i) {
       JsonObject permutation = (JsonObject) permutationMap.get(i);
@@ -203,7 +196,7 @@ public class DefaultSelectionServlet extends HttpServlet {
   }
 
   private Map<String, String> computeProperties(HttpServletRequest req) {
-    Map<String, String> properties = new HashMap<String, String>();
+    Map<String, String> properties = new HashMap<>();
     for (Entry<String, PropertyProvider> entry : providers.entrySet()) {
       properties.put(entry.getKey(), entry.getValue().get(req));
     }
@@ -229,9 +222,6 @@ public class DefaultSelectionServlet extends HttpServlet {
    * Handles the case in which an exception was thrown while trying to compute
    * properties for the selection of the permutation.
    *
-   * @param path
-   * @param e
-   * @throws IOException
    */
   protected void handleSelectionException(Path path, Exception e, HttpServletResponse resp) throws IOException {
     sendErrorMessage(path, "Error selecting permutation: " + e.getMessage(), resp);
@@ -265,8 +255,5 @@ public class DefaultSelectionServlet extends HttpServlet {
       this.moduleName = moduleName;
     }
 
-    public boolean isSelectionScript() {
-      return file.equals(moduleName + ".nocache.js");
-    }
   }
 }
