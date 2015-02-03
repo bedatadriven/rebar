@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class DefaultSelectionServlet extends HttpServlet {
 
-  private static final int CACHE_OBSOLETE = 404;
+  public static final int CACHE_OBSOLETE = 404;
   
   private static final Logger logger = Logger.getLogger(DefaultSelectionServlet.class.getName());
   
