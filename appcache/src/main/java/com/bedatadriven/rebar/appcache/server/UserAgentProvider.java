@@ -25,17 +25,14 @@ public class UserAgentProvider implements PropertyProvider {
 
   private static final Logger LOGGER = Logger.getLogger(UserAgentProvider.class.getName());
 
-  private final Pattern geckoRevision;
-
-  public UserAgentProvider() {
-    geckoRevision = Pattern.compile("rv:([0-9]+)\\.([0-9]+)");
-
-  }
+  private static final Pattern GECKO_REVISION = Pattern.compile("rv:([0-9]+)\\.([0-9]+)");
 
   @Override
   public String get(HttpServletRequest request) {
-    String ua = userAgent(request);
+    return parseUserAgentHeader(userAgent(request));
+  }
 
+  public static String parseUserAgentHeader(String ua) {
     // When IE is in compatability mode, the user agent string
     // sends the emulated version to the server, but the trident key word gives the true
     // browser version.
@@ -97,8 +94,8 @@ public class UserAgentProvider implements PropertyProvider {
     return ua.contains("gecko");
   }
 
-  private int parseGeckoVersion(String ua) {
-    Matcher matcher = geckoRevision.matcher(ua);
+  private static int parseGeckoVersion(String ua) {
+    Matcher matcher = GECKO_REVISION.matcher(ua);
     if (matcher.find()) {
 
       int major = Integer.parseInt(matcher.group(1));
