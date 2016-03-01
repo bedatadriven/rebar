@@ -3,6 +3,8 @@ package com.bedatadriven.rebar.appcache.test.client;
 
 public enum ElementId {
   
+  
+  
   RUNTIME_USER_AGENT,
   COMPILE_USER_AGENT,
   
@@ -18,8 +20,8 @@ public enum ElementId {
   PROGRESS_FILES_TOTAL,
   
   VERSION_LABEL,
-  LOAD_UPDATE, 
-  ;
+  LOAD_UPDATE,
+  I18N_TEXT, LOCALE;
 
   public String id() {
     return name().toLowerCase().replace("_", "-");

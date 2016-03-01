@@ -57,7 +57,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
     if (hostedMode) {
       // if we are being run in hosted mode, revert entirely to the IFrameLinker
-
+      
       return super.link(logger, linkerContext, artifacts);
 
     } else {
@@ -113,9 +113,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       lastModified = System.currentTimeMillis();
     }
 
-    return emitString(logger, selectionScript,
-        context.getStrongName()
-            + ".nocache.js", lastModified);
+    return emitString(logger, selectionScript, context.getStrongName() + ".js", lastModified);
   }
 
   /**
@@ -288,7 +286,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
         null);
 
     // add the bootstrap script (provided by the server)
-    writer.appendEntry(logger, context.getModuleName() + ".nocache.js");
+    writer.appendEntry(logger, context.getLocale() + ".js");
 
     for (EmittedArtifact artifact : context.getToCache()) {
       if (artifact.getVisibility() == Visibility.Public) {

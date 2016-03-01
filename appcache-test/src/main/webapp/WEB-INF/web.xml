@@ -5,10 +5,18 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>SelectionServlet</servlet-name>
-    <url-pattern>/TestApp/TestApp.nocache.js</url-pattern>
+    <url-pattern>/TestApp/en.js</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>SelectionServlet</servlet-name>
-    <url-pattern>/TestApp/TestApp.appcache</url-pattern>
+    <url-pattern>/TestApp/fr.js</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SelectionServlet</servlet-name>
+    <url-pattern>/TestApp/en.appcache</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SelectionServlet</servlet-name>
+    <url-pattern>/TestApp/fr.appcache</url-pattern>
   </servlet-mapping>
 </web-app>

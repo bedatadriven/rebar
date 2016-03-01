@@ -19,10 +19,7 @@ package com.bedatadriven.rebar.appcache.linker;
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.linker.Artifact;
-import com.google.gwt.core.ext.linker.ArtifactSet;
-import com.google.gwt.core.ext.linker.CompilationResult;
-import com.google.gwt.core.ext.linker.EmittedArtifact;
+import com.google.gwt.core.ext.linker.*;
 
 import java.util.*;
 
@@ -57,6 +54,21 @@ class PermutationContext {
 
   public String getModuleName() {
     return linkerContext.getModuleName();
+  }
+  
+  public String getLocale() {
+    Set<String> locale = new HashSet<>();
+    for (SortedMap<SelectionProperty, String> map : compilation.getPropertyMap()) {
+      for (Map.Entry<SelectionProperty, String> entry : map.entrySet()) {
+        if(entry.getKey().getName().equals("locale")) {
+          locale.add(entry.getValue());
+        }
+      }
+    }
+    if(locale.size() != 1) {
+      throw new IllegalStateException("Permutation " + getStrongName() + " has multiple locales: " + locale);
+    }
+    return locale.iterator().next();
   }
 
   public <X extends Artifact> SortedSet<X> find(Class<X> stylesheetReferenceClass) {

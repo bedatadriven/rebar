@@ -19,6 +19,7 @@ package com.bedatadriven.rebar.appcache.test.client;
 import com.bedatadriven.rebar.appcache.client.AppCache;
 import com.bedatadriven.rebar.appcache.client.AppCacheFactory;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,6 +38,8 @@ public class TestPanel implements IsWidget {
 
   public TestPanel(AppVersion applicationVersion) {
     panel = new FlowPanel();
+    panel.add(new LabeledValueWidget(ElementId.I18N_TEXT, Hello.INSTANCE.helloWorld()));
+    panel.add(new LabeledValueWidget(ElementId.LOCALE, LocaleInfo.getCurrentLocale().getLocaleName()));
     panel.add(new LabeledValueWidget(ElementId.VERSION_LABEL, applicationVersion.name()));
     panel.add(new LabeledValueWidget(ElementId.COMPILE_USER_AGENT, userAgent.getCompileTimeValue()));
     panel.add(new LabeledValueWidget(ElementId.RUNTIME_USER_AGENT, userAgent.getRuntimeValue()));

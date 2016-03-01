@@ -46,7 +46,7 @@ public class ScriptSelectionServletTest {
 
     ServletContext context = createMock(ServletContext.class);
     expect(context.getRealPath(eq("/ActivityInfo/permutations"))).andReturn(permutationPath()).anyTimes();
-    expect(context.getRealPath(eq("/ActivityInfo/F461B4925CA75C3608BEFC78A0C4CF03.nocache.js")))
+    expect(context.getRealPath(eq("/ActivityInfo/F461B4925CA75C3608BEFC78A0C4CF03.js")))
         .andReturn(dummyContentPath()).anyTimes();
     replay(context);
 
@@ -58,7 +58,7 @@ public class ScriptSelectionServletTest {
     servlet.init(config);
 
     HttpServletRequest request = createMock(HttpServletRequest.class);
-    expect(request.getRequestURI()).andReturn("/ActivityInfo/ActivityInfo.nocache.js");
+    expect(request.getRequestURI()).andReturn("/ActivityInfo/en.js");
     expect(request.getHeader(eq("User-Agent"))).andReturn(MS_IE_8).anyTimes();
     replay(request);
 

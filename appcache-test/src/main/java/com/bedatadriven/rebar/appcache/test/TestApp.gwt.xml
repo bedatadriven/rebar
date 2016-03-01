@@ -24,6 +24,9 @@
   <inherits name="com.bedatadriven.rebar.appcache.AppCache"/>
   <inherits name="com.bedatadriven.rebar.appcache.AppCacheLinker"/>
 
+  <extend-property name="locale" values="en,fr"/>
+  <set-property-fallback name="locale" value="en"/>
+  <set-property name="locale" value="en,fr"/>
 
   <set-property name="gwt.logging.popupHandler" value="DISABLED"/>
 

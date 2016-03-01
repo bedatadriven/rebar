@@ -157,6 +157,7 @@
           <httpConnector>
             <port>${jetty.port}</port>
           </httpConnector>
+          <war>${project.basedir}/target/version1</war>
         </configuration>
       </plugin>
 

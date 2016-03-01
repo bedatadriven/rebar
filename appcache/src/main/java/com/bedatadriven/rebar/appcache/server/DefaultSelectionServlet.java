@@ -23,7 +23,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -61,10 +60,13 @@ public class DefaultSelectionServlet extends HttpServlet {
   protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     // get the non-permuted version of the file
-    Path path = getModuleBase(req);
+    Path path = new Path(req.getRequestURI());
+    
+    logger.info("path.locale = " + path.locale);
+    logger.info("path.fileType = " + path.fileType);
 
     // special hook to help remove application cache
-    if (path.file.endsWith(".appcache") && isAppCacheDisabled(req)) {
+    if (path.isManifest() && isAppCacheDisabled(req)) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
@@ -73,10 +75,10 @@ public class DefaultSelectionServlet extends HttpServlet {
     JsonArray permutationMap = readPermutationMap(path);
 
     if (permutationMap == null) {
-      serveDefault(resp, path);
+      serveDevModeResource(resp, path);
     } else {
       try {
-        String permutation = computePermutation(req, permutationMap);
+        String permutation = computePermutation(req, path, permutationMap);
         if (permutation == null) {
           handleNoAvailablePermutation(path, resp);
         } else {
@@ -100,64 +102,35 @@ public class DefaultSelectionServlet extends HttpServlet {
     return false;
   }
 
-  private void serveDefault(HttpServletResponse resp, Path resource) throws IOException {
-    serve(resp, resource.moduleBase + resource.file);
+  private void serveDevModeResource(HttpServletResponse resp, Path resource) throws IOException {
+    throw new UnsupportedOperationException();
   }
 
   private void servePermutationSpecificFile(Path path, String permutation, HttpServletResponse resp) throws IOException, ServletException {
     // first verify that the file exists and is readable
-    String resource = resolvePermutationSpecificResource(path, permutation);
+    String resource = path.forPermutation(permutation);
+    
+    logger.info("Resolved path to: " + resource);
+    
     if (!new File(getServletContext().getRealPath(resource)).exists()) {
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } else {
-
       resp.setDateHeader("Expires", new Date().getTime());
-
-      if (path.file.endsWith(".appcache")) {
-        resp.setContentType("text/cache-manifest");
-
-      } else if (path.file.endsWith(".js")) {
-        resp.setContentType("application/javascript");
-      }
+      resp.setContentType(path.getContentType());
 
       serve(resp, resource);
     }
   }
 
-  protected String resolvePermutationSpecificResource(Path path, String permutation) throws ServletException {
-    if (path.file.startsWith(path.moduleName + ".")) {
-      return path.moduleBase + permutation + path.file.substring(path.moduleName.length());
-    } else {
-      logger.severe("ScriptSelectionServlet does not know how to serve '" + path.file + ", expected '" +
-          path.moduleName + ".xxxx'");
-      throw new ServletException();
-    }
-  }
-
   private void serve(HttpServletResponse resp, String path) throws IOException {
     InputStream is = new FileInputStream(getServletContext().getRealPath(path));
-    ServletOutputStream os = resp.getOutputStream();
+    OutputStream os = resp.getOutputStream();
     byte[] buffer = new byte[1024];
     int bytesRead;
 
     while ((bytesRead = is.read(buffer)) != -1) {
       os.write(buffer, 0, bytesRead);
     }
-  }
-
-  private Path getModuleBase(HttpServletRequest req) throws ServletException {
-    String uri = req.getRequestURI();
-    int lastSlash = uri.lastIndexOf('/');
-    if (lastSlash < 1) {
-      throw new ServletException("Request for resource must be in module path. URI = " + uri);
-    }
-    String file = uri.substring(lastSlash + 1);
-    String path = uri.substring(0, lastSlash + 1);
-
-    lastSlash = path.lastIndexOf('/', path.length() - 2);
-    String module = path.substring(lastSlash + 1, path.length() - 1);
-
-    return new Path(path, file, module);
   }
 
   private JsonArray readPermutationMap(Path path) {
@@ -176,9 +149,11 @@ public class DefaultSelectionServlet extends HttpServlet {
     }
   }
 
-  private String computePermutation(HttpServletRequest req, JsonArray permutationMap) throws ServletException {
+  private String computePermutation(HttpServletRequest req, Path path, JsonArray permutationMap) throws ServletException {
 
     Map<String, String> properties = computeProperties(req);
+    properties.put("locale", path.locale);
+    
     Set<String> matches = new HashSet<>();
 
     for (int i = 0; i != permutationMap.size(); ++i) {
@@ -227,13 +202,12 @@ public class DefaultSelectionServlet extends HttpServlet {
     sendErrorMessage(path, "Error selecting permutation: " + e.getMessage(), resp);
   }
 
-  protected void handleNoAvailablePermutation(Path path,
-                                              HttpServletResponse resp) throws IOException {
+  protected void handleNoAvailablePermutation(Path path,  HttpServletResponse resp) throws IOException {
     sendErrorMessage(path, "Your browser is unsupported", resp);
   }
 
   protected final void sendErrorMessage(Path path, String message, HttpServletResponse resp) throws IOException {
-    if (path.file.endsWith(".js")) {
+    if (path.fileType.equals("js")) {
       resp.setContentType("application/javascript");
       resp.getWriter().println("window.alert('" + message.replace("'", "\'") + "');");
     } else {
@@ -245,15 +219,44 @@ public class DefaultSelectionServlet extends HttpServlet {
   protected final static class Path {
 
     public final String moduleBase;
-    public final String file;
-    public final String moduleName;
+    public final String locale;
+    public final String fileType;
 
-    public Path(String path, String file, String moduleName) {
-      super();
-      this.moduleBase = path;
-      this.file = file;
-      this.moduleName = moduleName;
+    public Path(String uri) throws ServletException {
+      int lastSlash = uri.lastIndexOf('/');
+      if (lastSlash < 1) {
+        throw new ServletException("Request for resource must be in module path. URI = " + uri);
+      }
+      
+      this.moduleBase = uri.substring(0, lastSlash + 1);
+      
+      String file = uri.substring(lastSlash + 1);
+      String[] fileParts = file.split("\\.");
+      
+      if(fileParts.length != 2) {
+        throw new ServletException("Invalid file name: expected {locale}.{js|appcache}");
+      }
+      
+      this.locale = fileParts[0];
+      this.fileType = fileParts[1];
+    }
+    
+    public String forPermutation(String strongName) {
+      return moduleBase + strongName + "." + fileType;
     }
 
+    public String getContentType() {
+      if(fileType.equals("js")) {
+        return "application/javascript";
+      } else if(fileType.equals("appcache")) {
+        return "text/cache-manifest";
+      } else {
+        return "application/octet";
+      }
+    }
+    
+    public boolean isManifest() {
+      return fileType.equals("appcache");
+    }
   }
 }
