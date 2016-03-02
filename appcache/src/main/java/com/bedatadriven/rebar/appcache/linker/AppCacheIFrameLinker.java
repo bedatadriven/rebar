@@ -38,6 +38,7 @@ import java.util.*;
 @LinkerOrder(Order.PRIMARY)
 public final class AppCacheIFrameLinker extends IFrameLinker {
 
+  private static final String APPCACHE_SUFFIX = "appcache";
   private boolean hostedMode = false;
 
   public AppCacheIFrameLinker() {
@@ -62,8 +63,8 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
     } else {
 
-      ArtifactSet writableArtifacts = new ArtifactSet(artifacts);
-      ArtifactSet toReturn = new ArtifactSet(artifacts);
+      ArtifactSet writableArtifacts = new ArtifactSet(excludeTemplates(artifacts));
+      ArtifactSet toReturn = new ArtifactSet(excludeTemplates(artifacts));
 
       for (CompilationResult compilation : compilationResults) {
         PermutationContext context = new PermutationContext(linkerContext, writableArtifacts, compilation);
@@ -82,6 +83,21 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
       return toReturn;
     }
+  }
+
+  private Collection<? extends Artifact<?>> excludeTemplates(ArtifactSet artifacts) {
+    Set<Artifact<?>> filtered = new HashSet<>();
+    for (Artifact<?> artifact : artifacts) {
+      if(artifact instanceof PublicResource) {
+        PublicResource publicResource = (PublicResource) artifact;
+        if(!publicResource.getPartialPath().endsWith(".appcache")) {
+          filtered.add(artifact);
+        }
+      } else {
+        filtered.add(artifact);
+      }
+    }
+    return filtered;
   }
 
   private Collection<EmittedArtifact> emittedArtifacts(Collection<Artifact<?>> artifacts) {
@@ -252,7 +268,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     logger = logger.branch(TreeLogger.DEBUG, "Generating " + writer.getSuffix() + " contents",
         null);
 
-    StringBuffer out = readManifestTemplate(logger, context, writer.getSuffix());
+    StringBuffer out = readManifestTemplate(logger, context);
 
     // Generate the manifest entries
     appendEntries(logger, context, writer);
@@ -262,6 +278,8 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     replaceAll(out, "__NAME__", context.getModuleName());
     replaceAll(out, "__VERSION__", context.getStrongName());
     replaceAll(out, "__ENTRIES__", writer.getEntries());
+    
+    replaceAll(out, "__LOCALE__", context.getLocale());
 
     /*
     * NB: It's tempting to use LinkerContext.optimizeJavaScript here, but the
@@ -316,16 +334,16 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   }
 
 
-  private StringBuffer readManifestTemplate(TreeLogger logger, PermutationContext context, String suffix) throws UnableToCompleteException {
+  private StringBuffer readManifestTemplate(TreeLogger logger, PermutationContext context) throws UnableToCompleteException {
     // first try to find a template provided in the module's public
     // folder
     for (PublicResource artifact : context.find(PublicResource.class)) {
-      if (artifact.getPartialPath().equals(context.getModuleName() + "." + suffix)) {
+      if (artifact.getPartialPath().equals(context.getModuleName() + "." + APPCACHE_SUFFIX)) {
         return readAll(logger, artifact.getContents(logger));
       }
     }
 
-    String defaultTemplate = "Default." + suffix;
+    String defaultTemplate = "Default." + APPCACHE_SUFFIX;
     InputStream defaultIn = getClass().getResourceAsStream(defaultTemplate);
     if (defaultIn == null) {
       logger.log(TreeLogger.Type.ERROR, "Could not read default '" + defaultTemplate + "'");
