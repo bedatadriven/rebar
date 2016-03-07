@@ -21,7 +21,10 @@ public enum ElementId {
   
   VERSION_LABEL,
   LOAD_UPDATE,
-  I18N_TEXT, LOCALE;
+  I18N_TEXT, 
+  LOCALE,
+  NETWORK_RESOURCE,
+  FETCH_NETWORK_RESOURCE;
 
   public String id() {
     return name().toLowerCase().replace("_", "-");

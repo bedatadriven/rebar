@@ -47,6 +47,7 @@ public class TestPanel implements IsWidget {
     panel.add(new DownloadProgressWidget(appCache));
     panel.add(new AsyncFragmentWidget());
     panel.add(new UpdateAppWidget(appCache));
+    panel.add(new NetworkResourceWidget());
   }
 
   @Override
@@ -54,26 +55,4 @@ public class TestPanel implements IsWidget {
     return panel;
   }
 
-  //
-//  private void addRemoveButton() {
-//    panel.add(new HTML("<br>"));
-//    panel.add(new Button("Remove cache", new ClickHandler() {
-//
-//      @Override
-//      public void onClick(ClickEvent event) {
-//        appCache.removeCache(new AsyncCallback<Void>() {
-//
-//          @Override
-//          public void onSuccess(Void result) {
-//            Window.alert("Cache successfully removed");
-//          }
-//
-//          @Override
-//          public void onFailure(Throwable caught) {
-//            Window.alert("Failed to remove cache: " + caught.getMessage());
-//          }
-//        });
-//      }
-//    }));
-//  }
 }

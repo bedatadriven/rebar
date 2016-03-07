@@ -3,7 +3,11 @@ package com.bedatadriven.rebar.appcache.test;
 import com.bedatadriven.rebar.appcache.client.AppCache;
 import com.bedatadriven.rebar.appcache.test.client.AppVersion;
 import com.bedatadriven.rebar.appcache.test.client.ElementId;
+import org.hamcrest.CoreMatchers;
 import org.junit.*;
+
+import static com.bedatadriven.rebar.appcache.test.PageModel.within;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class AppCacheIT {
@@ -138,7 +142,19 @@ public class AppCacheIT {
     page.assertVersionIs(AppVersion.VERSION2);
     browser.screenshot("update-loaded");
   }
-  
+
+  @Test
+  public void networkResource() {
+    // Ensure that the appcache template was used
+    // load the initial version of the page and ensure it's cached
+    PageModel page = browser.navigateTo(server);
+    page.assertAppCacheDownloadsWithProgress();
+    
+    page.click(ElementId.FETCH_NETWORK_RESOURCE);
+    
+    page.assertThat(ElementId.NETWORK_RESOURCE, equalTo("TESTING 1234..."), within(10));
+    
+  }
 
   @After
   public void tearDown() throws Exception {

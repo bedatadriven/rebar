@@ -62,9 +62,12 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       return super.link(logger, linkerContext, artifacts);
 
     } else {
+      
 
       ArtifactSet writableArtifacts = new ArtifactSet(excludeTemplates(artifacts));
       ArtifactSet toReturn = new ArtifactSet(excludeTemplates(artifacts));
+
+      String manifestTemplate =  readManifestTemplate(logger, linkerContext, artifacts);
 
       for (CompilationResult compilation : compilationResults) {
         PermutationContext context = new PermutationContext(linkerContext, writableArtifacts, compilation);
@@ -76,7 +79,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
 
         toReturn.addAll(compilationArtifacts);
         toReturn.add(doEmitBootstrapScript(logger, context, writableArtifacts));
-        toReturn.add(doEmitManifest(logger, context, new Html5ManifestWriter()));
+        toReturn.add(doEmitManifest(logger, context, manifestTemplate));
       }
 
       toReturn.add(emitPermutationMap(logger, linkerContext, writableArtifacts));
@@ -261,14 +264,16 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   }
 
   private EmittedArtifact doEmitManifest(TreeLogger logger,
-                                         PermutationContext context,
-                                         ManifestWriter writer)
+                                         PermutationContext context, 
+                                         String template)
       throws UnableToCompleteException {
+    
+    Html5ManifestWriter writer = new Html5ManifestWriter();
 
     logger = logger.branch(TreeLogger.DEBUG, "Generating " + writer.getSuffix() + " contents",
         null);
 
-    StringBuffer out = readManifestTemplate(logger, context);
+    StringBuffer out = new StringBuffer(template);
 
     // Generate the manifest entries
     appendEntries(logger, context, writer);
@@ -334,12 +339,24 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
   }
 
 
-  private StringBuffer readManifestTemplate(TreeLogger logger, PermutationContext context) throws UnableToCompleteException {
+  private String readManifestTemplate(TreeLogger parentLogger,
+                                      LinkerContext context,
+                                      ArtifactSet artifacts) throws UnableToCompleteException {
+
+    TreeLogger logger = parentLogger.branch(TreeLogger.Type.DEBUG, "Locating template for module " + 
+        context.getModuleName());
+
     // first try to find a template provided in the module's public
     // folder
-    for (PublicResource artifact : context.find(PublicResource.class)) {
-      if (artifact.getPartialPath().equals(context.getModuleName() + "." + APPCACHE_SUFFIX)) {
-        return readAll(logger, artifact.getContents(logger));
+    for (Artifact artifact : artifacts) {
+      if(artifact instanceof PublicResource) {
+        PublicResource resource = (PublicResource) artifact;
+        logger.log(TreeLogger.Type.DEBUG, "Checking " + resource.getPartialPath());
+
+        if (resource.getPartialPath().equals(context.getModuleName() + "." + APPCACHE_SUFFIX)) {
+          logger.log(TreeLogger.Type.DEBUG, "Using " + resource.getPartialPath());
+          return readAll(logger, resource.getContents(logger));
+        }
       }
     }
 
@@ -352,7 +369,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
     return readAll(logger, defaultIn);
   }
 
-  private StringBuffer readAll(TreeLogger logger, InputStream in) throws UnableToCompleteException {
+  private String readAll(TreeLogger logger, InputStream in) throws UnableToCompleteException {
     StringBuffer out = new StringBuffer();
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
     try {
@@ -363,7 +380,7 @@ public final class AppCacheIFrameLinker extends IFrameLinker {
       logger.log(TreeLogger.ERROR, "Unable to read manifest template", e);
       throw new UnableToCompleteException();
     }
-    return out;
+    return out.toString();
   }
 
 

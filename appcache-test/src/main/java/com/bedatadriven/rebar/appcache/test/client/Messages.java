@@ -9,4 +9,5 @@ public class Messages {
   public static final String APP_IS_UP_TO_DATE = "Application is up to date";
   
   public static final String CHECK_FOR_UPDATE = "Check for update";
+  
 }
